@@ -7,50 +7,50 @@ import javax.swing.border.Border;
 
 class MainUIwin extends JFrame {
 	private JPanel bg = new JPanel(new GridLayout(3, 1));
-	private JPanel buttonline = new JPanel(new FlowLayout());
+	private JPanel buttonline = new JPanel(new BorderLayout());
+	private JPanel buttonlineC = new JPanel(new FlowLayout(5,5,5));
 	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.CENTER);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
-	private JLabel la3 = new JLabel("버튼모음", JLabel.CENTER);
-	private JButton bt = new JButton("음악 목록");
+	private JButton bt = new JButton("List");
 	private JButton bt4 = new JButton("가사");
-	private JButton bt1 = new JButton("prev");
-	private JButton bt2 = new JButton("play");
-	private JButton bt3 = new JButton("next");
-	protected static boolean listflag = true;
-	protected static boolean lyricflag = true;
+	private JButton bt1 = new JButton("Prev");
+	private JButton bt2 = new JButton("Play");
+	private JButton bt3 = new JButton("Next");
+	private JButton bt5 = new JButton("한곡 반복");
+	private JButton bt6 = new JButton("전체 반복");
+	private JButton bt7 = new JButton("Random");
+
 	protected static int x;
 	protected static int y;
-	private JFrame f1 = null;
-	private JFrame f2 = null;
+	private JFrame playList = null;
+	private JFrame lyric = null;
 
 	private void event() {
-		ActionListener listClose = new ActionListener() {
+		ActionListener listBt = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (listflag == false) {
-					JFrame f1 = new Playlist();
-					listflag = true;
-				}
+				playList.setLocation(getX() + 600, getY());
+				playList.setVisible(true);
 			}
 		};
-		bt.addActionListener(listClose);
-		ActionListener lyricClose = new ActionListener() {
+
+		bt.addActionListener(listBt);
+
+		ActionListener lyricbt = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (lyricflag == false) {
-					JFrame f2 = new Lyric();
-					lyricflag = true;
-				}
+				lyric.setLocation(getX(), getY() + 400);
+				lyric.setVisible(true);
 			}
 		};
-		bt4.addActionListener(lyricClose);
+		bt4.addActionListener(lyricbt);
 
 		ComponentListener cl = new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				if (f1 != null) {
-					f1.setLocation(getX() + 600, getY());
+				if (playList != null) {
+					playList.setLocation(getX() + 600, getY());
 				}
-				if (f2 != null) {
-					f2.setLocation(getX(), getY() + 400);
+				if (lyric != null) {
+					lyric.setLocation(getX(), getY() + 400);
 				}
 			}
 		};
@@ -72,18 +72,25 @@ class MainUIwin extends JFrame {
 		setContentPane(bg);
 		bg.setBorder(mainBorder);
 		bg.setBackground(Color.WHITE);
+		buttonline.setBackground(Color.white);
 		bg.add(la1);
 		bg.add(la2);
 		bg.add(buttonline);
-		buttonline.add(bt1);
-		buttonline.add(bt2);
-		buttonline.add(bt3);
-		buttonline.add(bt);
-		buttonline.add(bt4);
+		buttonline.add(buttonlineC,BorderLayout.SOUTH);
+		
+		buttonlineC.add(bt1);
+		buttonlineC.add(bt2);
+		buttonlineC.add(bt3);
+		buttonlineC.add(bt5);
+		buttonlineC.add(bt6);
+		buttonlineC.add(bt7);
+		
+		buttonlineC.add(bt);
+		buttonlineC.add(bt4);
+		
 	}
 
 	private void menu() {
-
 	}
 
 	public MainUIwin() {
@@ -91,18 +98,19 @@ class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(614, 408);
+		setSize(615, 408);
 		setLocation(300, 100);
 		setAlwaysOnTop(true);
 		setVisible(true);
-		f1 = new Playlist();
-		f2 = new Lyric();
+		setResizable(false);
+		playList = new Playlist();
+		lyric = new Lyric();
 		allClose();
 	}
 }
 
 public class MainUI {
 	public static void main(String[] args) {
-		JFrame f = new MainUIwin();
+		JFrame mainUi = new MainUIwin();
 	}
 }

@@ -22,16 +22,13 @@ public class Playlist extends JFrame{
 	private JScrollPane scroll = new JScrollPane();
 	private String[] str = new String[] {"노래1","노래2","노래3","노래4"};
 	
-	
 	private void menu() {
-		
 	}
 
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
-				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-				MainUIwin.listflag = false;
+				setVisible(false);
 			}
 		};
 		addWindowListener(win);
