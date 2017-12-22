@@ -10,10 +10,14 @@ import javax.swing.border.Border;
 
 public class Lyric extends JFrame {
 	private JPanel bg = new JPanel(new BorderLayout());
-	private JLabel la = new JLabel("가사",JLabel.CENTER);
-	
-	
-	
+	private JLabel la = new JLabel("가사", JLabel.CENTER);
+	protected int x = MainUIwin.x;
+	protected int y = MainUIwin.y;
+
+	public void moved() {
+		setLocation(x, y);
+	}
+
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
@@ -23,13 +27,13 @@ public class Lyric extends JFrame {
 		};
 		addWindowListener(win);
 	}
-	
+
 	private void menu() {
-		
+
 	}
 
 	private void design() {
-		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), "가사");
+		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
 		setContentPane(bg);
 		bg.add(la);
 		bg.setBorder(lyrics);
@@ -42,9 +46,8 @@ public class Lyric extends JFrame {
 		menu();
 		setTitle("가사");
 		setSize(614, 200);
-		setLocation(MainUIwin.x, MainUIwin.y+400);
+		setLocation(300, 500);
 		setAlwaysOnTop(true);
 		setVisible(true);
 	}
 }
-
