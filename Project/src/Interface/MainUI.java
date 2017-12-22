@@ -20,9 +20,8 @@ class MainUIwin extends JFrame {
 	protected static boolean lyricflag = true;
 	protected static int x;
 	protected static int y;
-	private JFrame f1 =null;
+	private JFrame f1 = null;
 	private JFrame f2 = null;
-	
 
 	private void event() {
 		ActionListener listClose = new ActionListener() {
@@ -47,13 +46,15 @@ class MainUIwin extends JFrame {
 		ComponentListener cl = new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				System.out.println("x = "+getX()+" y= " +getY());
-				f1.setLocation(getX()+600, getY());
-				f2.setLocation(getX(), getY()+400);
+				if (f1 != null) {
+					f1.setLocation(getX() + 600, getY());
+				}
+				if (f2 != null) {
+					f2.setLocation(getX(), getY() + 400);
+				}
 			}
 		};
 		addComponentListener(cl);
-
 	}
 
 	private void allClose() {
@@ -100,7 +101,7 @@ class MainUIwin extends JFrame {
 		setVisible(true);
 		f1 = new Playlist();
 		f2 = new Lyric();
-		
+
 		allClose();
 	}
 }
