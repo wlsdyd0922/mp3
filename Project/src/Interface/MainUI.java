@@ -20,9 +20,8 @@ class MainUIwin extends JFrame {
 	protected static boolean lyricflag = true;
 	protected static int x;
 	protected static int y;
-	private JFrame f1 =null;
+	private JFrame f1 = null;
 	private JFrame f2 = null;
-	
 
 	private void event() {
 		ActionListener listClose = new ActionListener() {
@@ -47,13 +46,15 @@ class MainUIwin extends JFrame {
 		ComponentListener cl = new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				System.out.println("x = "+getX()+" y= " +getY());
-				f1.setLocation(getX()+600, getY());
-				f2.setLocation(getX(), getY()+400);
+				if (f1 != null) {
+					f1.setLocation(getX() + 600, getY());
+				}
+				if (f2 != null) {
+					f2.setLocation(getX(), getY() + 400);
+				}
 			}
 		};
 		addComponentListener(cl);
-
 	}
 
 	private void allClose() {
@@ -68,10 +69,6 @@ class MainUIwin extends JFrame {
 
 	private void design() {
 		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
-		Border playInfo = BorderFactory.createLineBorder(Color.black, 2);
-		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
-		Border playList = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2),
-				"mp3 Play List");
 		setContentPane(bg);
 		bg.setBorder(mainBorder);
 		bg.setBackground(Color.WHITE);
@@ -100,7 +97,6 @@ class MainUIwin extends JFrame {
 		setVisible(true);
 		f1 = new Playlist();
 		f2 = new Lyric();
-		
 		allClose();
 	}
 }
@@ -108,6 +104,5 @@ class MainUIwin extends JFrame {
 public class MainUI {
 	public static void main(String[] args) {
 		JFrame f = new MainUIwin();
-
 	}
 }
