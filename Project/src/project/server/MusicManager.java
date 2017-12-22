@@ -9,6 +9,7 @@ public class MusicManager /*extends Thread */{
 
 	MusicManager() 
 	{
+		System.out.println("asdf");
 	}
 
 	public boolean createMusicList(String id)
