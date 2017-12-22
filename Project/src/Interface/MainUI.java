@@ -18,30 +18,39 @@ class MainUIwin extends JFrame {
 	private JButton bt3 = new JButton("next");
 	protected static boolean listflag = true;
 	protected static boolean lyricflag = true;
-	
+	protected static int x;
+	protected static int y;
 
 	private void event() {
 		ActionListener listClose = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(listflag ==false) {
-				JFrame f1 = new Playlist();
-				listflag = true;
+				if (listflag == false) {
+					JFrame f1 = new Playlist();
+					listflag = true;
 				}
 			}
 		};
 		bt.addActionListener(listClose);
 		ActionListener lyricClose = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(lyricflag == false) {
+				if (lyricflag == false) {
 					JFrame f2 = new Lyric();
 					lyricflag = true;
 				}
 			}
 		};
 		bt4.addActionListener(lyricClose);
-		
-		
-		
+
+		ComponentListener cl = new ComponentAdapter() {
+			@Override
+			public void componentMoved(ComponentEvent arg0) {
+				
+				x = getX();
+				y = getY();
+			}
+		};
+		addComponentListener(cl);
+
 	}
 
 	private void allClose() {
@@ -53,8 +62,6 @@ class MainUIwin extends JFrame {
 		};
 		addWindowListener(win);
 	}
-
-	
 
 	private void design() {
 		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
@@ -84,7 +91,7 @@ class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(600, 400);
+		setSize(614, 408);
 		setLocation(300, 100);
 		setAlwaysOnTop(true);
 		setVisible(true);

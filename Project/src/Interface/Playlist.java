@@ -51,7 +51,6 @@ public class Playlist extends JFrame{
 		event();
 		menu();
 		setTitle("Play List");
-		Dimension res = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(300, 600);
 		setLocation(900, 100);
 		setAlwaysOnTop(true);

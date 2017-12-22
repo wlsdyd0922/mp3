@@ -41,8 +41,8 @@ public class Lyric extends JFrame {
 		event();
 		menu();
 		setTitle("°¡»ç");
-		setSize(600, 200);
-		setLocation(300, 500);
+		setSize(614, 200);
+		setLocation(MainUIwin.x, MainUIwin.y+400);
 		setAlwaysOnTop(true);
 		setVisible(true);
 	}
