@@ -9,7 +9,7 @@ public class MusicManager /*extends Thread */{
 
 	MusicManager() 
 	{
-		System.out.println("asdf");
+		System.out.println("asdfasdf");
 	}
 
 	public boolean createMusicList(String id)
