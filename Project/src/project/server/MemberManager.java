@@ -16,6 +16,11 @@ public class MemberManager {
 		musicManager = new MusicManager();
 	}
 	
+	public boolean updateMemberList()
+	{
+		return true;
+	}
+	
 	public boolean login(String id, String pw) {
 		for (Member m : clientList)
 			if (m.getId().equals(id) && m.getPassword().equals(pw))
