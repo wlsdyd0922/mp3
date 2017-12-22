@@ -1,17 +1,11 @@
 package project.server;
 
 import java.io.*;
-import java.net.*;
 import java.util.List;
 
 public class MusicManager /*extends Thread */{
-	static List<String> list;
-	Socket socket = null;
-	File file = null;
-	FileOutputStream fos = null;
-	InputStream is = null;
-
-	public static File musicList;// = new File("files", "member.db");
+	private static List<String> list;
+	public static File musicList;
 
 	MusicManager() 
 	{
@@ -26,17 +20,25 @@ public class MusicManager /*extends Thread */{
 			return false;
 	}
 	
-	public File findMusicList(String id)
-	{
-		musicList = new File("musics",id+".db");
-		if(musicList.exists())
-			return musicList;
-		else
+	@SuppressWarnings("unchecked")
+	public List<String> findMusicList(String id) {
+		try (ObjectInputStream obj = new ObjectInputStream(
+														  new BufferedInputStream(
+														   new FileInputStream(musicList)));)
+		{
+			list = (List<String>) obj.readObject();
+		} 
+		catch (Exception e)
+		{
+			System.err.println("music list update failed");
 			return null;
+		}
+		return list;
 	}
-	
-	public boolean updateMusicList(String id)
+
+	public boolean updateMusicList(String id,String music)
 	{
+		
 		musicList = new File("musics",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(

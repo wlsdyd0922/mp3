@@ -1,12 +1,12 @@
 package project.server;
 
 import java.io.Serializable;
-import java.util.*;
 
+@SuppressWarnings("serial")
 public class Member implements Serializable{
 	private String id;
 	private String password;
-	private List<String> musicList = new ArrayList<String>();
+	//private List<String> musicList = new ArrayList<String>();
 	
 	public Member(String id, String password) {
 		super();
@@ -30,11 +30,11 @@ public class Member implements Serializable{
 		this.password = password;
 	}
 
-	public List<String> getMusicList() {
-		return musicList;
-	}
-
-	public void setMusicList(List<String> musicList) {
-		this.musicList = musicList;
-	}
+//	public List<String> getMusicList() {
+//		return musicList;
+//	}
+//
+//	public void setMusicList(List<String> musicList) {
+//		this.musicList = musicList;
+//	}
 }

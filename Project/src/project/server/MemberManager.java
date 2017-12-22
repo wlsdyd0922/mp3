@@ -6,22 +6,42 @@ import java.util.*;
 public class MemberManager {
 	private static List<Member> clientList;
 	private static MusicManager musicManager;
-	private static final File memberDB = new File("members", "member.db");
-//	private File musicList;
-//	
+	private static File memberDB;
 
-	public MemberManager()
+	@SuppressWarnings("unchecked")
+	public MemberManager() 
 	{
-		clientList = new ArrayList<>();
+		memberDB = new File("members", "member.db");
+		try (ObjectInputStream obj = new ObjectInputStream(
+															new BufferedInputStream(
+															new FileInputStream(memberDB)));)
+		{
+			clientList = (List<Member>) obj.readObject();
+		} 
+		catch (Exception e) 
+		{
+			System.out.println("memberDB read failed");
+		}
 		musicManager = new MusicManager();
 	}
-	
-	public boolean updateMemberList()
+
+	public boolean updateMemberList(String id)
 	{
+		try(ObjectOutputStream obj = new ObjectOutputStream(
+				new BufferedOutputStream(
+				new FileOutputStream(memberDB)));)
+		{
+			obj.writeObject(clientList);
+		}
+		catch (Exception e) {
+			System.out.println("memberDB update failed");
+			return false;
+		}
 		return true;
 	}
-	
-	public boolean login(String id, String pw) {
+
+	public boolean login(String id, String pw) 
+	{
 		for (Member m : clientList)
 			if (m.getId().equals(id) && m.getPassword().equals(pw))
 				return true;
@@ -33,19 +53,9 @@ public class MemberManager {
 		for (Member m : clientList)
 			if (m.getId().equals(id))
 				return false;
-		Member newMember = new Member(id,pw);
+		Member newMember = new Member(id, pw);
 		musicManager.createMusicList(id);
+		clientList.add(newMember);
 		return true;
 	}
-	
-//	public List<Member> loadMusicList(Member m) {
-//		try (ObjectInputStream obj = new ObjectInputStream(
-//															new BufferedInputStream(
-//																new FileInputStream(db)));) {
-//			musicList = new File("musics",m.getId()+".db");
-//			//list = (List<Member>) obj.readObject();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 }
