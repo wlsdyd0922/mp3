@@ -1,4 +1,4 @@
-package project.server;
+package server;
 
 import java.io.*;
 import java.util.List;
@@ -9,7 +9,6 @@ public class MusicManager /*extends Thread */{
 
 	MusicManager() 
 	{
-		System.out.println("asdfasdf");
 	}
 
 	public boolean createMusicList(String id)
@@ -22,7 +21,7 @@ public class MusicManager /*extends Thread */{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> findMusicList(String id) {
+	public List<String> readMusicList(String id) {
 		try (ObjectInputStream obj = new ObjectInputStream(
 														  new BufferedInputStream(
 														   new FileInputStream(musicList)));)
@@ -36,14 +35,34 @@ public class MusicManager /*extends Thread */{
 		}
 		return list;
 	}
-
-	public boolean updateMusicList(String id,String music)
+	
+	public boolean addMusic(String id,String music)
 	{
-		
+		list = readMusicList(id);
+		if(!list.add(music))
+		{
+			System.err.println("music add failed");
+		}
+		return updateMusicList(id);
+	}
+	
+	public boolean deleteMusic(String id, String music)
+	{
+		list = readMusicList(id);
+		if(!list.remove(music))
+		{
+			System.err.println("music delete failed");
+			return false;
+		}
+		return updateMusicList(id);
+	}
+	
+	public boolean updateMusicList(String id)
+	{
 		musicList = new File("musics",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
-																new FileOutputStream(musicList)));)
+															  new FileOutputStream(musicList)));)
 		{
 			obj.writeObject(list);
 		}
@@ -63,35 +82,4 @@ public class MusicManager /*extends Thread */{
 		else
 			return false;
 	}
-	
-//	public static void seekMusic(String fileName) {
-//		for (String m : list)
-//			if (m.equals(fileName)) {
-//				try
-//				{
-//					ServerSocket ss = new ServerSocket(8000);
-//					Socket socket = ss.accept();
-//					OutputStream os = socket.getOutputStream();
-//
-//					File file = new File("musics", fileName + ".mp3");
-//					FileInputStream fis = new FileInputStream(file);
-//					int readCount = 0;
-//					byte[] buffer = new byte[4096];
-//
-//					while ((readCount = fis.read(buffer)) > 0)
-//					{
-//						os.write(buffer, 0, readCount);
-//					}
-//					os.close();
-//					fis.close();
-//				}
-//				catch (IOException e) 
-//				{
-//					e.printStackTrace();
-//				}
-//				
-//
-//				return;
-//			}
-//	}
 }
