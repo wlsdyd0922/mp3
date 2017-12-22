@@ -4,81 +4,99 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-class Window01 extends JFrame {
-	private JPanel bg = new JPanel(new BorderLayout());
-	private JPanel grid = new JPanel(new GridLayout(1, 2));
-	private JPanel grid1 = new JPanel(new GridLayout(2, 1));
-	private JLabel la1 = new JLabel("mp3플레이 정보",JLabel.CENTER);
-	private JLabel la2 = new JLabel("가사",JLabel.CENTER);
-	private JLabel la3 = new JLabel("mp3플레이 리스트",JLabel.CENTER);
-	private JList list = new JList();
-	private String[] str = new String[] {"노래1","노래2","노래3","노래4"};
+class MainUIwin extends JFrame {
+	private JPanel bg = new JPanel(new GridLayout(3, 1));
+	private JPanel buttonline = new JPanel(new FlowLayout());
+	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.CENTER);
+	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
+	private JLabel la3 = new JLabel("버튼모음", JLabel.CENTER);
+	private JButton bt = new JButton("음악 목록");
+	private JButton bt4 = new JButton("가사");
+	private JButton bt1 = new JButton("prev");
+	private JButton bt2 = new JButton("play");
+	private JButton bt3 = new JButton("next");
+	protected static boolean listflag = true;
+	protected static boolean lyricflag = true;
 	
-	private JScrollPane scroll = new JScrollPane();
-	
-	
+
 	private void event() {
-		System.out.println("12312321323");
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		ListSelectionListener sel = new ListSelectionListener() {
-			
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				String str1 = (String) list.getSelectedValue();
-				System.out.println(str1);
+		ActionListener listClose = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(listflag ==false) {
+				JFrame f1 = new Playlist();
+				listflag = true;
+				}
 			}
 		};
-		list.addListSelectionListener(sel);
+		bt.addActionListener(listClose);
+		ActionListener lyricClose = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(lyricflag == false) {
+					JFrame f2 = new Lyric();
+					lyricflag = true;
+				}
+			}
+		};
+		bt4.addActionListener(lyricClose);
+		
+		
+		
 	}
 
+	private void allClose() {
+		WindowListener win = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		};
+		addWindowListener(win);
+	}
+
+	
+
 	private void design() {
-		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), "MP3플레이어");
-		Border playInfo = BorderFactory.createLineBorder(Color.black,2);
-		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), "가사");
-		Border playList = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), "mp3 Play List");
-		scroll.setViewportView(list);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		list.setListData(str); // 이름넣음
+		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
+		Border playInfo = BorderFactory.createLineBorder(Color.black, 2);
+		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
+		Border playList = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2),
+				"mp3 Play List");
 		setContentPane(bg);
 		bg.setBorder(mainBorder);
-		la1.setBorder(playInfo);
-		la2.setBorder(lyrics);
-		la3.setBorder(playList);
-		//grid1.setBorder(bd);
-		bg.add(grid);
-		grid.add(grid1);
-		grid.add(scroll);
-		grid1.add(la1);
-		grid1.add(la2);
-
-		int a = list.getSelectedIndex();
-		System.out.println(a);
+		bg.setBackground(Color.WHITE);
+		bg.add(la1);
+		bg.add(la2);
+		bg.add(buttonline);
+		buttonline.add(bt1);
+		buttonline.add(bt2);
+		buttonline.add(bt3);
+		buttonline.add(bt);
+		buttonline.add(bt4);
 	}
 
 	private void menu() {
 
 	}
 
-	public Window01() {
+	public MainUIwin() {
 		design();
 		event();
 		menu();
-		setTitle("Swing예제 01");
-		setSize(800, 600);
-		setLocationByPlatform(true);
+		setTitle("Playing");
+		setSize(600, 400);
+		setLocation(300, 100);
 		setAlwaysOnTop(true);
-		setResizable(false);
 		setVisible(true);
+		JFrame f1 = new Playlist();
+		JFrame f2 = new Lyric();
+		allClose();
 	}
 }
 
 public class MainUI {
 	public static void main(String[] args) {
-		JFrame f = new Window01();
-		JFrame f1 = new Window01();
-		JFrame f2 = new Window01();
+		JFrame f = new MainUIwin();
+
 	}
 }
