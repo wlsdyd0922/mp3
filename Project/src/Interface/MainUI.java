@@ -5,27 +5,37 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import javafx.stage.FileChooser;
+
 class MainUIwin extends JFrame {
+	private JFileChooser chooser = new JFileChooser();
 	private JPanel bg = new JPanel(new GridLayout(3, 1));
-	private JPanel buttonline = new JPanel(new BorderLayout());
-	private JPanel buttonlineC = new JPanel(new FlowLayout(5,5,5));
+	private JPanel buttonline = new JPanel(null);
 	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.CENTER);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
-	private JButton bt = new JButton("List");
-	private JButton bt4 = new JButton("가사");
-	private JButton bt1 = new JButton("Prev");
-	private JButton bt2 = new JButton("Play");
-	private JButton bt3 = new JButton("Next");
-	private JButton bt5 = new JButton("한곡 반복");
-	private JButton bt6 = new JButton("전체 반복");
-	private JButton bt7 = new JButton("Random");
-
+	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", "가사", "≡" };
+	private JButton[] bt = new JButton[8];
+	private JMenuBar bar = new JMenuBar();
+	private JMenu menu = new JMenu("File");
+	private JMenuItem open = new JMenuItem("Open");
+	
 	protected static int x;
 	protected static int y;
 	private JFrame playList = null;
 	private JFrame lyric = null;
 
 	private void event() {
+		ActionListener fileOpen = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chooser.setMultiSelectionEnabled(true);
+				chooser.showOpenDialog(bg);
+			}
+		};
+		open.addActionListener(fileOpen);
+		
+		
 		ActionListener listBt = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				playList.setLocation(getX() + 600, getY());
@@ -33,7 +43,7 @@ class MainUIwin extends JFrame {
 			}
 		};
 
-		bt.addActionListener(listBt);
+		bt[7].addActionListener(listBt);
 
 		ActionListener lyricbt = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -41,7 +51,7 @@ class MainUIwin extends JFrame {
 				lyric.setVisible(true);
 			}
 		};
-		bt4.addActionListener(lyricbt);
+		bt[6].addActionListener(lyricbt);
 
 		ComponentListener cl = new ComponentAdapter() {
 			@Override
@@ -50,7 +60,7 @@ class MainUIwin extends JFrame {
 					playList.setLocation(getX() + 600, getY());
 				}
 				if (lyric != null) {
-					lyric.setLocation(getX(), getY() + 400);
+					lyric.setLocation(getX() - 5, getY() + 400);
 				}
 			}
 		};
@@ -68,29 +78,37 @@ class MainUIwin extends JFrame {
 	}
 
 	private void design() {
+		for (int i = 0; i < bt.length; i++) {
+			bt[i] = new JButton(str[i]);
+			buttonline.add(bt[i]);
+			bt[i].setBackground(Color.WHITE);
+		}
+		
+		bt[0].setBounds(10, 10, 80, 40);
+		bt[1].setBounds(110, 10, 80, 40);
+		bt[2].setBounds(210, 10, 80, 40);
+		bt[3].setBounds(355, 10, 60, 40);
+		bt[4].setBounds(420, 10, 90, 40);
+		bt[5].setBounds(515, 10, 60, 40);
+		bt[6].setBounds(10, 60, 60, 40);
+		bt[7].setBounds(515, 60, 60, 40);
+		bt[7].setFont(new Font("굴림", Font.PLAIN, 30));
 		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
+		Border btBorder = BorderFactory.createLineBorder(Color.black, 3);
 		setContentPane(bg);
 		bg.setBorder(mainBorder);
 		bg.setBackground(Color.WHITE);
 		buttonline.setBackground(Color.white);
+		buttonline.setBorder(btBorder);
 		bg.add(la1);
 		bg.add(la2);
 		bg.add(buttonline);
-		buttonline.add(buttonlineC,BorderLayout.SOUTH);
-		
-		buttonlineC.add(bt1);
-		buttonlineC.add(bt2);
-		buttonlineC.add(bt3);
-		buttonlineC.add(bt5);
-		buttonlineC.add(bt6);
-		buttonlineC.add(bt7);
-		
-		buttonlineC.add(bt);
-		buttonlineC.add(bt4);
-		
 	}
 
 	private void menu() {
+		setJMenuBar(bar);
+		bar.add(menu);
+		menu.add(open);
 	}
 
 	public MainUIwin() {
@@ -98,7 +116,7 @@ class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(615, 408);
+		setSize(610, 405);
 		setLocation(300, 100);
 		setAlwaysOnTop(true);
 		setVisible(true);
