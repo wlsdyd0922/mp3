@@ -17,6 +17,7 @@ class MainUIwin extends JFrame {
 	private JButton[] bt = new JButton[8];
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
+	private JMenu menu2 = new JMenu("Option");
 	private JMenuItem open = new JMenuItem("Open");
 
 	protected static int x;
@@ -75,7 +76,7 @@ class MainUIwin extends JFrame {
 		};
 		addWindowListener(win);
 	}
-
+	
 	private void design() {
 		for (int i = 0; i < bt.length; i++) {
 			bt[i] = new JButton(str[i]);
@@ -107,7 +108,9 @@ class MainUIwin extends JFrame {
 	private void menu() {
 		setJMenuBar(bar);
 		bar.add(menu);
+		bar.add(menu2);
 		menu.add(open);
+		
 	}
 
 	public MainUIwin() {
@@ -128,6 +131,6 @@ class MainUIwin extends JFrame {
 
 public class MainUI {
 	public static void main(String[] args) {
-		JFrame mainUi = new MainUIwin();
+		JFrame mainui = new MainUIwin();
 	}
 }
