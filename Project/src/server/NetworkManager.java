@@ -23,7 +23,7 @@ public class NetworkManager extends Thread{
 			out.close();
 			socket.close();
 		}catch(Exception e) {	}
-		remove(this);//나를 지워라
+		remove(this);
 	}
 	
 	final static int LOGIN = 0;					//로그인 요청
@@ -38,7 +38,8 @@ public class NetworkManager extends Thread{
 	
 	private ServerSocket server;
 	private Socket socket;
-	private BufferedReader in;
+	//private BufferedReader in;
+	ObjectInputStream in; 
 	private PrintWriter out;
 	private int port;
 	
@@ -56,11 +57,11 @@ public class NetworkManager extends Thread{
 		memM = new MemberManager();
 		try 
 		{
-			server = new ServerSocket(20000);
+			server = new ServerSocket(port);
 			socket = server.accept();
 
-			in = new BufferedReader(
-						new InputStreamReader(
+			in = new ObjectInputStream(
+					new BufferedInputStream(
 							socket.getInputStream()));
 
 			out = new PrintWriter(
@@ -87,11 +88,11 @@ public class NetworkManager extends Thread{
 				state = in.read();
 				switch (state) {
 				case JOIN : 
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println("client id : " + id);
-					pw = in.readLine();
+					pw = (String)in.readObject();
 					System.out.println("client pw : " + pw);
-					email = in.readLine();
+					email = (String)in.readObject();
 					System.out.println("client email : " + email);
 					boolean joinResult = memM.memberAccept(id, pw, email);
 					out.println(joinResult);
@@ -99,9 +100,9 @@ public class NetworkManager extends Thread{
 					break;
 					
 				case LOGIN:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println("client : " + id);
-					pw = in.readLine();
+					pw = (String)in.readObject();
 					System.out.println("client : " + pw);
 
 					boolean loginResult  = memM.login(id, pw);
@@ -111,21 +112,21 @@ public class NetworkManager extends Thread{
 					break;
 
 				case LIST:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					break;
 					
 				case TOTAL_LIST:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + " 전체 리스트 요청");
 					listSender(null);
 					break;
 
 				case MUSIC:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + " 음악 파일 요청");
-					musicTitle = in.readLine();
+					musicTitle = (String)in.readObject();
 					musicSender(id, musicTitle);
 					break;
 
@@ -137,13 +138,13 @@ public class NetworkManager extends Thread{
 //					break;
 
 				case LOGOUT : 
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + " 로그아웃");
 					kill();
 					break;
 					
 				case DROP:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if(dropResult)
@@ -151,12 +152,12 @@ public class NetworkManager extends Thread{
 					break;
 					
 				default:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + ": 잘못된 요청");
 					break;
 				}
 			} 
-			catch (IOException e) 
+			catch (Exception e) 
 			{
 				kill();
 			}
