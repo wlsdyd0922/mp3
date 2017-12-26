@@ -21,8 +21,7 @@ public class Lyric extends JFrame {
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
-				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-				MainUIwin.lyricflag = false;
+				setVisible(false);
 			}
 		};
 		addWindowListener(win);
@@ -45,7 +44,7 @@ public class Lyric extends JFrame {
 		event();
 		menu();
 		setTitle("°¡»ç");
-		setSize(614, 200);
+		setSize(615, 200);
 		setLocation(300, 500);
 		setAlwaysOnTop(true);
 		setVisible(true);
