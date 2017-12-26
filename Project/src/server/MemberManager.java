@@ -4,28 +4,39 @@ import java.io.*;
 import java.util.*;
 
 public class MemberManager {
-	private static List<Member> clientList;
+	//private static List<Member> clientList = new ArrayList<>();
+	private Map<String,Member> clientList = new HashMap<>();
 	private static MusicManager musicManager;
-	private static File memberDB;
+	//private static File memberDB;
 
 	public void InitList()
 	{
-		clientList = new ArrayList<>();
+		File memberDB = new File("members", "member.db");
+		//clientList = new ArrayList<>();
+		//clientList = new HashMap<>();
 		updateMemberList();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public MemberManager() 
 	{
-		memberDB = new File("members", "member.db");
-		if(memberDB.length() == 0)
-			InitList();
+		musicManager = new MusicManager();
+		musicManager.createDirectory();
+		
+		File memberDB = new File("members", "member.db");
+		//if(memberDB.length() == 0)
+		InitList();
+		if(!memberDB.exists())
+		{
+			System.out.println("member db°¡ ¾øÀ½");
+			return;
+		}
 		
 		try (ObjectInputStream obj = new ObjectInputStream(
 															new BufferedInputStream(
-															new FileInputStream(memberDB)));)
+																new FileInputStream(memberDB)));)
 		{
-			clientList = (List<Member>) obj.readObject();
+			clientList = (Map<String, Member>) obj.readObject();
 		} 
 		catch (Exception e) 
 		{
@@ -35,9 +46,10 @@ public class MemberManager {
 
 	public boolean updateMemberList()
 	{
+		File memberDB = new File("members", "member.db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
-				new BufferedOutputStream(
-				new FileOutputStream(memberDB)));)
+															new BufferedOutputStream(
+																new FileOutputStream(memberDB)));)
 		{
 			obj.writeObject(clientList);
 		}
@@ -48,27 +60,47 @@ public class MemberManager {
 		return true;
 	}
 
-	public boolean login(String id, String pw) 
+	public boolean login(String id, String pw)  
 	{
-		for (Member m : clientList)
-			if (m.getId().equals(id) && m.getPassword().equals(pw))
+		//for (Member m : clientList)
+		if (clientList.get(id).getPassword() == pw)
 				return true;
 		return false;
 	}
 
-	public boolean memberAccept(String id, String pw)
+	public boolean memberAccept(String id, String pw, String email)
 	{
-		if(clientList.contains(id))
+		musicManager.createDirectory();
+		if(clientList.containsKey(id))
 			return false;
-		Member newMember = new Member(id, pw);
+		//Member newMember = new Member(id, pw);
 		musicManager.createMusicList(id);
-		clientList.add(newMember);
+		clientList.put(id, new Member(id,pw,email));//(newMember);
 		updateMemberList();
 		return true;
 	}
 	
 	public boolean memberDrop(String id)
 	{
-		return true;
+		if(clientList.remove(id) != null)
+		{
+			musicManager.deleteMusicList(id);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	public void memberDisplay() {
+		File memberDB = new File("members", "member.db");
+		try (ObjectInputStream obj = new ObjectInputStream(
+															new BufferedInputStream(
+															new FileInputStream(memberDB)));) {
+			clientList = (Map<String, Member>) obj.readObject();
+			
+			System.out.println(clientList.toString());
+		} catch (Exception e) {
+			System.out.println("memberDB read failed");
+		}
 	}
 }

@@ -46,7 +46,6 @@ public class Lyric extends JFrame {
 		setTitle("°¡»ç");
 		setSize(615, 200);
 		setLocation(300, 500);
-		setAlwaysOnTop(true);
 		setVisible(true);
 	}
 }
