@@ -49,6 +49,10 @@ class MainUIwin extends JFrame {
 		});
 		open.addActionListener(e -> {
 			chooser.setMultiSelectionEnabled(true);
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)",".mp3"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mpeg File (*.mpeg)",".mpeg"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wav File (*.wav)",".wav"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)",".wma"));
 			chooser.showOpenDialog(bg);
 		});
 		bt[7].addActionListener(e -> {
