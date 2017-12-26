@@ -38,8 +38,8 @@ public class NetworkManager extends Thread{
 	
 	private ServerSocket server; 
 	private Socket socket;
-	//private BufferedReader in;
-	ObjectInputStream in; 
+	private BufferedReader in;
+	//private ObjectInputStream in; 
 	private PrintWriter out;
 	private int port;
 	
@@ -53,7 +53,7 @@ public class NetworkManager extends Thread{
 		this.socket = socket;
 		this.setDaemon(true);
 		this.start();
-		System.out.println(socket.toString());
+		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 //			try {
 //				server = new ServerSocket(port);
@@ -63,15 +63,25 @@ public class NetworkManager extends Thread{
 //			}
 
 			try {
-				in = new ObjectInputStream(
-						new BufferedInputStream(
-								socket.getInputStream()));
+			in = new BufferedReader(
+					new InputStreamReader(
+							this.socket.getInputStream()));
 
-				out = new PrintWriter(
-							new BufferedWriter(
-								new OutputStreamWriter(
-										socket.getOutputStream())));
+			out = new PrintWriter(
+						new BufferedWriter(
+							new OutputStreamWriter(
+									this.socket.getOutputStream())));
+//
+//				in = new ObjectInputStream(
+//						new BufferedInputStream(
+//								this.socket.getInputStream()));
+//
+//				out = new PrintWriter(
+//							new BufferedWriter(
+//								new OutputStreamWriter(
+//										this.socket.getOutputStream())));
 			} catch (IOException e) {
+				e.getStackTrace();
 				System.out.println("in/out stream error");
 			}
 	}
@@ -87,11 +97,14 @@ public class NetworkManager extends Thread{
 				state = in.read();
 				switch (state) {
 				case JOIN : 
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println("client id : " + id);
-					pw = (String)in.readObject();
+					//pw = (String)in.readObject();
+					pw = in.readLine();
 					System.out.println("client pw : " + pw);
-					email = (String)in.readObject();
+					//email = (String)in.readObject();
+					email = in.readLine();
 					System.out.println("client email : " + email);
 					boolean joinResult = memM.memberAccept(id, pw, email);
 					out.println(joinResult);
@@ -100,9 +113,11 @@ public class NetworkManager extends Thread{
 					break;
 					
 				case LOGIN:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println("client : " + id);
-					pw = (String)in.readObject();
+					//pw = (String)in.readObject();
+					pw = in.readLine();
 					System.out.println("client : " + pw);
 
 					boolean loginResult  = memM.login(id, pw);
@@ -112,21 +127,25 @@ public class NetworkManager extends Thread{
 					break;
 
 				case LIST:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					break;
 					
 				case TOTAL_LIST:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + " 전체 리스트 요청");
 					listSender(null);
 					break;
 
 				case MUSIC:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + " 음악 파일 요청");
-					musicTitle = (String)in.readObject();
+					//musicTitle = (String)in.readObject();
+					musicTitle = in.readLine();
 					musicSender(id, musicTitle);
 					break;
 
@@ -138,13 +157,15 @@ public class NetworkManager extends Thread{
 //					break;
 
 				case LOGOUT : 
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + " 로그아웃");
 					kill();
 					break;
 					
 				case DROP:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if(dropResult)
@@ -152,7 +173,8 @@ public class NetworkManager extends Thread{
 					break;
 					
 				default:
-					id = (String)in.readObject();
+					//id = (String)in.readObject();
+					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
 					break;
 				}
