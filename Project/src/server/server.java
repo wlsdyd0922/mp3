@@ -8,7 +8,6 @@ public class server {
 		try(ServerSocket server = new ServerSocket(20000)){
 			System.out.println("서버 기동");
 			Socket s = server.accept();
-			System.out.println(s.toString());
 			NetworkManager nm = new NetworkManager(s);
 			System.out.println("네트워크 매니저 생성");
 			

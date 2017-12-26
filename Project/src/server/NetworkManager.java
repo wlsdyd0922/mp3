@@ -53,28 +53,27 @@ public class NetworkManager extends Thread{
 		this.socket = socket;
 		this.setDaemon(true);
 		this.start();
-		
+		System.out.println(socket.toString());
 		memM = new MemberManager();
-		try 
-		{
-			server = new ServerSocket(port);
-			socket = server.accept();
+//			try {
+//				server = new ServerSocket(port);
+//				socket = server.accept();
+//			} catch (IOException e) {
+//				System.out.println("server socket create error");
+//			}
 
-			in = new ObjectInputStream(
-					new BufferedInputStream(
-							socket.getInputStream()));
+			try {
+				in = new ObjectInputStream(
+						new BufferedInputStream(
+								socket.getInputStream()));
 
-			out = new PrintWriter(
-						new BufferedWriter(
-							new OutputStreamWriter(
-									socket.getOutputStream())));
-			
-			// ds = new DatagramSocket(20000);
-		}
-		catch (IOException e)
-		{
-			System.err.println("server socket create error");
-		}
+				out = new PrintWriter(
+							new BufferedWriter(
+								new OutputStreamWriter(
+										socket.getOutputStream())));
+			} catch (IOException e) {
+				System.out.println("in/out stream error");
+			}
 	}
 	
 	public void run() {
@@ -97,6 +96,7 @@ public class NetworkManager extends Thread{
 					boolean joinResult = memM.memberAccept(id, pw, email);
 					out.println(joinResult);
 					out.flush();
+					memM.memberDisplay();
 					break;
 					
 				case LOGIN:
@@ -162,16 +162,16 @@ public class NetworkManager extends Thread{
 				kill();
 			}
 			
-			try
-			{
-				socket.close();
-				server.close();
-			} 
-			catch (IOException e)
-			{
-				System.out.println("socket/server close error");
-				e.printStackTrace();
-			}
+//			try
+//			{
+//				socket.close();
+//				server.close();
+//			} 
+//			catch (IOException e)
+//			{
+//				System.out.println("socket/server close error");
+//				e.printStackTrace();
+//			}
 		}
 	}
 	
