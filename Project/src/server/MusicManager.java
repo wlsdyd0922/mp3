@@ -10,7 +10,29 @@ public class MusicManager /*extends Thread */{
 	MusicManager() 
 	{
 	}
-
+	
+	public boolean createDirectory()
+	{
+        String path = "musics";
+        File file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+            System.out.println("music 叼泛配府 积己");
+        }
+        else
+        	return false;
+        
+        path = "members";
+        file = new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+            System.out.println("music 叼泛配府 积己");
+        }
+        else return false;
+        
+        return true;
+	}
+	
 	public boolean createMusicList(String id)
 	{
 		musicList = new File("members",id+".db");

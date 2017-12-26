@@ -60,6 +60,7 @@ public class MemberManager {
 
 	public boolean memberAccept(String id, String pw, String email)
 	{
+		musicManager.createDirectory();
 		if(clientList.containsKey(id))
 			return false;
 		//Member newMember = new Member(id, pw);
