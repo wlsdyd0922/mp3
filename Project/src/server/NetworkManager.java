@@ -99,7 +99,7 @@ public class NetworkManager extends Thread{
 					out.flush();
 					break;
 					
-				case LOGIN:
+				case LOGIN: 
 					id = (String)in.readObject();
 					System.out.println("client : " + id);
 					pw = (String)in.readObject();
