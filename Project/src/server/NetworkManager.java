@@ -93,7 +93,9 @@ public class NetworkManager extends Thread{
 					System.out.println("client pw : " + pw);
 					email = in.readLine();
 					System.out.println("client email : " + email);
-					/*boolean r = */memM.memberAccept(id, pw, email);
+					boolean joinResult = memM.memberAccept(id, pw, email);
+					out.println(joinResult);
+					out.flush();
 					break;
 					
 				case LOGIN:
@@ -102,12 +104,9 @@ public class NetworkManager extends Thread{
 					pw = in.readLine();
 					System.out.println("client : " + pw);
 
-					String result = "로그인 실패";
-					if (memM.login(id, pw)) {
-						result = "로그인 성공";
-						System.out.println(id + " : 로그인 성공");
-					}
-					out.println(result);
+					boolean loginResult  = memM.login(id, pw);
+					
+					out.println(loginResult);
 					out.flush();
 					break;
 
@@ -146,8 +145,8 @@ public class NetworkManager extends Thread{
 				case DROP:
 					id = in.readLine();
 					System.out.println(id + " 탈퇴");
-					boolean rD = memM.memberDrop(id);
-					if(rD)
+					boolean dropResult = memM.memberDrop(id);
+					if(dropResult)
 						kill();
 					break;
 					
