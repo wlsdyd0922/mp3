@@ -51,8 +51,6 @@ public class NetworkManager extends Thread{
 	{
 		port = 20000;
 		this.socket = socket;
-		this.setDaemon(true);
-		this.start();
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 //			try {
@@ -80,6 +78,8 @@ public class NetworkManager extends Thread{
 //							new BufferedWriter(
 //								new OutputStreamWriter(
 //										this.socket.getOutputStream())));
+			this.setDaemon(true);
+			this.start();
 			} catch (IOException e) {
 				e.getStackTrace();
 				System.out.println("in/out stream error");
@@ -87,13 +87,13 @@ public class NetworkManager extends Thread{
 	}
 	
 	public void run() {
+		try {
 		while (flag) {
 			int state;
 			String id = null;
 			String pw = null;
 			String email = null;
 			String musicTitle = null;
-			try {
 				state = in.read();
 				switch (state) {
 				case JOIN : 
@@ -178,7 +178,8 @@ public class NetworkManager extends Thread{
 					System.out.println(id + ": 잘못된 요청");
 					break;
 				}
-			} 
+		}
+		}
 			catch (Exception e) 
 			{
 				kill();
@@ -195,7 +196,7 @@ public class NetworkManager extends Thread{
 //				e.printStackTrace();
 //			}
 		}
-	}
+	
 	
 	public boolean listSender(String id) 
 	{
