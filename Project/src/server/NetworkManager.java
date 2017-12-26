@@ -1,36 +1,69 @@
 package server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-public class NetworkManager {
+
+public class NetworkManager extends Thread{
 	private boolean flag = true;
+	
+	private static List<NetworkManager> list = new ArrayList<>();
+	public static void add(NetworkManager c) {
+		list.add(c);
+	}
+	public static void remove(NetworkManager c) {
+		list.remove(c);
+	}
+	
+	public void kill() {
+		try {
+			flag = false;
+			in.close();
+			out.close();
+			socket.close();
+		}catch(Exception e) {	}
+		remove(this);//나를 지워라
+	}
+	
+	final static int LOGIN = 0;
+	final static int LIST = 1;
+	final static int MUSIC = 2;
+	final static int UPLOAD = 3;
+	
 	private ServerSocket server;
 	private Socket socket;
+	private BufferedReader in;
+	private PrintWriter out;
+	private int port;
+	
+	private MemberManager memM;
+	private MusicManager musM;
 	//private DatagramSocket ds;
 	
-	public NetworkManager()
+	public NetworkManager(Socket socket)
 	{
+		port = 20000;
+		this.socket = socket;
+		this.setDaemon(true);
+		this.start();
+		
+		memM = new MemberManager();
 		try 
 		{
 			server = new ServerSocket(20000);
 			socket = server.accept();
-			//ds = new DatagramSocket(20000);
+
+			in = new BufferedReader(
+						new InputStreamReader(
+							socket.getInputStream()));
+
+			out = new PrintWriter(
+						new BufferedWriter(
+							new OutputStreamWriter(
+									socket.getOutputStream())));
+			
+			// ds = new DatagramSocket(20000);
 		}
 		catch (IOException e)
 		{
@@ -38,15 +71,73 @@ public class NetworkManager {
 		}
 	}
 	
-	public void receiver()
-	{
-		
+	public void run() {
+		while (flag) {
+			int state;
+			String id = null;
+			String musicTitle = null;
+			try {
+				state = in.read();
+				switch (state) {
+				case LOGIN:
+					id = in.readLine();
+					System.out.println("client : " + id);
+					String pw = in.readLine();
+					System.out.println("client : " + pw);
+
+					String result = "로그인 실패";
+					if (memM.login(id, pw)) {
+						result = "로그인 성공";
+						System.out.println(id + " : 로그인 성공");
+					}
+					out.println(result);
+					out.flush();
+					break;
+
+				case LIST:
+					id = in.readLine();
+					System.out.println(id + " 리스트 요청");
+					listSender(id);
+					break;
+
+				case MUSIC:
+					id = in.readLine();
+					System.out.println(id + " 음악 파일 요청");
+					musicTitle = in.readLine();
+					musicSender(id, musicTitle);
+					break;
+
+				case UPLOAD:
+					id = in.readLine();
+					System.out.println(id + " 음악 파일 업로드");
+					musicTitle = in.readLine();
+					musicReceiver(musicTitle);
+					break;
+
+				default:
+					id = in.readLine();
+					System.out.println(id + ": 잘못된 요청");
+					break;
+				}
+			} catch (IOException e) {
+				kill();
+			}
+			
+			try {
+				socket.close();
+				server.close();
+			} catch (IOException e) {
+				System.out.println("socket/server close error");
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	public boolean listSender(List<String> musics) 
+	public boolean listSender(String id) 
 	{
+		List<String> musics = musM.readMusicList(id);
 		try (ObjectOutputStream out = new ObjectOutputStream(
-				socket.getOutputStream());) 
+															socket.getOutputStream());) 
 		{
 			out.writeObject(musics);
 			out.flush();
@@ -59,29 +150,83 @@ public class NetworkManager {
 		return true;
 	} 
 	
-	public boolean musicReceiver() {
-		try {
-			DatagramSocket socket = new DatagramSocket(20000);
-
-			File file = null;
-			DataOutputStream dos = null;
-
-			DatagramPacket dp = new DatagramPacket(new byte[1024], 1024);
-			socket.receive(dp);
-			String str = new String(dp.getData()).trim();
-			file = new File(str);
-			dos = new DataOutputStream(
-						new BufferedOutputStream(
-							new FileOutputStream(file)));
-
-			dos.write(str.getBytes(), 0, str.getBytes().length);
-
-			dos.close();
-			return true;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
+	public boolean musicReceiver(String music) {
+		String filename = music;
+		 
+        long fileSize;
+        long totalReadBytes = 0;
+         
+        byte[] buffer = new byte[1024];
+        try {
+            int nReadSize = 0;
+            System.out.println("전송 대기");
+              
+            DatagramSocket ds = new DatagramSocket(port);
+            FileOutputStream fos = null;       
+            fos = new FileOutputStream(filename);
+            DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
+            ds.receive(dp);
+            String str = new String(dp.getData()).trim();
+             
+            if (str.equals("start")){
+                System.out.println(str);
+                dp = new DatagramPacket(buffer, buffer.length);
+                ds.receive(dp);
+                str = new String(dp.getData()).trim();
+                fileSize = Long.parseLong(str);
+                
+                while (true) {
+                    ds.receive(dp);
+                    str = new String(dp.getData()).trim();
+                    nReadSize = dp.getLength();
+                    fos.write(dp.getData(), 0, nReadSize);
+                    totalReadBytes+=nReadSize;
+                    System.out.println("In progress: " + totalReadBytes + "/"
+                            + fileSize + " Byte(s) ("
+                            + (totalReadBytes * 100 / fileSize) + " %)");
+                    if(totalReadBytes>=fileSize)
+                        break;
+                }
+                System.out.println("File transfer completed");
+                fos.close();
+                ds.close();
+                return true;
+            }
+            else{
+                System.out.println("Start Error");
+                fos.close();
+                ds.close();
+                return false;
+            }
+        } 
+        catch (Exception e)
+        {
+        	System.out.println("music receive error");
+        }
+        System.out.println("Process Close");
+        return false;
+    }
+		
+//		try  
+//		{
+//			DatagramSocket socket = new DatagramSocket(20000);
+//
+//			DatagramPacket dp = new DatagramPacket(new byte[1024], 1024);
+//			socket.receive(dp);
+//			String str = new String(dp.getData()).trim();
+//			File file = new File(str);
+//			DataOutputStream dos = new DataOutputStream(
+//													new BufferedOutputStream(
+//													new FileOutputStream(file)));
+//
+//			dos.write(str.getBytes(), 0, str.getBytes().length);
+//
+//			dos.close();
+//			return true;
+//		} catch (Exception e) {
+//			System.out.println(e.getMessage());
+//			return false;
+//		}
 
 //		try(DataInputStream in = new DataInputStream(
 //													new BufferedInputStream(
@@ -109,51 +254,56 @@ public class NetworkManager {
 //			return false;
 //		}
 //		return true;
-	}
+//	}
 	
-	public boolean musicSender()
+	public boolean musicSender(String id,String musicTitle)
 	{
-		Scanner in = new Scanner(System.in);
-		InetAddress inet;
-		DatagramSocket ds;
-		int port = 20000;
-		try 
-		{
+		File file = new File(musicTitle);
+		DatagramSocket ds = null;
+		InetAddress inet = null;
+		
+		if (!file.exists()) {
+			System.out.println("File not exist");
+			return false;
+		}
+		long fileSize = file.length();
+		long totalReadBytes = 0;
+
+		try {
 			inet = InetAddress.getByName("192.168.0.132");
-			try 
-			{
-				ds = new DatagramSocket();
+			ds = new DatagramSocket();
+			String str = "start";
+			DatagramPacket dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
+			ds.send(dp);
+			FileInputStream fis = new FileInputStream(file);
+			byte[] buffer = new byte[1024];
 
-				String str = "UDP 테스트";
-				byte[] b = str.getBytes();
-				DatagramPacket dp = new DatagramPacket(b, b.length, inet, port);
-				System.out.println("데이터 준비 완료");
+			str = String.valueOf(fileSize);
+			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
+			ds.send(dp);
 
-				try 
-				{
-					ds.send(dp);
-				}
-				catch (IOException e) 
-				{
-					System.err.println("send error");
-					return false;
-				}
-				System.out.println("전송 완료");
+			while (true) {
+				int readBytes = fis.read(buffer, 0, buffer.length);
+				if (readBytes == -1)
+					break;
+				dp = new DatagramPacket(buffer, readBytes, inet, port);
+				ds.send(dp);
+				totalReadBytes += readBytes;
+				System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
+						+ (totalReadBytes * 100 / fileSize) + " %)");
 
-				ds.close();
-				System.out.println("전송 도구 회수 완료");
-			} 
-			catch (SocketException e1) 
-			{
-				System.err.println("packet error");
-				return false;
 			}
-			System.out.println("전송 준비 완료");
+			str = "end";
+			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
+			ds.send(dp);
+			System.out.println("음악 전송 완료");
+			fis.close();
+			ds.close();
 			return true;
 		} 
-		catch (UnknownHostException e) 
+		catch (Exception e) 
 		{
-			System.err.println("Inet error");
+			System.out.println("음악 전송 실패");
 			return false;
 		}
 	}

@@ -4,13 +4,15 @@ import java.io.*;
 import java.util.*;
 
 public class MemberManager {
-	private static List<Member> clientList;
+	//private static List<Member> clientList = new ArrayList<>();
+	private Map<String,String> clientList = new HashMap<>();
 	private static MusicManager musicManager;
 	private static File memberDB;
 
 	public void InitList()
 	{
-		clientList = new ArrayList<>();
+		//clientList = new ArrayList<>();
+		//clientList = new HashMap<>();
 		updateMemberList();
 	}
 	
@@ -25,7 +27,7 @@ public class MemberManager {
 															new BufferedInputStream(
 															new FileInputStream(memberDB)));)
 		{
-			clientList = (List<Member>) obj.readObject();
+			clientList = (Map<String, String>) obj.readObject();
 		} 
 		catch (Exception e) 
 		{
@@ -50,25 +52,28 @@ public class MemberManager {
 
 	public boolean login(String id, String pw) 
 	{
-		for (Member m : clientList)
-			if (m.getId().equals(id) && m.getPassword().equals(pw))
+		//for (Member m : clientList)
+		if (clientList.get(id) == pw)
 				return true;
 		return false;
 	}
 
 	public boolean memberAccept(String id, String pw)
 	{
-		if(clientList.contains(id))
+		if(clientList.containsKey(id))
 			return false;
-		Member newMember = new Member(id, pw);
+		//Member newMember = new Member(id, pw);
 		musicManager.createMusicList(id);
-		clientList.add(newMember);
+		clientList.put(id, pw);//(newMember);
 		updateMemberList();
 		return true;
 	}
 	
 	public boolean memberDrop(String id)
 	{
-		return true;
+		if(clientList.remove(id) != null)
+			return true;
+		else
+			return false;
 	}
 }
