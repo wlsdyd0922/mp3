@@ -26,10 +26,15 @@ public class NetworkManager extends Thread{
 		remove(this);//나를 지워라
 	}
 	
-	final static int LOGIN = 0;
-	final static int LIST = 1;
-	final static int MUSIC = 2;
-	final static int UPLOAD = 3;
+	final static int LOGIN = 0;					//로그인 요청
+	final static int JOIN = 1;						//회원 가입
+	final static int LIST = 2;						//로그인 성공 후 리스트 요청
+	final static int MUSIC = 3;					//개인 리스트 요청
+	final static int DROP = 4;					//탈퇴
+	final static int LOGOUT = 5;				//로그아웃
+	final static int TOTAL_LIST = 6;		//서버 전체 음악 리스트
+//	final static int UPLOAD = 6;				//음악 업로드
+//	final static int MUSIC_DEL = 7;			//음악 삭제
 	
 	private ServerSocket server;
 	private Socket socket;
@@ -75,14 +80,26 @@ public class NetworkManager extends Thread{
 		while (flag) {
 			int state;
 			String id = null;
+			String pw = null;
+			String email = null;
 			String musicTitle = null;
 			try {
 				state = in.read();
 				switch (state) {
+				case JOIN : 
+					id = in.readLine();
+					System.out.println("client id : " + id);
+					pw = in.readLine();
+					System.out.println("client pw : " + pw);
+					email = in.readLine();
+					System.out.println("client email : " + email);
+					/*boolean r = */memM.memberAccept(id, pw, email);
+					break;
+					
 				case LOGIN:
 					id = in.readLine();
 					System.out.println("client : " + id);
-					String pw = in.readLine();
+					pw = in.readLine();
 					System.out.println("client : " + pw);
 
 					String result = "로그인 실패";
@@ -96,8 +113,14 @@ public class NetworkManager extends Thread{
 
 				case LIST:
 					id = in.readLine();
-					System.out.println(id + " 리스트 요청");
+					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
+					break;
+					
+				case TOTAL_LIST:
+					id = in.readLine();
+					System.out.println(id + " 전체 리스트 요청");
+					listSender(null);
 					break;
 
 				case MUSIC:
@@ -107,26 +130,45 @@ public class NetworkManager extends Thread{
 					musicSender(id, musicTitle);
 					break;
 
-				case UPLOAD:
-					id = in.readLine();
-					System.out.println(id + " 음악 파일 업로드");
-					musicTitle = in.readLine();
-					musicReceiver(musicTitle);
-					break;
+//				case UPLOAD:
+//					id = in.readLine();
+//					System.out.println(id + " 음악 파일 업로드");
+//					musicTitle = in.readLine();
+//					musicReceiver(id, musicTitle);
+//					break;
 
+				case LOGOUT : 
+					id = in.readLine();
+					System.out.println(id + " 로그아웃");
+					kill();
+					break;
+					
+				case DROP:
+					id = in.readLine();
+					System.out.println(id + " 탈퇴");
+					boolean rD = memM.memberDrop(id);
+					if(rD)
+						kill();
+					break;
+					
 				default:
 					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
 					break;
 				}
-			} catch (IOException e) {
+			} 
+			catch (IOException e) 
+			{
 				kill();
 			}
 			
-			try {
+			try
+			{
 				socket.close();
 				server.close();
-			} catch (IOException e) {
+			} 
+			catch (IOException e)
+			{
 				System.out.println("socket/server close error");
 				e.printStackTrace();
 			}
@@ -135,7 +177,11 @@ public class NetworkManager extends Thread{
 	
 	public boolean listSender(String id) 
 	{
-		List<String> musics = musM.readMusicList(id);
+		List<String> musics = null;
+		if(id != null)
+			musics = musM.readMusicList(id);
+		else
+			musics = musM.loadServerList();
 		try (ObjectOutputStream out = new ObjectOutputStream(
 															socket.getOutputStream());) 
 		{
@@ -150,62 +196,64 @@ public class NetworkManager extends Thread{
 		return true;
 	} 
 	
-	public boolean musicReceiver(String music) {
-		String filename = music;
-		 
-        long fileSize;
-        long totalReadBytes = 0;
-         
-        byte[] buffer = new byte[1024];
-        try {
-            int nReadSize = 0;
-            System.out.println("전송 대기");
-              
-            DatagramSocket ds = new DatagramSocket(port);
-            FileOutputStream fos = null;       
-            fos = new FileOutputStream(filename);
-            DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
-            ds.receive(dp);
-            String str = new String(dp.getData()).trim();
-             
-            if (str.equals("start")){
-                System.out.println(str);
-                dp = new DatagramPacket(buffer, buffer.length);
-                ds.receive(dp);
-                str = new String(dp.getData()).trim();
-                fileSize = Long.parseLong(str);
-                
-                while (true) {
-                    ds.receive(dp);
-                    str = new String(dp.getData()).trim();
-                    nReadSize = dp.getLength();
-                    fos.write(dp.getData(), 0, nReadSize);
-                    totalReadBytes+=nReadSize;
-                    System.out.println("In progress: " + totalReadBytes + "/"
-                            + fileSize + " Byte(s) ("
-                            + (totalReadBytes * 100 / fileSize) + " %)");
-                    if(totalReadBytes>=fileSize)
-                        break;
-                }
-                System.out.println("File transfer completed");
-                fos.close();
-                ds.close();
-                return true;
-            }
-            else{
-                System.out.println("Start Error");
-                fos.close();
-                ds.close();
-                return false;
-            }
-        } 
-        catch (Exception e)
-        {
-        	System.out.println("music receive error");
-        }
-        System.out.println("Process Close");
-        return false;
-    }
+//	public boolean musicReceiver(String id, String music) {
+//		String filename = music;
+//		 
+//        long fileSize;
+//        long totalReadBytes = 0;
+//         
+//        byte[] buffer = new byte[1024];
+//        try {
+//            int nReadSize = 0;
+//            System.out.println("전송 대기");
+//              
+//            DatagramSocket ds = new DatagramSocket(port);
+//            FileOutputStream fos = null;       
+//            fos = new FileOutputStream(filename);
+//            DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
+//            ds.receive(dp);
+//            String str = new String(dp.getData()).trim();
+//             
+//            if (str.equals("start")){
+//                System.out.println(str);
+//                dp = new DatagramPacket(buffer, buffer.length);
+//                ds.receive(dp);
+//                str = new String(dp.getData()).trim();
+//                fileSize = Long.parseLong(str);
+//                
+//                while (true) {
+//                    ds.receive(dp);
+//                    str = new String(dp.getData()).trim();
+//                    nReadSize = dp.getLength();
+//                    fos.write(dp.getData(), 0, nReadSize);
+//                    totalReadBytes+=nReadSize;
+//                    System.out.println("In progress: " + totalReadBytes + "/"
+//                            + fileSize + " Byte(s) ("
+//                            + (totalReadBytes * 100 / fileSize) + " %)");
+//                    if(totalReadBytes>=fileSize)
+//                        break;
+//                }
+//                System.out.println("File transfer completed");
+//                fos.close();
+//                ds.close();
+//                
+//                musM.addMusic(id, music);
+//                return true;
+//            }
+//            else{
+//                System.out.println("Start Error");
+//                fos.close();
+//                ds.close();
+//                return false;
+//            }
+//        } 
+//        catch (Exception e)
+//        {
+//        	System.out.println("music receive error");
+//        }
+//        System.out.println("Process Close");
+//        return false;
+//    }
 		
 //		try  
 //		{

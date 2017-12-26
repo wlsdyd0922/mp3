@@ -5,7 +5,7 @@ import java.util.*;
 
 public class MemberManager {
 	//private static List<Member> clientList = new ArrayList<>();
-	private Map<String,String> clientList = new HashMap<>();
+	private Map<String,Member> clientList = new HashMap<>();
 	private static MusicManager musicManager;
 	private static File memberDB;
 
@@ -27,7 +27,7 @@ public class MemberManager {
 															new BufferedInputStream(
 															new FileInputStream(memberDB)));)
 		{
-			clientList = (Map<String, String>) obj.readObject();
+			clientList = (Map<String, Member>) obj.readObject();
 		} 
 		catch (Exception e) 
 		{
@@ -53,18 +53,18 @@ public class MemberManager {
 	public boolean login(String id, String pw) 
 	{
 		//for (Member m : clientList)
-		if (clientList.get(id) == pw)
+		if (clientList.get(id).getPassword() == pw)
 				return true;
 		return false;
 	}
 
-	public boolean memberAccept(String id, String pw)
+	public boolean memberAccept(String id, String pw, String email)
 	{
 		if(clientList.containsKey(id))
 			return false;
 		//Member newMember = new Member(id, pw);
 		musicManager.createMusicList(id);
-		clientList.put(id, pw);//(newMember);
+		clientList.put(id, new Member(id,pw,email));//(newMember);
 		updateMemberList();
 		return true;
 	}
@@ -72,7 +72,10 @@ public class MemberManager {
 	public boolean memberDrop(String id)
 	{
 		if(clientList.remove(id) != null)
+		{
+			musicManager.deleteMusicList(id);
 			return true;
+		}
 		else
 			return false;
 	}
