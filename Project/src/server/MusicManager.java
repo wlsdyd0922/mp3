@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicManager /*extends Thread */{
+public class MusicManager /*extends Thread */{ 
 	private static List<String> list;
 	private static File musicList;
 	MusicManager() 

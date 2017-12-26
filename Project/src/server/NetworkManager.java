@@ -36,7 +36,7 @@ public class NetworkManager extends Thread{
 //	final static int UPLOAD = 6;				//À½¾Ç ¾÷·Îµå
 //	final static int MUSIC_DEL = 7;			//À½¾Ç »èÁ¦
 	
-	private ServerSocket server;
+	private ServerSocket server; 
 	private Socket socket;
 	//private BufferedReader in;
 	ObjectInputStream in; 

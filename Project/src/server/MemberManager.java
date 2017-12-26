@@ -60,7 +60,7 @@ public class MemberManager {
 		return true;
 	}
 
-	public boolean login(String id, String pw) 
+	public boolean login(String id, String pw)  
 	{
 		//for (Member m : clientList)
 		if (clientList.get(id).getPassword() == pw)
