@@ -97,6 +97,7 @@ public class NetworkManager extends Thread{
 				state = in.read();
 				switch (state) {
 				case JOIN : 
+					System.out.println(socket.toString() + " 가입 요청");
 					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println("client id : " + id);
@@ -107,9 +108,10 @@ public class NetworkManager extends Thread{
 					email = in.readLine();
 					System.out.println("client email : " + email);
 					boolean joinResult = memM.memberAccept(id, pw, email);
-					out.println(joinResult);
+					out.print(joinResult);
 					out.flush();
 					memM.memberDisplay();
+					kill();
 					break;
 					
 				case LOGIN:
@@ -122,7 +124,7 @@ public class NetworkManager extends Thread{
 
 					boolean loginResult  = memM.login(id, pw);
 					
-					out.println(loginResult);
+					out.print(loginResult);
 					out.flush();
 					break;
 
@@ -218,114 +220,6 @@ public class NetworkManager extends Thread{
 		}
 		return true;
 	} 
-	
-//	public boolean musicReceiver(String id, String music) {
-//		String filename = music;
-//		 
-//        long fileSize;
-//        long totalReadBytes = 0;
-//         
-//        byte[] buffer = new byte[1024];
-//        try {
-//            int nReadSize = 0;
-//            System.out.println("전송 대기");
-//              
-//            DatagramSocket ds = new DatagramSocket(port);
-//            FileOutputStream fos = null;       
-//            fos = new FileOutputStream(filename);
-//            DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
-//            ds.receive(dp);
-//            String str = new String(dp.getData()).trim();
-//             
-//            if (str.equals("start")){
-//                System.out.println(str);
-//                dp = new DatagramPacket(buffer, buffer.length);
-//                ds.receive(dp);
-//                str = new String(dp.getData()).trim();
-//                fileSize = Long.parseLong(str);
-//                
-//                while (true) {
-//                    ds.receive(dp);
-//                    str = new String(dp.getData()).trim();
-//                    nReadSize = dp.getLength();
-//                    fos.write(dp.getData(), 0, nReadSize);
-//                    totalReadBytes+=nReadSize;
-//                    System.out.println("In progress: " + totalReadBytes + "/"
-//                            + fileSize + " Byte(s) ("
-//                            + (totalReadBytes * 100 / fileSize) + " %)");
-//                    if(totalReadBytes>=fileSize)
-//                        break;
-//                }
-//                System.out.println("File transfer completed");
-//                fos.close();
-//                ds.close();
-//                
-//                musM.addMusic(id, music);
-//                return true;
-//            }
-//            else{
-//                System.out.println("Start Error");
-//                fos.close();
-//                ds.close();
-//                return false;
-//            }
-//        } 
-//        catch (Exception e)
-//        {
-//        	System.out.println("music receive error");
-//        }
-//        System.out.println("Process Close");
-//        return false;
-//    }
-		
-//		try  
-//		{
-//			DatagramSocket socket = new DatagramSocket(20000);
-//
-//			DatagramPacket dp = new DatagramPacket(new byte[1024], 1024);
-//			socket.receive(dp);
-//			String str = new String(dp.getData()).trim();
-//			File file = new File(str);
-//			DataOutputStream dos = new DataOutputStream(
-//													new BufferedOutputStream(
-//													new FileOutputStream(file)));
-//
-//			dos.write(str.getBytes(), 0, str.getBytes().length);
-//
-//			dos.close();
-//			return true;
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//			return false;
-//		}
-
-//		try(DataInputStream in = new DataInputStream(
-//													new BufferedInputStream(
-//													  socket.getInputStream()));)
-//		{
-//			String name = in.readUTF();
-//			
-//			File target = new File("musics", name);
-//			FileOutputStream out = new FileOutputStream(target);
-//			
-//			Long totalSize = in.readLong();
-//			System.out.println("mp3파일 전송 받음 : " + totalSize + "byte");
-//			
-//			byte[] buffer = new byte[1024];
-//			while(true)
-//			{
-//				int size = in.read(buffer);
-//				if(size==-1)break;
-//				out.write(buffer,0,size);
-//			}
-//		} 
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//			return false;
-//		}
-//		return true;
-//	}
 	
 	public boolean musicSender(String id,String musicTitle)
 	{
