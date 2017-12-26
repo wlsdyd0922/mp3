@@ -18,6 +18,7 @@ class MainUIwin extends JFrame {
 	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", "가사", "≡"};
 	private JButton[] bt = new JButton[8];
 	private JButton bt1 = new JButton("로그인");
+	private JButton bt2 = new JButton("회원가입");
 	
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
@@ -28,16 +29,24 @@ class MainUIwin extends JFrame {
 	private JFrame playList = null;
 	private JFrame lyric = null;
 	private LoginDialog login = new LoginDialog(this);
+	private SignUpDialog signup = new SignUpDialog(this);
 	
 	private void event() {
 		ActionListener logIn = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
 				login.setVisible(true);
 			}
 		};
 		bt1.addActionListener(logIn);
+		
+		ActionListener signUp = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				signup.setVisible(true);
+			}
+		};
+		bt2.addActionListener(signUp);
 		
 		ActionListener fileOpen = new ActionListener() {
 
@@ -104,8 +113,8 @@ class MainUIwin extends JFrame {
 		
 		bg.add(titleLine);
 		titleLine.add(la1);
-		
 		titleLine.add(bt1);
+		titleLine.add(bt2);
 		
 		bg.add(la2);
 		bg.add(buttonline);
@@ -117,6 +126,7 @@ class MainUIwin extends JFrame {
 			bt[i].setBackground(Color.WHITE);
 		}
 		bt1.setBackground(Color.white);
+		bt2.setBackground(Color.white);
 
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
@@ -128,7 +138,8 @@ class MainUIwin extends JFrame {
 		bt[7].setBounds(515, 60, 60, 40);
 		bt[7].setFont(new Font("굴림", Font.PLAIN, 30));
 		la1.setBounds(10,10,400 ,20);
-		bt1.setBounds(500,10,80,40);
+		bt1.setBounds(495,10,80,40);
+		bt2.setBounds(490,60,90,40);
 	}
 
 	private void menu() {
