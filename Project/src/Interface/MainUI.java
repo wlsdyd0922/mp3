@@ -11,10 +11,14 @@ class MainUIwin extends JFrame {
 	private JFileChooser chooser = new JFileChooser();
 	private JPanel bg = new JPanel(new GridLayout(3, 1));
 	private JPanel buttonline = new JPanel(null);
-	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.CENTER);
+	private JPanel titleLine = new JPanel(null);
+	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
-	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", "가사", "≡" };
+	
+	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", "가사", "≡"};
 	private JButton[] bt = new JButton[8];
+	private JButton bt1 = new JButton("로그인");
+	
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
 	private JMenuItem open = new JMenuItem("Open");
@@ -23,8 +27,18 @@ class MainUIwin extends JFrame {
 	protected static int y;
 	private JFrame playList = null;
 	private JFrame lyric = null;
-
+	private LoginDialog login = new LoginDialog(this);
+	
 	private void event() {
+		ActionListener logIn = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				login.setVisible(true);
+			}
+		};
+		bt1.addActionListener(logIn);
+		
 		ActionListener fileOpen = new ActionListener() {
 
 			@Override
@@ -66,6 +80,8 @@ class MainUIwin extends JFrame {
 		addComponentListener(cl);
 	}
 
+	
+	
 	private void allClose() {
 		WindowListener win = new WindowAdapter() {
 			@Override
@@ -77,11 +93,30 @@ class MainUIwin extends JFrame {
 	}
 
 	private void design() {
+		setContentPane(bg);
+		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
+		buttonline.setBorder(BorderFactory.createLineBorder(Color.black, 3));
+		titleLine.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+		
+		bg.setBackground(Color.WHITE);
+		buttonline.setBackground(Color.white);
+		titleLine.setBackground(Color.white);
+		
+		bg.add(titleLine);
+		titleLine.add(la1);
+		
+		titleLine.add(bt1);
+		
+		bg.add(la2);
+		bg.add(buttonline);
+		
+		
 		for (int i = 0; i < bt.length; i++) {
 			bt[i] = new JButton(str[i]);
 			buttonline.add(bt[i]);
 			bt[i].setBackground(Color.WHITE);
 		}
+		bt1.setBackground(Color.white);
 
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
@@ -92,16 +127,8 @@ class MainUIwin extends JFrame {
 		bt[6].setBounds(10, 60, 60, 40);
 		bt[7].setBounds(515, 60, 60, 40);
 		bt[7].setFont(new Font("굴림", Font.PLAIN, 30));
-		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
-		Border btBorder = BorderFactory.createLineBorder(Color.black, 3);
-		setContentPane(bg);
-		bg.setBorder(mainBorder);
-		bg.setBackground(Color.WHITE);
-		buttonline.setBackground(Color.white);
-		buttonline.setBorder(btBorder);
-		bg.add(la1);
-		bg.add(la2);
-		bg.add(buttonline);
+		la1.setBounds(10,10,400 ,20);
+		bt1.setBounds(500,10,80,40);
 	}
 
 	private void menu() {
@@ -117,7 +144,6 @@ class MainUIwin extends JFrame {
 		setTitle("Playing");
 		setSize(615, 408);
 		setLocation(300, 100);
-		setAlwaysOnTop(true);
 		setVisible(true);
 		setResizable(false);
 		playList = new Playlist();

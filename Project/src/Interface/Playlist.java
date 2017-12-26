@@ -32,6 +32,7 @@ public class Playlist extends JFrame{
 			}
 		};
 		addWindowListener(win);
+		
 	}
 
 	private void design() {
@@ -50,7 +51,6 @@ public class Playlist extends JFrame{
 		setTitle("Play List");
 		setSize(300, 600);
 		setLocation(900, 100);
-		setAlwaysOnTop(true);
 		setVisible(true);
 	}
 }
