@@ -5,52 +5,65 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import javafx.stage.FileChooser;
+
 class MainUIwin extends JFrame {
+	private JFileChooser chooser = new JFileChooser();
 	private JPanel bg = new JPanel(new GridLayout(3, 1));
-	private JPanel buttonline = new JPanel(new FlowLayout());
+	private JPanel buttonline = new JPanel(null);
 	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.CENTER);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
-	private JLabel la3 = new JLabel("버튼모음", JLabel.CENTER);
-	private JButton bt = new JButton("음악 목록");
-	private JButton bt4 = new JButton("가사");
-	private JButton bt1 = new JButton("prev");
-	private JButton bt2 = new JButton("play");
-	private JButton bt3 = new JButton("next");
-	protected static boolean listflag = true;
-	protected static boolean lyricflag = true;
+	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", "가사", "≡" };
+	private JButton[] bt = new JButton[8];
+	private JMenuBar bar = new JMenuBar();
+	private JMenu menu = new JMenu("File");
+	private JMenuItem open = new JMenuItem("Open");
+
 	protected static int x;
 	protected static int y;
+	private JFrame playList = null;
+	private JFrame lyric = null;
 
 	private void event() {
-		ActionListener listClose = new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (listflag == false) {
-					JFrame f1 = new Playlist();
-					listflag = true;
-				}
+		ActionListener fileOpen = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chooser.setMultiSelectionEnabled(true);
+				chooser.showOpenDialog(bg);
 			}
 		};
-		bt.addActionListener(listClose);
-		ActionListener lyricClose = new ActionListener() {
+		open.addActionListener(fileOpen);
+
+		ActionListener listBt = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (lyricflag == false) {
-					JFrame f2 = new Lyric();
-					lyricflag = true;
-				}
+				playList.setLocation(getX() + 600, getY());
+				playList.setVisible(true);
 			}
 		};
-		bt4.addActionListener(lyricClose);
+
+		bt[7].addActionListener(listBt);
+
+		ActionListener lyricbt = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				lyric.setLocation(getX(), getY() + 400);
+				lyric.setVisible(true);
+			}
+		};
+		bt[6].addActionListener(lyricbt);
 
 		ComponentListener cl = new ComponentAdapter() {
 			@Override
 			public void componentMoved(ComponentEvent arg0) {
-				
-				x = getX();
-				y = getY();
+				if (playList != null) {
+					playList.setLocation(getX() + 600, getY());
+				}
+				if (lyric != null) {
+					lyric.setLocation(getX(), getY() + 400);
+				}
 			}
 		};
 		addComponentListener(cl);
-
 	}
 
 	private void allClose() {
@@ -64,26 +77,37 @@ class MainUIwin extends JFrame {
 	}
 
 	private void design() {
+		for (int i = 0; i < bt.length; i++) {
+			bt[i] = new JButton(str[i]);
+			buttonline.add(bt[i]);
+			bt[i].setBackground(Color.WHITE);
+		}
+
+		bt[0].setBounds(10, 10, 80, 40);
+		bt[1].setBounds(110, 10, 80, 40);
+		bt[2].setBounds(210, 10, 80, 40);
+		bt[3].setBounds(355, 10, 60, 40);
+		bt[4].setBounds(420, 10, 90, 40);
+		bt[5].setBounds(515, 10, 60, 40);
+		bt[6].setBounds(10, 60, 60, 40);
+		bt[7].setBounds(515, 60, 60, 40);
+		bt[7].setFont(new Font("굴림", Font.PLAIN, 30));
 		Border mainBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어");
-		Border playInfo = BorderFactory.createLineBorder(Color.black, 2);
-		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
-		Border playList = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2),
-				"mp3 Play List");
+		Border btBorder = BorderFactory.createLineBorder(Color.black, 3);
 		setContentPane(bg);
 		bg.setBorder(mainBorder);
 		bg.setBackground(Color.WHITE);
+		buttonline.setBackground(Color.white);
+		buttonline.setBorder(btBorder);
 		bg.add(la1);
 		bg.add(la2);
 		bg.add(buttonline);
-		buttonline.add(bt1);
-		buttonline.add(bt2);
-		buttonline.add(bt3);
-		buttonline.add(bt);
-		buttonline.add(bt4);
 	}
 
 	private void menu() {
-
+		setJMenuBar(bar);
+		bar.add(menu);
+		menu.add(open);
 	}
 
 	public MainUIwin() {
@@ -91,19 +115,19 @@ class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(614, 408);
+		setSize(615, 408);
 		setLocation(300, 100);
 		setAlwaysOnTop(true);
 		setVisible(true);
-		JFrame f1 = new Playlist();
-		JFrame f2 = new Lyric();
+		setResizable(false);
+		playList = new Playlist();
+		lyric = new Lyric();
 		allClose();
 	}
 }
 
 public class MainUI {
 	public static void main(String[] args) {
-		JFrame f = new MainUIwin();
-
+		JFrame mainUi = new MainUIwin();
 	}
 }
