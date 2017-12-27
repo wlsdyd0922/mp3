@@ -12,7 +12,7 @@ public class Search extends JFrame{
 	private String[] servermusic = new String[] {"서버노래1","서버노래2","서버노래3"};
 	private JTextField text = new JTextField();
 	private JButton bt = new JButton("검색");
-	
+	 
 	private void event() {
 		
 		text.addKeyListener(new KeyAdapter() {

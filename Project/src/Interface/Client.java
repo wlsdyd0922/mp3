@@ -11,7 +11,7 @@ public class Client {
 
 	public Client() {
 		try {
-			inet = InetAddress.getByName("localhost");
+			inet  = InetAddress.getByName("localhost");
 			socket = new Socket(inet, 20000);
 			out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

@@ -109,7 +109,7 @@ public class SignUpDialog extends JDialog {
 			emailField.setText("");
 		});
 	}
-
+ 
 	private void SignUp() {
 		String id = nameField.getText();
 		String pw = "";

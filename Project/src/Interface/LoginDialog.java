@@ -35,7 +35,7 @@ public class LoginDialog extends JDialog {
 		GridBagConstraints gbc = new GridBagConstraints();
  
 		gbc.insets = new Insets(4, 4, 4, 4);
- 
+  
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.weightx = 0;

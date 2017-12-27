@@ -23,7 +23,7 @@ class MainUIwin extends JFrame {
 	private JPanel buttonline = new JPanel(null);
 	private JPanel titleLine = new JPanel(null);
 	private JPanel scrollLine = new JPanel(new BorderLayout());
-
+ 
 	private JList<String> musicList = new JList<>();
 	private JScrollPane scroll = new JScrollPane();
 	private String[] str1 = new String[] { "노래1", "노래2", "노래3", "노래4" };
