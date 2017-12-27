@@ -8,24 +8,6 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	
-	private static List<NetworkManager> list = new ArrayList<>();
-	public static void add(NetworkManager c) {
-		list.add(c);
-	}
-	public static void remove(NetworkManager c) {
-		list.remove(c);
-	}
-	
-	public void kill() {
-		try {
-			flag = false;
-			in.close();
-			out.close();
-			socket.close();
-		}catch(Exception e) {	}
-		remove(this);
-	}
-	
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
 	final static int LIST = 2;						//로그인 성공 후 리스트 요청
@@ -36,16 +18,13 @@ public class NetworkManager extends Thread{
 //	final static int UPLOAD = 6;				//음악 업로드
 //	final static int MUSIC_DEL = 7;			//음악 삭제
 	
-	private ServerSocket server; 
 	private Socket socket;
 	private BufferedReader in;
-	//private ObjectInputStream in; 
 	private PrintWriter out;
 	private int port;
 	
 	private MemberManager memM;
 	private MusicManager musM;
-	//private DatagramSocket ds;
 	
 	public NetworkManager(Socket socket)
 	{
@@ -54,13 +33,6 @@ public class NetworkManager extends Thread{
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 		musM = new MusicManager();
-		memM.memberDisplay();
-//			try {
-//				server = new ServerSocket(port);
-//				socket = server.accept();
-//			} catch (IOException e) {
-//				System.out.println("server socket create error");
-//			}
 
 			try {
 			in = new BufferedReader(
@@ -71,144 +43,123 @@ public class NetworkManager extends Thread{
 						new BufferedWriter(
 							new OutputStreamWriter(
 									this.socket.getOutputStream())));
-//
-//				in = new ObjectInputStream(
-//						new BufferedInputStream(
-//								this.socket.getInputStream()));
-//
-//				out = new PrintWriter(
-//							new BufferedWriter(
-//								new OutputStreamWriter(
-//										this.socket.getOutputStream())));
+
 			this.setDaemon(true);
 			this.start();
 			} catch (IOException e) {
-				e.getStackTrace();
-				System.out.println("in/out stream error");
+				System.err.println("in/out stream error");
 			}
 	}
 	
-	public void run() {
+	public void run() 
+	{
 		try {
-		while (flag) {
-			int state;
-			String id = null;
-			String pw = null;
-			String email = null;
-			String musicTitle = null;
-				state = in.read();
+			while (flag) {
+				int state;
+				String id = null;
+				String pw = null;
+				String email = null;
+				String musicTitle = null;
+				state = Integer.parseInt(in.readLine());
 				switch (state) {
-				case JOIN : 
+				case JOIN:
 					System.out.println(socket.toString() + " 가입 요청");
-					//id = (String)in.readObject();
 					id = in.readLine();
-					System.out.println("client id : " + id);
-					//pw = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " id : " + id);
 					pw = in.readLine();
-					System.out.println("client pw : " + pw);
-					//email = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " pw : " + pw);
 					email = in.readLine();
-					System.out.println("client email : " + email);
+					System.out.println(socket.getInetAddress() + " email : " + email);
+
 					boolean joinResult = memM.memberAccept(id, pw, email);
-					out.print(joinResult);
+					out.println(joinResult);
 					out.flush();
+
 					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
 					memM.memberDisplay();
-					kill();
+					socket.close();
 					break;
-					
+
 				case LOGIN:
-					//id = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " 로그인 시도");
+
 					id = in.readLine();
-					System.out.println("client : " + id);
-					//pw = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " : id " + id);
 					pw = in.readLine();
-					System.out.println("client : " + pw);
- 
-					boolean loginResult  = memM.login(id, pw);
-					
-					out.print(loginResult);
+					System.out.println(socket.getInetAddress() + " : pw " + pw);
+
+					boolean loginResult = memM.login(id, pw);
+					out.println(loginResult);
 					out.flush();
+					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
+					//listSender(id);
+					//socket.close();
 					break;
 
 				case LIST:
-					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					break;
-					
+
 				case TOTAL_LIST:
-					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println(id + " 전체 리스트 요청");
-					listSender(null);
+					listSender("server");
 					break;
 
 				case MUSIC:
-					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println(id + " 음악 파일 요청");
-					//musicTitle = (String)in.readObject();
 					musicTitle = in.readLine();
 					musicSender(id, musicTitle);
 					break;
 
-//				case UPLOAD:
-//					id = in.readLine();
-//					System.out.println(id + " 음악 파일 업로드");
-//					musicTitle = in.readLine();
-//					musicReceiver(id, musicTitle);
-//					break;
+				// case UPLOAD:
+				// id = in.readLine();
+				// System.out.println(id + " 음악 파일 업로드");
+				// musicTitle = in.readLine();
+				// musicReceiver(id, musicTitle);
+				// break;
 
-				case LOGOUT : 
-					//id = (String)in.readObject();
+				case LOGOUT:
 					id = in.readLine();
 					System.out.println(id + " 로그아웃");
-					kill();
+					socket.close();
 					break;
-					
+
 				case DROP:
-					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
-					if(dropResult)
-						kill();
+					if (dropResult)
+						socket.close();
 					break;
-					
+
 				default:
-					//id = (String)in.readObject();
 					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
 					break;
 				}
-		}
-		}
-			catch (Exception e) 
-			{
-				kill();
 			}
-			
-//			try
-//			{
-//				socket.close();
-//				server.close();
-//			} 
-//			catch (IOException e)
-//			{
-//				System.out.println("socket/server close error");
-//				e.printStackTrace();
-//			}
 		}
+		catch (Exception e) 
+		{
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 	
 	
 	public boolean listSender(String id) 
 	{
-		System.out.println("list Sender \nid : " + id);
+		System.out.println("list Sender id : " + id);
 		List<String> music = null;
 		
-		if(id != null)
+		if(!id.equals("server"))
 			music = musM.readMusicList(id);
 		else
 			music = musM.loadServerList();
@@ -218,7 +169,7 @@ public class NetworkManager extends Thread{
 		{
 			System.out.println("서버 리스트 전송 : " + music);
 			out.writeObject(music);
-			out.flush();
+			out.close();
 		} 
 		catch (Exception e) 
 		{
@@ -230,7 +181,7 @@ public class NetworkManager extends Thread{
 	
 	public boolean musicSender(String id,String musicTitle)
 	{
-		File file = new File(musicTitle);
+		File file = new File("musics",musicTitle);
 		DatagramSocket ds = null;
 		InetAddress inet = null;
 		

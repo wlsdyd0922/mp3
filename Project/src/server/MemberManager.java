@@ -5,11 +5,17 @@ import java.util.*;
 
 public class MemberManager {
 	private Map<String,Member> clientList = new HashMap<>();
-	private static MusicManager musicManager;
+	private MusicManager musicManager;
+	File memberDB;
 
 	public void InitList()
 	{
-		File memberDB = new File("members", "member.db");
+		memberDB = new File("members", "member.db");
+		if(!memberDB.exists())
+		{
+			updateMemberList();
+			InitList();
+		}
 		readMemberList();
 	}
 	
@@ -19,8 +25,6 @@ public class MemberManager {
 		musicManager = new MusicManager();
 		musicManager.createDirectory();
 		
-		File memberDB = new File("members", "member.db");
-		//if(memberDB.length() == 0)
 		InitList();
 		if(!memberDB.exists())
 		{
@@ -42,7 +46,7 @@ public class MemberManager {
 
 	public boolean updateMemberList()
 	{
-		File memberDB = new File("members", "member.db");
+		//memberDB = new File("members", "member.db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
 																new FileOutputStream(memberDB)));)
@@ -58,7 +62,7 @@ public class MemberManager {
 	
 	public boolean readMemberList()
 	{
-		File memberDB = new File("members", "member.db");
+		//memberDB = new File("members", "member.db");
 		try(ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(
 						new FileInputStream(memberDB)));)
@@ -76,7 +80,7 @@ public class MemberManager {
 	public boolean login(String id, String pw)  
 	{
 		//for (Member m : clientList)
-		if (clientList.get(id).getPassword() == pw)
+		if (clientList.get(id).getPassword().equals(pw))
 				return true;
 		return false;
 	}
@@ -84,7 +88,6 @@ public class MemberManager {
 	public boolean memberAccept(String id, String pw, String email)
 	{
 		readMemberList();
-		musicManager.createDirectory();
 		if(clientList.containsKey(id))
 			return false;
 		//Member newMember = new Member(id, pw);
@@ -106,17 +109,18 @@ public class MemberManager {
 	}
 
 	public void memberDisplay() {
-		File memberDB = new File("members", "member.db");
+		//memberDB = new File("members", "member.db");
 		try (ObjectInputStream obj = new ObjectInputStream(
 															new BufferedInputStream(
 															new FileInputStream(memberDB)));) {
 			clientList = (Map<String, Member>) obj.readObject();
 			
+			System.out.println("--회원 목록--");
 			Iterator<String> it = clientList.keySet().iterator();
 			while(it.hasNext()) 
 			{
 				String n = it.next();
-				System.out.println("회원 id : "+n);
+				System.out.println("id : "+n);
 			}
 		} catch (Exception e) {
 			System.out.println("memberDB read failed");

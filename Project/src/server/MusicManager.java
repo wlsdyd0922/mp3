@@ -6,7 +6,6 @@ import java.util.List;
 
 public class MusicManager /*extends Thread */{ 
 	private static List<String> list;
-	private static File musicList;
 	MusicManager() 
 	{
 	}
@@ -36,9 +35,18 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean createMusicList(String id)
 	{
-		musicList = new File("members",id+".db");
-		if(musicList.exists())
+		File musicList = new File("members",id+".db");
+		if(!musicList.exists())
+		{
+			try {
+				musicList.createNewFile();
+				System.out.println(id+".db »ý¼º");
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
 			return true;
+		}
 		else
 			return false;
 	}
@@ -104,7 +112,7 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean updateMusicList(String id)
 	{
-		musicList = new File("members",id+".db");
+		File musicList = new File("members",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
 															  new FileOutputStream(musicList)));)
@@ -121,7 +129,7 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean deleteMusicList(String id)
 	{
-		musicList = new File("members",id+".db");
+		File musicList = new File("members",id+".db");
 		if(musicList.delete())
 			return true;
 		else
