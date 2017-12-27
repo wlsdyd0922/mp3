@@ -124,7 +124,7 @@ public class NetworkManager extends Thread{
 					//pw = (String)in.readObject();
 					pw = in.readLine();
 					System.out.println("client : " + pw);
-
+ 
 					boolean loginResult  = memM.login(id, pw);
 					
 					out.print(loginResult);

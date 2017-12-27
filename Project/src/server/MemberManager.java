@@ -52,7 +52,7 @@ public class MemberManager {
 		catch (Exception e) {
 			System.out.println("memberDB update failed");
 			return false;
-		}
+		} 
 		return true;
 	}
 	

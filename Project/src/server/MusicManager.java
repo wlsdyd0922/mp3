@@ -100,7 +100,7 @@ public class MusicManager /*extends Thread */{
 	{
 		File target = new File("musics",music);
 		return target;
-	}
+	} 
 	
 	public boolean updateMusicList(String id)
 	{
