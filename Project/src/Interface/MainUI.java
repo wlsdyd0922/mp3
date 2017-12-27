@@ -132,7 +132,6 @@ class MainUIwin extends JFrame {
 		bar.add(menu);
 		bar.add(menu2);
 		menu.add(open);
-		
 	}
 
 	public MainUIwin() {
@@ -142,8 +141,8 @@ class MainUIwin extends JFrame {
 		setTitle("Playing");
 		setSize(615, 408);
 		setLocation(300, 100);
-		setVisible(true);
 		setResizable(false);
+		setVisible(true);
 		playList = new Playlist();
 		lyric = new Lyric();
 		allClose();

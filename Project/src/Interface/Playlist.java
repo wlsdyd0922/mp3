@@ -1,18 +1,9 @@
 package Interface;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 //플레이 리스트
@@ -21,6 +12,8 @@ public class Playlist extends JFrame{
 	private JList<String> musicList = new JList<>(); 
 	private JScrollPane scroll = new JScrollPane();
 	private String[] str = new String[] {"노래1","노래2","노래3","노래4"};
+	private JButton bt = new JButton("검색");
+	private JFrame search= new Search();
 	
 	private void menu() {
 	}
@@ -32,7 +25,9 @@ public class Playlist extends JFrame{
 			}
 		};
 		addWindowListener(win);
-		
+		bt.addActionListener(e->{
+			search.setVisible(true);
+		});
 	}
 
 	private void design() {
@@ -41,13 +36,13 @@ public class Playlist extends JFrame{
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		setContentPane(bg);
 		musicList.setListData(str);
-		bg.add(scroll);
+		bg.add(scroll,BorderLayout.CENTER);
+		bg.add(bt,BorderLayout.SOUTH);
 	}
 	
 	public Playlist() {
 		design();
 		event();
-		menu();
 		setTitle("Play List");
 		setSize(300, 600);
 		setLocation(900, 100);
