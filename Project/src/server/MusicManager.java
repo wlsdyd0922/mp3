@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MusicManager /*extends Thread */{ 
-	private static List<String> list;
+	//private static List<String> list;
 	MusicManager() 
 	{
 	}
@@ -73,14 +73,15 @@ public class MusicManager /*extends Thread */{
 														  new BufferedInputStream(
 														   new FileInputStream(musicList)));)
 		{
-			list = (List<String>) obj.readObject();
+			List<String> list = (List<String>) obj.readObject();
+			return list;
 		} 
 		catch (Exception e)
 		{
 			System.err.println("music list update failed");
 			return null;
 		}
-		return list;
+		
 	}
 	
 //	public boolean addMusic(String id,String music)
@@ -95,7 +96,7 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean deleteMusic(String id, String music)
 	{
-		list = readMusicList(id);
+		List<String> list = readMusicList(id);
 		if(!list.remove(music))
 		{
 			System.err.println("music delete failed");
@@ -112,6 +113,7 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean updateMusicList(String id)
 	{
+		List<String> list = readMusicList(id);
 		File musicList = new File("members",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
@@ -129,9 +131,13 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean addToMusicList(String id, String music)
 	{
-		list.add(music);
-		updateMusicList(id);
-		return true;
+		List<String> list = readMusicList(id);
+		if(!list.add(music))
+		{
+			System.err.println("music delete failed");
+			return false;
+		}
+		return updateMusicList(id);
 	}
 	
 	public boolean deleteMusicList(String id)

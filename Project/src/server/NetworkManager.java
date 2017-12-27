@@ -140,7 +140,6 @@ public class NetworkManager extends Thread{
 					String addmusic = in.readLine();
 					musM.addToMusicList(id, addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
-					
 					break;
 				case MUSIC_DEL:
 					id = in.readLine();
