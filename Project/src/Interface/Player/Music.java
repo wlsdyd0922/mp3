@@ -8,7 +8,7 @@ import javazoom.jl.player.*;
 public class Music {
 
 	public static void main(String[] args) {
-
+ 
 		try {
 			Scanner in = new Scanner(System.in);
 			System.out.print("Mp3 파일 경로 :");
