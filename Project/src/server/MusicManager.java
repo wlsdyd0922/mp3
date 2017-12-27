@@ -127,6 +127,13 @@ public class MusicManager /*extends Thread */{
 		return true;
 	}
 	
+	public boolean addToMusicList(String id, String music)
+	{
+		list.add(music);
+		updateMusicList(id);
+		return true;
+	}
+	
 	public boolean deleteMusicList(String id)
 	{
 		File musicList = new File("members",id+".db");

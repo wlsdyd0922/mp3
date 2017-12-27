@@ -10,13 +10,13 @@ public class NetworkManager extends Thread{
 	
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
-	final static int LIST = 2;						//로그인 성공 후 리스트 요청
-	final static int MUSIC = 3;					//개인 리스트 요청
+	final static int LIST = 2;						//개인 리스트 요청
+	final static int MUSIC = 3;					//음악 파일 다운 요청
 	final static int DROP = 4;					//탈퇴
 	final static int LOGOUT = 5;				//로그아웃
 	final static int TOTAL_LIST = 6;		//서버 전체 음악 리스트
-//	final static int UPLOAD = 6;				//음악 업로드
-//	final static int MUSIC_DEL = 7;			//음악 삭제
+	final static int MUSIC_ADD = 7;		//음악 추가
+	final static int MUSIC_DEL = 8;			//음악 삭제
 	
 	private Socket socket;
 	private BufferedReader in;
@@ -135,7 +135,19 @@ public class NetworkManager extends Thread{
 					if (dropResult)
 						socket.close();
 					break;
-
+				case MUSIC_ADD :
+					id = in.readLine();
+					String addmusic = in.readLine();
+					musM.addToMusicList(id, addmusic);
+					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
+					
+					break;
+				case MUSIC_DEL:
+					id = in.readLine();
+					String delmusic = in.readLine();
+					System.out.println(socket.getInetAddress() + " " + delmusic + "삭제");
+					musM.deleteMusic(id, delmusic);
+					break;
 				default:
 					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
@@ -152,7 +164,6 @@ public class NetworkManager extends Thread{
 			}
 		}
 	}
-	
 	
 	public boolean listSender(String id) 
 	{
@@ -183,7 +194,7 @@ public class NetworkManager extends Thread{
 	{
 		File file = new File("musics",musicTitle);
 		DatagramSocket ds = null;
-		InetAddress inet = null;
+		InetAddress inet = socket.getInetAddress();
 		
 		if (!file.exists()) {
 			System.out.println("File not exist");
@@ -193,7 +204,6 @@ public class NetworkManager extends Thread{
 		long totalReadBytes = 0;
 
 		try {
-			inet = InetAddress.getByName("192.168.0.132");
 			ds = new DatagramSocket();
 			String str = "start";
 			DatagramPacket dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
@@ -212,9 +222,9 @@ public class NetworkManager extends Thread{
 				dp = new DatagramPacket(buffer, readBytes, inet, port);
 				ds.send(dp);
 				totalReadBytes += readBytes;
+				Thread.sleep(1);
 				System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
 						+ (totalReadBytes * 100 / fileSize) + " %)");
-
 			}
 			str = "end";
 			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);

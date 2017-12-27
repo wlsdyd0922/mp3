@@ -3,10 +3,15 @@ package server;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -37,39 +42,91 @@ public class Reference {
 						new OutputStreamWriter(
 								socket.getOutputStream())));
 
-		try (BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						socket.getInputStream()));) 
-		{
-//			while(true)
-//			{
-				int state = LOGIN;
-				out.println(state);
-				out.flush();
-				System.out.println("ID 입력");
-				String id = s.next();
-				out.println(id);
-				out.flush();
-				System.out.println("PW 입력");
-				String pw = s.next();
-				out.println(pw);
-				out.flush();
-//				System.out.println("email 입력");
-//				String email = s.next();
-//				out.println(email);
-//				out.flush();
-				String textFS = in.readLine();
-					System.out.println("server : " + textFS);
-//			}
-		} catch (Exception e) {
-			System.err.println("받기 실패");
-		}
+		int state = MUSIC;
+		out.println(state);
+		out.flush();
+		System.out.println("ID 입력");
+		String id = s.next();
+		out.println(id);
+		out.flush();
+		
+		String music = s.next();
+		out.println(music);
+		out.flush();
+		
+//		System.out.println("PW 입력");
+//		String pw = s.next();
+//		out.println(pw);
+//		out.flush();
+//		
+//		System.out.println("email 입력");
+//		String email = s.next();
+//		out.println(email);
+//		out.flush();
+		
+//		try (BufferedReader in = new BufferedReader(
+//				new InputStreamReader(
+//						socket.getInputStream()));) 
+//		{
+//				String textFS = in.readLine();
+//					System.out.println("server : " + textFS);
+//
+//		} catch (Exception e) {
+//			System.err.println("받기 실패");
+//		}
 
 //		ObjectInputStream in = new ObjectInputStream(
 //												new BufferedInputStream(
 //													socket.getInputStream()));
 //		List<String> list = (ArrayList<String>) in.readObject();
 //		System.out.println("server : " + list.toString());
+		
+		byte[] buffer = new byte[1024];
+		long fileSize;
+        long totalReadBytes = 0;
+
+        try {
+            int nReadSize = 0;
+            System.out.println("Waitng.....");
+              
+            DatagramSocket ds = new DatagramSocket(port);
+            FileOutputStream fos = null;       
+            fos = new FileOutputStream(music);
+            DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
+            ds.receive(dp);
+            String str = new String(dp.getData()).trim();
+             
+            if (str.equals("start")){
+                System.out.println(str);
+                dp = new DatagramPacket(buffer, buffer.length);
+                ds.receive(dp);
+                str = new String(dp.getData()).trim();
+                fileSize = Long.parseLong(str);
+                while (true) {
+                    ds.receive(dp);
+                    str = new String(dp.getData()).trim();
+                    nReadSize = dp.getLength();
+                    fos.write(dp.getData(), 0, nReadSize);
+                    Thread.sleep(1);
+                    totalReadBytes+=nReadSize;
+                    System.out.println("In progress: " + totalReadBytes + "/"
+                            + fileSize + " Byte(s) ("
+                            + (totalReadBytes * 100 / fileSize) + " %)");
+                    if(totalReadBytes>=fileSize)
+                        break;
+                }
+                 
+                System.out.println("File transfer completed");
+                fos.close();
+                ds.close();
+            }
+            else{
+                System.out.println("Start Error");
+                fos.close();
+                ds.close();
+            }
+        } catch (Exception e) {}
+        System.out.println("Process Close");
 		
 		socket.close();
 		System.out.println("connection end");

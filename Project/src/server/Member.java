@@ -8,8 +8,6 @@ public class Member implements Serializable{
 	private String password;
 	private String email;
 
-	//private List<String> musicList = new ArrayList<String>();
-	
 	public Member(String id, String password, String email) {
 		super();
 		this.id = id;
