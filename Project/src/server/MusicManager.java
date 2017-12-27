@@ -26,9 +26,10 @@ public class MusicManager /*extends Thread */{
         file = new File(path);
         if(!file.exists()){
             file.mkdirs();
-            System.out.println("music 叼泛配府 积己");
+            System.out.println("member 叼泛配府 积己");
         }
-        else return false;
+        else 
+        	return false;
         
         return true;
 	}
@@ -45,12 +46,12 @@ public class MusicManager /*extends Thread */{
 	@SuppressWarnings("unchecked")
 	public List<String> loadServerList()
 	{
-		List serverList = new ArrayList<>();
+		System.out.println("load Server List");
+		List<String> serverList = new ArrayList<>();
 		File dir = new File("musics");		
 
 		File[] flist = dir.listFiles();
 		for (File f : flist)
-			//System.out.println(f.getAbsolutePath());
 			serverList.add(f.getName());
 		
 		return serverList;
@@ -58,6 +59,7 @@ public class MusicManager /*extends Thread */{
 	
 	@SuppressWarnings("unchecked")
 	public List<String> readMusicList(String id) {
+		System.out.println("read Music List");
 		File musicList = new File("members",id+".db");
 		try (ObjectInputStream obj = new ObjectInputStream(
 														  new BufferedInputStream(

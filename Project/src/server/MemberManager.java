@@ -4,17 +4,13 @@ import java.io.*;
 import java.util.*;
 
 public class MemberManager {
-	//private static List<Member> clientList = new ArrayList<>();
 	private Map<String,Member> clientList = new HashMap<>();
 	private static MusicManager musicManager;
-	//private static File memberDB;
 
 	public void InitList()
 	{
 		File memberDB = new File("members", "member.db");
-		//clientList = new ArrayList<>();
-		//clientList = new HashMap<>();
-		updateMemberList();
+		readMemberList();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,6 +55,23 @@ public class MemberManager {
 		}
 		return true;
 	}
+	
+	public boolean readMemberList()
+	{
+		File memberDB = new File("members", "member.db");
+		try(ObjectInputStream in = new ObjectInputStream(
+				new BufferedInputStream(
+						new FileInputStream(memberDB)));)
+		{
+			Map<String,Member> list = (Map<String,Member>)in.readObject();
+					return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public boolean login(String id, String pw)  
 	{
@@ -70,6 +83,7 @@ public class MemberManager {
 
 	public boolean memberAccept(String id, String pw, String email)
 	{
+		readMemberList();
 		musicManager.createDirectory();
 		if(clientList.containsKey(id))
 			return false;
@@ -98,7 +112,12 @@ public class MemberManager {
 															new FileInputStream(memberDB)));) {
 			clientList = (Map<String, Member>) obj.readObject();
 			
-			System.out.println(clientList.toString());
+			Iterator<String> it = clientList.keySet().iterator();
+			while(it.hasNext()) 
+			{
+				String n = it.next();
+				System.out.println("È¸¿ø id : "+n);
+			}
 		} catch (Exception e) {
 			System.out.println("memberDB read failed");
 		}

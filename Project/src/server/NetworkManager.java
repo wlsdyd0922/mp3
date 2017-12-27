@@ -53,6 +53,8 @@ public class NetworkManager extends Thread{
 		this.socket = socket;
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
+		musM = new MusicManager();
+		memM.memberDisplay();
 //			try {
 //				server = new ServerSocket(port);
 //				socket = server.accept();
@@ -110,6 +112,7 @@ public class NetworkManager extends Thread{
 					boolean joinResult = memM.memberAccept(id, pw, email);
 					out.print(joinResult);
 					out.flush();
+					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
 					memM.memberDisplay();
 					kill();
 					break;
@@ -202,15 +205,19 @@ public class NetworkManager extends Thread{
 	
 	public boolean listSender(String id) 
 	{
-		List<String> musics = null;
+		System.out.println("list Sender \nid : " + id);
+		List<String> music = null;
+		
 		if(id != null)
-			musics = musM.readMusicList(id);
+			music = musM.readMusicList(id);
 		else
-			musics = musM.loadServerList();
+			music = musM.loadServerList();
+		
 		try (ObjectOutputStream out = new ObjectOutputStream(
 															socket.getOutputStream());) 
 		{
-			out.writeObject(musics);
+			System.out.println("서버 리스트 전송 : " + music);
+			out.writeObject(music);
 			out.flush();
 		} 
 		catch (Exception e) 
