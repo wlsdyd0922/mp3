@@ -115,7 +115,7 @@ public class NetworkManager extends Thread{
 					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
 					memM.memberDisplay();
 					kill();
-					break;
+					break; 
 					
 				case LOGIN:
 					//id = (String)in.readObject();

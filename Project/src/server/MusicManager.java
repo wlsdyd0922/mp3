@@ -54,7 +54,7 @@ public class MusicManager /*extends Thread */{
 		for (File f : flist)
 			serverList.add(f.getName());
 		
-		return serverList;
+		return serverList; 
 	}
 	
 	@SuppressWarnings("unchecked")

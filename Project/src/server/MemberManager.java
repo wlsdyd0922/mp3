@@ -102,7 +102,7 @@ public class MemberManager {
 			return true;
 		}
 		else
-			return false;
+			return false; 
 	}
 
 	public void memberDisplay() {
