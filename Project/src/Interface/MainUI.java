@@ -23,14 +23,14 @@ class MainUIwin extends JFrame {
 	private JPanel buttonline = new JPanel(null);
 	private JPanel titleLine = new JPanel(null);
 	private JPanel scrollLine = new JPanel(new BorderLayout());
-	
-	private JList<String> musicList = new JList<>(); 
+
+	private JList<String> musicList = new JList<>();
 	private JScrollPane scroll = new JScrollPane();
-	private String[] str1 = new String[] {"노래1","노래2","노래3","노래4"};
-	
+	private String[] str1 = new String[] { "노래1", "노래2", "노래3", "노래4" };
+
 	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
-	private JLabel la3 = new JLabel("가사",JLabel.CENTER);
+	private JLabel la3 = new JLabel("가사", JLabel.CENTER);
 
 	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", };
 	private JButton[] bt = new JButton[6];
@@ -57,7 +57,7 @@ class MainUIwin extends JFrame {
 			}
 		};
 		addWindowListener(win);
-		
+
 		bt1.addActionListener(e -> {
 			login.setVisible(true);
 		});
@@ -72,8 +72,8 @@ class MainUIwin extends JFrame {
 			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)", ".wma"));
 			chooser.showOpenDialog(bg);
 		});
-		
-		bt3.addActionListener(e->{
+
+		bt3.addActionListener(e -> {
 			search.setVisible(true);
 		});
 
@@ -81,24 +81,23 @@ class MainUIwin extends JFrame {
 
 	private void design() {
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) d.getWidth()/5*2-40;
-		int y = (int) d.getHeight()/5*3-4;
-		int xp = (int) d.getWidth()/5-30;
+		int x = (int) d.getWidth() / 5 * 2 - 40;
+		int y = (int) d.getHeight() / 5 * 3 - 4;
+		int xp = (int) d.getWidth() / 5 - 30;
 		setContentPane(bg1);
-		bg1.add(bg,BorderLayout.CENTER);
+		bg1.add(bg, BorderLayout.CENTER);
 		bg.setBounds(0, 0, x, y);
-		
+
 		scroll.setViewportView(musicList);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		bg1.add(scrollLine);
-		scrollLine.setBounds(x+1, 0, xp, y);
-		scrollLine.add(scroll,BorderLayout.CENTER);
-		scrollLine.add(bt3,BorderLayout.SOUTH);
-		musicList.setListData(str1);		
-	
-		
+		scrollLine.setBounds(x + 1, 0, xp, y);
+		scrollLine.add(scroll, BorderLayout.CENTER);
+		scrollLine.add(bt3, BorderLayout.SOUTH);
+		musicList.setListData(str1);
+
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
-		
+
 		buttonline.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 		titleLine.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
 
@@ -110,7 +109,7 @@ class MainUIwin extends JFrame {
 		titleLine.add(la1);
 		titleLine.add(bt1);
 		titleLine.add(bt2);
-		
+
 		bg.add(la2);
 		bg.add(buttonline);
 
@@ -130,7 +129,7 @@ class MainUIwin extends JFrame {
 		la1.setBounds(10, 10, 400, 20);
 		bt1.setBounds(495, 10, 80, 40);
 		bt2.setBounds(490, 60, 90, 40);
-		
+
 		bg.add(la3);
 		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
 		la3.setBorder(lyrics);
@@ -154,6 +153,14 @@ class MainUIwin extends JFrame {
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
+	}
+
+	private void add() {
+		musicList.setListData(str1);
+	}
+
+	private void delete() {
+		musicList.getSelectedValuesList();
 	}
 }
 
