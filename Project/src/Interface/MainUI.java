@@ -68,21 +68,7 @@ class MainUIwin extends JFrame {
 			}
 		};
 		musicList.addKeyListener(listdelete);
-		
-		MouseAdapter listdeletemou = new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount()==2) {
-					System.out.println("»èÁ¦");
-				}
-			}
-		};
-		musicList.addMouseListener(listdeletemou);
-		
-		
-		
-		
-
+				
 		bt1.addActionListener(e -> {
 			login.setVisible(true);
 		});
