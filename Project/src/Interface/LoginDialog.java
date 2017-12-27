@@ -1,9 +1,8 @@
 package Interface;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
- 
+
 public class LoginDialog extends JDialog {
  
 	private JLabel nameLabel = new JLabel("Name : ");
@@ -62,10 +61,19 @@ public class LoginDialog extends JDialog {
  
 		this.add(topPanel);
 		this.add(buttonPanel, BorderLayout.SOUTH);
- 
 	}
  
 	private void setUpListeners() {
+		WindowListener win = new WindowAdapter() {
+			public void windowClosing(WindowEvent arg0) {
+				setVisible(false);
+				nameField.setText("");
+				passwordField.setText("");
+				super.windowClosing(arg0);
+			}
+		}; 
+		addWindowListener(win);
+		
 		passwordField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -73,10 +81,17 @@ public class LoginDialog extends JDialog {
 				}
 			}
 		});
+		
 		okButton.addActionListener(e->{
 			login();
+			nameField.setText("");
+			passwordField.setText("");
 			}); 
-		cancelButton.addActionListener(e->{LoginDialog.this.setVisible(false);});
+		cancelButton.addActionListener(e->{
+			LoginDialog.this.setVisible(false);
+			nameField.setText("");
+			passwordField.setText("");
+			});
 	}
 	
 	private void login() {

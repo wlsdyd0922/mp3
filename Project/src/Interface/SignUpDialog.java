@@ -78,7 +78,7 @@ public class SignUpDialog extends JDialog {
 	}
 
 	private void setUpListeners() {
-
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		passwordField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -86,11 +86,27 @@ public class SignUpDialog extends JDialog {
 				}
 			}
 		});
+		WindowListener win = new WindowAdapter() {
+			public void windowClosing(WindowEvent arg0) {
+				nameField.setText("");
+				passwordField.setText("");
+				emailField.setText("");
+				setVisible(false);
+				super.windowClosing(arg0);
+			}
+		};
+		addWindowListener(win);
 		okButton.addActionListener(e -> {
 			SignUp();
+			nameField.setText("");
+			passwordField.setText("");
+			emailField.setText("");
 		});
 		cancelButton.addActionListener(e -> {
 			SignUpDialog.this.setVisible(false);
+			nameField.setText("");
+			passwordField.setText("");
+			emailField.setText("");
 		});
 	}
 

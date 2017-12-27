@@ -30,6 +30,7 @@ class MainUIwin extends JFrame {
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
+	private JMenu menu2 = new JMenu("Option");
 	private JMenuItem open = new JMenuItem("Open");
 
 	protected static int x;
@@ -48,6 +49,10 @@ class MainUIwin extends JFrame {
 		});
 		open.addActionListener(e -> {
 			chooser.setMultiSelectionEnabled(true);
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)",".mp3"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mpeg File (*.mpeg)",".mpeg"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wav File (*.wav)",".wav"));
+			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)",".wma"));
 			chooser.showOpenDialog(bg);
 		});
 		bt[7].addActionListener(e -> {
@@ -81,7 +86,7 @@ class MainUIwin extends JFrame {
 		};
 		addWindowListener(win);
 	}
-
+	
 	private void design() {
 		setContentPane(bg);
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
@@ -125,7 +130,9 @@ class MainUIwin extends JFrame {
 	private void menu() {
 		setJMenuBar(bar);
 		bar.add(menu);
+		bar.add(menu2);
 		menu.add(open);
+		
 	}
 
 	public MainUIwin() {
@@ -145,6 +152,6 @@ class MainUIwin extends JFrame {
 
 public class MainUI {
 	public static void main(String[] args) {
-		JFrame mainUi = new MainUIwin();
+		JFrame mainui = new MainUIwin();
 	}
 }
