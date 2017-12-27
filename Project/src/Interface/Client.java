@@ -1,12 +1,7 @@
 package Interface;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class Client {
 	private InetAddress inet;
@@ -26,22 +21,33 @@ public class Client {
 	}
 
 	public void logInManager(int login, String id, String pw) {
-		out.write(login);
+		out.println(login);
 		out.flush();
-		out.write(id);
+		out.println(id);
 		out.flush();
-		out.write(pw);
+		out.println(pw);
 		out.flush();
+		login();
 		out.close();
+	}
+	private boolean login() {
+		try {
+			String log= in.readLine();
+			return Boolean.parseBoolean(log);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	public void signUpManager(int join, String id, String pw,String email) {
-		out.write(join);
+		out.println(join);
 		out.flush();
-		out.write(id);
-		out.write(pw);
+		out.println(id);
 		out.flush();
-		out.write(email);
+		out.println(pw);
+		out.flush();
+		out.println(email);
 		out.flush();
 		out.close();
 	}
