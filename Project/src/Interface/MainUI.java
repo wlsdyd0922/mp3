@@ -75,6 +75,18 @@ class MainUIwin extends JFrame {
 			}
 		};
 		addComponentListener(cl);
+		
+		FocusListener fl = new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				System.out.println("비활성화");
+			}
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				System.out.println("활성화");
+			}
+		};
+		addFocusListener(fl);
 	}
 
 	private void allClose() {
@@ -88,6 +100,7 @@ class MainUIwin extends JFrame {
 	}
 	
 	private void design() {
+		
 		setContentPane(bg);
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
 		buttonline.setBorder(BorderFactory.createLineBorder(Color.black, 3));
