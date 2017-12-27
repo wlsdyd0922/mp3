@@ -54,6 +54,7 @@ public class Search extends JFrame{
 		text.setBounds(5,5,200,30);
 		bt.setBounds(210,5,70,30);
 		top.add(bt);
+		allList.setListData(servermusic);
 	}
 	
 	public Search() {
