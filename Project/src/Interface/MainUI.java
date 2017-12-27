@@ -47,7 +47,7 @@ class MainUIwin extends JFrame {
 	protected static int y;
 	private JFrame search = null;
 	private LoginDialog login = new LoginDialog(this);
-	private SignUpDialog signup = new SignUpDialog(this);
+	private SignUpDialog signup = new SignUpDialog(this); 
 
 	private void event() {
 		WindowListener win = new WindowAdapter() {
@@ -57,13 +57,40 @@ class MainUIwin extends JFrame {
 			}
 		};
 		addWindowListener(win);
+		
+
+		KeyAdapter listdelete = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					System.out.println("삭제");
+				}
+			}
+		};
+		musicList.addKeyListener(listdelete);
+		
+		MouseAdapter listdeletemou = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()==2) {
+					System.out.println("삭제");
+				}
+			}
+		};
+		musicList.addMouseListener(listdeletemou);
+		
+		
+		
+		
 
 		bt1.addActionListener(e -> {
 			login.setVisible(true);
 		});
+		
 		bt2.addActionListener(e -> {
 			signup.setVisible(true);
 		});
+		
 		open.addActionListener(e -> {
 			chooser.setMultiSelectionEnabled(true);
 			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)", ".mp3"));
@@ -90,12 +117,13 @@ class MainUIwin extends JFrame {
 
 		scroll.setViewportView(musicList);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		musicList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		bg1.add(scrollLine);
 		scrollLine.setBounds(x + 1, 0, xp, y);
 		scrollLine.add(scroll, BorderLayout.CENTER);
 		scrollLine.add(bt3, BorderLayout.SOUTH);
 		musicList.setListData(str1);
-
+		
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
 
 		buttonline.setBorder(BorderFactory.createLineBorder(Color.black, 3));

@@ -32,6 +32,32 @@ public class Search extends JFrame{
 				
 			}
 		};
+		
+		KeyAdapter listadd = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					System.out.println("추가");
+				}
+			}
+		};
+		allList.addKeyListener(listadd);
+		
+		MouseAdapter listaddmou = new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()==2) {
+					System.out.println("추가");
+				}
+			}
+		};
+		allList.addMouseListener(listaddmou);
+		
+		
+		
+		
+		
+		
 	}
 
 
