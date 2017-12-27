@@ -7,7 +7,7 @@ import java.util.*;
 
 public class NetworkManager extends Thread{
 	private boolean flag = true;
-	
+	private boolean status = false;
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
 	final static int LIST = 2;						//개인 리스트 요청
@@ -25,6 +25,17 @@ public class NetworkManager extends Thread{
 	
 	private MemberManager memM;
 	private MusicManager musM;
+	
+	public void kill()
+	{
+		status = false;
+		flag = false;
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public NetworkManager(Socket socket)
 	{
@@ -91,6 +102,7 @@ public class NetworkManager extends Thread{
 					boolean loginResult = memM.login(id, pw);
 					out.println(loginResult);
 					out.flush();
+					status = true;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
 					//listSender(id);
 					//socket.close();
@@ -125,7 +137,7 @@ public class NetworkManager extends Thread{
 				case LOGOUT:
 					id = in.readLine();
 					System.out.println(id + " 로그아웃");
-					socket.close();
+					kill();
 					break;
 
 				case DROP:
@@ -133,20 +145,23 @@ public class NetworkManager extends Thread{
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if (dropResult)
-						socket.close();
+					kill();
 					break;
+					
 				case MUSIC_ADD :
 					id = in.readLine();
 					String addmusic = in.readLine();
 					musM.addToMusicList(id, addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
 					break;
+					
 				case MUSIC_DEL:
 					id = in.readLine();
 					String delmusic = in.readLine();
 					System.out.println(socket.getInetAddress() + " " + delmusic + "삭제");
 					musM.deleteMusic(id, delmusic);
 					break;
+					
 				default:
 					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
