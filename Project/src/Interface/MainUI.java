@@ -62,7 +62,7 @@ class MainUIwin extends JFrame {
 		KeyAdapter listdelete = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 					System.out.println("ªË¡¶");
 				}
 			}
