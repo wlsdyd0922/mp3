@@ -8,6 +8,7 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
+	
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
 	final static int LIST = 2;						//개인 리스트 요청
@@ -44,7 +45,8 @@ public class NetworkManager extends Thread{
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 		musM = new MusicManager();
-
+		//musM.readMusicList("123");
+		//musM.addToMusicList("123", "Marianne.mp3");
 			try {
 			in = new BufferedReader(
 					new InputStreamReader(
@@ -110,18 +112,34 @@ public class NetworkManager extends Thread{
 
 				case LIST:
 					id = in.readLine();
+					if(!status)
+//					{
+//						System.out.println("로그인 상태가 아님");
+//						out.println("로그인 필요");
+//						out.flush();
+//					}
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					break;
 
 				case TOTAL_LIST:
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
 					System.out.println(id + " 전체 리스트 요청");
 					listSender("server");
 					break;
 
 				case MUSIC:
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
 					System.out.println(id + " 음악 파일 요청");
 					musicTitle = in.readLine();
 					musicSender(id, musicTitle);
@@ -136,12 +154,22 @@ public class NetworkManager extends Thread{
 
 				case LOGOUT:
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
 					System.out.println(id + " 로그아웃");
 					kill();
 					break;
 
 				case DROP:
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if (dropResult)
@@ -150,21 +178,47 @@ public class NetworkManager extends Thread{
 					
 				case MUSIC_ADD :
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
+					System.out.println(socket.getInetAddress() +" " + id + " : 음악 추가 신청");
 					String addmusic = in.readLine();
+					System.out.println(id + " : " + addmusic);
 					musM.addToMusicList(id, addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
+					boolean addResult =musM.addToMusicList(id, addmusic);
+					out.println(addResult);
+					out.flush();
+					status = true;
 					break;
 					
 				case MUSIC_DEL:
 					id = in.readLine();
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
+					System.out.println(socket.getInetAddress() +" " + id + " : 음악 삭제 신청");
 					String delmusic = in.readLine();
-					System.out.println(socket.getInetAddress() + " " + delmusic + "삭제");
-					musM.deleteMusic(id, delmusic);
+					System.out.println(id + " " + delmusic + "삭제");
+					boolean delResult =musM.deleteMusic(id, delmusic);
+					out.println(delResult);
+					out.flush();
 					break;
 					
 				default:
 					id = in.readLine();
 					System.out.println(id + ": 잘못된 요청");
+//					{
+//					System.out.println("로그인 상태가 아님");
+//					out.println("로그인 필요");
+//					out.flush();
+//				}
+					out.println("잘못된 접근");
+					out.flush();
 					break;
 				}
 			}

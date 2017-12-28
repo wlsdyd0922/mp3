@@ -35,20 +35,32 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean createMusicList(String id)
 	{
+		List<String> list = new ArrayList<>();
+		//list.add(" ");
 		File musicList = new File("members",id+".db");
-		if(!musicList.exists())
-		{
-			try {
-				musicList.createNewFile();
-				System.out.println(id+".db 持失");
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-			return true;
-		}
-		else
+//		if(!musicList.exists())
+//		{
+//			try {
+//				musicList.createNewFile();
+//				System.out.println(id+".db 持失");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				return false;
+//			}
+//			return true;
+//		}
+//		else
+//			return false;
+		try (ObjectOutputStream obj = new ObjectOutputStream(
+				new BufferedOutputStream(
+						new FileOutputStream(musicList)));) {
+			obj.writeObject(list);
+		} catch (Exception e) {
+			System.out.println(id + "musicList create error");
 			return false;
+		}
+		System.out.println(id + ".db 持失");
+		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -67,21 +79,19 @@ public class MusicManager /*extends Thread */{
 	
 	@SuppressWarnings("unchecked")
 	public List<String> readMusicList(String id) {
-		System.out.println("read Music List");
+		System.out.println(id + " read Music List");
 		File musicList = new File("members",id+".db");
 		try (ObjectInputStream obj = new ObjectInputStream(
 														  new BufferedInputStream(
 														   new FileInputStream(musicList)));)
 		{
-			List<String> list = (List<String>) obj.readObject();
+			List<String> list;
+			list = (List<String>) obj.readObject();
 			return list;
-		} 
-		catch (Exception e)
-		{
-			System.err.println("music list update failed");
+		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
-		
 	}
 	
 //	public boolean addMusic(String id,String music)
@@ -102,7 +112,7 @@ public class MusicManager /*extends Thread */{
 			System.err.println("music delete failed");
 			return false;
 		}
-		return updateMusicList(id);
+		return updateMusicList(id,list);
 	}
 	
 	public File findMusic(String music)
@@ -111,9 +121,9 @@ public class MusicManager /*extends Thread */{
 		return target;
 	} 
 	
-	public boolean updateMusicList(String id)
+	public boolean updateMusicList(String id,List<String> list)
 	{
-		List<String> list = readMusicList(id);
+		//List<String> list = readMusicList(id);
 		File musicList = new File("members",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
@@ -134,10 +144,10 @@ public class MusicManager /*extends Thread */{
 		List<String> list = readMusicList(id);
 		if(!list.add(music))
 		{
-			System.err.println("music delete failed");
+			System.err.println("music add failed");
 			return false;
 		}
-		return updateMusicList(id);
+		return updateMusicList(id,list);
 	}
 	
 	public boolean deleteMusicList(String id)

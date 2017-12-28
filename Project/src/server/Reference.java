@@ -44,47 +44,50 @@ public class Reference {
 						new OutputStreamWriter(
 								socket.getOutputStream())));
 
-		int state = JOIN;
+		int state = LIST;
 		out.println(state);
 		out.flush();
+		
 		System.out.println("ID 입력");
 		String id = s.next();
 		out.println(id);
 		out.flush();
-//		System.out.println("파일명 입력");
-//		String music = s.next();
-//		out.println(music);
+		
+//		System.out.println("PW 입력");
+//		String pw = s.next();
+//		out.println(pw);
 //		out.flush();
 		
-		System.out.println("PW 입력");
-		String pw = s.next();
-		out.println(pw);
-		out.flush();
+//		System.out.println("email 입력");
+//		String email = s.next();
+//		out.println(email);
+//		out.flush();
 		
-		System.out.println("email 입력");
-		String email = s.next();
-		out.println(email);
-		out.flush();
+//		System.out.println("곡 제목 입력");
+//		String song = s.next();
+//		out.println(song);
+//		out.flush();
 		
-		try (BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						socket.getInputStream()));) 
-		{
-				String textFS = in.readLine();
-					System.out.println("server : " + textFS);
-
-		} catch (Exception e) {
-			System.err.println("받기 실패");
-		}
-
-//		ObjectInputStream in = new ObjectInputStream(
-//												new BufferedInputStream(
-//													socket.getInputStream()));
-//		List<String> list = (ArrayList<String>) in.readObject();
-//		System.out.println("server : " + list.toString());
+//		try (BufferedReader in = new BufferedReader(
+//				new InputStreamReader(
+//						socket.getInputStream()));) 
+//		{
+//				String textFS = in.readLine();
+//					System.out.println("server : " + textFS);
+//
+//		} catch (Exception e) {
+//			System.err.println("받기 실패");
+//		}
+		
+////////////////List 수신/////////////////
+		ObjectInputStream in = new ObjectInputStream(
+												new BufferedInputStream(
+													socket.getInputStream()));
+		List<String> list = (ArrayList<String>) in.readObject();
+		System.out.println("server : " + list.toString());
 		
 		
-//////////////////////udp////////////////////////
+//////////////////////udp 파일전송////////////////////////
 		/*		
 		byte[] buffer = new byte[1024];
 		long fileSize;
@@ -133,6 +136,8 @@ public class Reference {
         } catch (Exception e) {}
         System.out.println("Process Close");
 		*/
+///////////////////////////////////////////////////////////////////////
+
 		socket.close();
 		System.out.println("connection end");
 	}
