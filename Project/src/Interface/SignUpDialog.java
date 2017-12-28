@@ -89,6 +89,7 @@ public class SignUpDialog extends JDialog {
 				}
 			}
 		});
+		
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
 				nameField.setText("");
@@ -99,18 +100,21 @@ public class SignUpDialog extends JDialog {
 			}
 		};
 		addWindowListener(win);
+		
 		okButton.addActionListener(e -> {
 			SignUp();
 			nameField.setText("");
 			passwordField.setText("");
 			emailField.setText("");
 		});
+		
 		cancelButton.addActionListener(e -> {
 			SignUpDialog.this.setVisible(false);
 			nameField.setText("");
 			passwordField.setText("");
 			emailField.setText("");
 		});
+		
 	}
  
 	private void SignUp() {

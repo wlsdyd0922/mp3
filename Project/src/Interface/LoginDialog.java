@@ -99,12 +99,15 @@ public class LoginDialog extends JDialog {
 	private void loginPass() {
 		String id = nameField.getText();
 		String pw = "";
+		
 		char[] pw1 = passwordField.getPassword();
 		for(int i = 0 ; i < pw1.length;i++) {
 			pw += pw1[i];
 		}
 		
 		Client cl = new Client();
+		
+		
 		cl.logInManager(MainUIwin.LOGIN, id, pw);
 		System.out.println(id+" / "+pw);
 		LoginDialog.this.setVisible(false);

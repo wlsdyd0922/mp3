@@ -1,17 +1,7 @@
 package Interface;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.List;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
+import java.awt.*;
+import java.awt.event.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -89,10 +79,15 @@ public class Search extends JFrame {
 		};
 		allList.addMouseListener(listaddmou);
 	}
+	
+	
 
 	private void musicSearch() {
 
 	}
+	
+	
+	
 
 	private void design() {
 		setContentPane(bg);
@@ -111,6 +106,9 @@ public class Search extends JFrame {
 		allList.setListData(serverMusic);
 		allList.setSelectedIndex(0);
 	}
+	
+	
+	
 
 	public Search() {
 		design();
