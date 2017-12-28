@@ -335,8 +335,10 @@ public class NetworkManager extends Thread{
 		}
 	}
 
-	public void ipSave(String id) {
-		ipList.put(socket.getInetAddress().toString(), new ArrayList<String>());
-		ipList.get(socket.getInetAddress().toString()).add(id);
+	public void ipSave(String id) 
+	{
+		if(ipList.get(id) == null)
+		ipList.put(id, new ArrayList<String>());
+		ipList.get(id).add(socket.getInetAddress().toString());
 	}
 }
