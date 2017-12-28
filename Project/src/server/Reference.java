@@ -31,9 +31,8 @@ public class Reference {
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
 
-	public static void musicReceive(String ip, int port, String music) {
+	public static void musicReceive(int port, String music) {
 		////////////////////// udp 파일전송////////////////////////
-		System.out.println("mR");
 		byte[] buffer = new byte[1024];
 		long fileSize;
 		long totalReadBytes = 0;
@@ -166,10 +165,10 @@ public class Reference {
 
 			case MUSIC:
 				System.out.println("파일명 입력");
-				String music = s.nextLine();
+				String music = s.next();
 				out.println(music);
 				out.flush();
-				musicReceive(ip, port, music);
+				musicReceive(port, music);
 				break;
 
 			case DROP: // 탈퇴

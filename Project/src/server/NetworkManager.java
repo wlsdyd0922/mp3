@@ -8,6 +8,7 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
+	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
@@ -182,10 +183,12 @@ public class NetworkManager extends Thread{
 //				}
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
-					out.println(dropResult);
-					out.flush();
 					if (dropResult)
-					kill();
+					{
+						out.println(dropResult);
+						out.flush();
+						kill();
+					}
 					else
 					{
 						out.println("다시 로그인");
@@ -330,5 +333,10 @@ public class NetworkManager extends Thread{
 			System.out.println("음악 전송 실패");
 			return false;
 		}
+	}
+
+	public void ipSave(String id) {
+		ipList.put(socket.getInetAddress().toString(), new ArrayList<String>());
+		ipList.get(socket.getInetAddress().toString()).add(id);
 	}
 }
