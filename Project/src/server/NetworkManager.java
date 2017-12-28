@@ -104,7 +104,7 @@ public class NetworkManager extends Thread{
 					boolean loginResult = memM.login(id, pw);
 					out.println(loginResult);
 					out.flush();
-					status = true;
+					if(loginResult) status = true;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
 					//listSender(id);
 					//socket.close();
