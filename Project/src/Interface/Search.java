@@ -88,7 +88,6 @@ public class Search extends JFrame {
 			}
 		};
 		allList.addMouseListener(listaddmou);
-
 	}
 
 	private void musicSearch() {

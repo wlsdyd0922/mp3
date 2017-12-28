@@ -68,13 +68,13 @@ class MainUIwin extends JFrame {
 					for (int i = 0; i < musicList.getModel().getSize(); i++) {
 						model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
 					}
-					
+
 					for (int i = 0; i < musicList.getSelectedValuesList().size(); i++) {
 						String str = musicList.getSelectedValuesList().get(i);
 						model.removeElement(str);
 					}
 					musicList.setModel(model);
-					
+
 				}
 			}
 		};
@@ -124,7 +124,6 @@ class MainUIwin extends JFrame {
 		bt3.addActionListener(e -> {
 			search.setVisible(true);
 		});
-
 	}
 
 	private void design() {
@@ -140,7 +139,7 @@ class MainUIwin extends JFrame {
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		bg1.add(scrollLine);
-		scrollLine.setBounds(x + 1, 0, xp, y);
+		scrollLine.setBounds(x + 1, 0, xp - 7, y);
 		scrollLine.add(scroll, BorderLayout.CENTER);
 		scrollLine.add(bt3, BorderLayout.SOUTH);
 		musicList.setListData(str1);
