@@ -20,22 +20,21 @@ public class Client {
 		}
 	}
 
-	public void logInManager(int login, String id, String pw) {
+	public boolean logInManager(int login, String id, String pw) {
 		out.println(login);
 		out.flush();
 		out.println(id);
 		out.flush();
 		out.println(pw);
 		out.flush();
-		login();
 		out.close();
+		return login();
 	}
 	private boolean login() {
 		try {
 			String log= in.readLine();
 			return Boolean.parseBoolean(log);
 		} catch (IOException e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

@@ -77,13 +77,15 @@ public class LoginDialog extends JDialog {
 		passwordField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					login();
+					loginPass();
+					nameField.setText("");
+					passwordField.setText("");
 				}
 			}
 		});
 		
 		okButton.addActionListener(e->{
-			login();
+			loginPass();
 			nameField.setText("");
 			passwordField.setText("");
 			}); 
@@ -94,7 +96,7 @@ public class LoginDialog extends JDialog {
 			});
 	}
 	
-	private void login() {
+	private void loginPass() {
 		String id = nameField.getText();
 		String pw = "";
 		char[] pw1 = passwordField.getPassword();

@@ -79,10 +79,13 @@ public class SignUpDialog extends JDialog {
 
 	private void setUpListeners() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		passwordField.addKeyListener(new KeyAdapter() {
+		emailField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					SignUp();
+					nameField.setText("");
+					passwordField.setText("");
+					emailField.setText("");
 				}
 			}
 		});
