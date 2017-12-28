@@ -104,7 +104,7 @@ public class NetworkManager extends Thread{
 					boolean loginResult = memM.login(id, pw);
 					out.println(loginResult);
 					out.flush();
-					if(loginResult) status = true;
+					status = loginResult;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
 					//listSender(id);
 					//socket.close();
@@ -243,10 +243,14 @@ public class NetworkManager extends Thread{
 		else
 			music = musM.loadServerList();
 		
+		if (music.isEmpty())
+		music.add("추가된 음악이 없습니다");
+		
 		try (ObjectOutputStream out = new ObjectOutputStream(
 															socket.getOutputStream());) 
 		{
 			System.out.println("서버 리스트 전송 : " + music);
+			
 			out.writeObject(music);
 			out.close();
 		} 

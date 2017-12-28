@@ -57,7 +57,7 @@ public class Reference {
 //		String pw = s.next();
 //		out.println(pw);
 //		out.flush();
-		
+
 //		System.out.println("email 입력");
 //		String email = s.next();
 //		out.println(email);
@@ -68,6 +68,8 @@ public class Reference {
 //		out.println(song);
 //		out.flush();
 		
+		
+////////////////일반 데이터 수신//////////////////////////////
 //		try (BufferedReader in = new BufferedReader(
 //				new InputStreamReader(
 //						socket.getInputStream()));) 
