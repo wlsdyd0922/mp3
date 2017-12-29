@@ -12,12 +12,13 @@ public class Client {
 	private Socket socket;
 	private PrintWriter out;
 	private ObjectInputStream in;
+	protected static String id;
 	protected static JFrame search = null;
 	protected static boolean logInflag = false;
 
 	public Client() {
 		try {
-			inet = InetAddress.getByName("localhost");
+			inet = InetAddress.getByName("192.168.0.171");
 			socket = new Socket(inet, 20000);
 			out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -31,6 +32,7 @@ public class Client {
 		out.println(login);
 		out.flush();
 		out.println(id);
+		this.id = id;
 		out.flush();
 		out.println(pw);
 		out.flush();
@@ -63,16 +65,36 @@ public class Client {
 		out.close();
 	}
 
-	public void serverMusicList(int total_list) {
+	public List<String> serverMusicList(int total_list) {
 		out.println(total_list);
 		out.flush();
+		out.println(Client.id);
+		out.flush();
 		try {
-			
 		List<String> list = (ArrayList<String>) in.readObject();
-		System.out.println("err1");
-		System.out.println("server : " + list.toString());
+		return list;
 		}catch (Exception e) {
-			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public void musicAdd(int music_add) {
+		out.println(music_add);
+		out.flush();
+		out.println(Client.id);
+		out.flush();
+	}
+	
+	public List<String> clientMusicList(int cllist) {
+		out.println(cllist);
+		out.flush();
+		out.println(Client.id);
+		out.flush();
+		try {
+		List<String> list = (ArrayList<String>) in.readObject();
+		return list;
+		}catch (Exception e) {
+			return null;
 		}
 	}
 }

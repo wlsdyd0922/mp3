@@ -1,13 +1,34 @@
 package Interface;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-
-import javafx.stage.FileChooser;
 
 class MainUIwin extends JFrame {
 	final static int LOGIN = 0; // 로그인 요청
@@ -31,11 +52,9 @@ class MainUIwin extends JFrame {
 	protected static JList<String> musicList = new JList<>(new DefaultListModel<>());
 	protected static int x;
 	protected static int y;
-//	protected static boolean logInflag = false;
+	// protected static boolean logInflag = false;
 
 	private JScrollPane scroll = new JScrollPane();
-	private String[] str1 = new String[] { "노래1", "노래2", "노래3", "노래4" };
-
 	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
 	private JLabel la3 = new JLabel("가사", JLabel.CENTER);
@@ -51,7 +70,6 @@ class MainUIwin extends JFrame {
 	private JMenu menu2 = new JMenu("Option");
 	private JMenuItem open = new JMenuItem("Open");
 
-	
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
 
@@ -127,9 +145,11 @@ class MainUIwin extends JFrame {
 		bt3.addActionListener(e -> {
 			Client.search.setVisible(true);
 		});
+
 	}
 
 	private void design() {
+
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (int) d.getWidth() / 5 * 2 - 40;
 		int y = (int) d.getHeight() / 5 * 3 - 4;
@@ -145,7 +165,6 @@ class MainUIwin extends JFrame {
 		scrollLine.setBounds(x + 1, 0, xp - 7, y);
 		scrollLine.add(scroll, BorderLayout.CENTER);
 		scrollLine.add(bt3, BorderLayout.SOUTH);
-		musicList.setListData(str1);
 
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
 

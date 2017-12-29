@@ -1,19 +1,34 @@
 package Interface;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.*;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class Search extends JFrame {
 	private JPanel bg = new JPanel(new BorderLayout());
 	private JPanel top = new JPanel(null);
 	private JList<String> allList = new JList<>(new DefaultListModel<>());
 	private JScrollPane scroll = new JScrollPane();
-	private String[] serverMusic = new String[] { "서버노래1", "서버노래2", "서버노래3" };
-
 	private JTextField text = new JTextField();
 	private JButton bt = new JButton("검색");
+	private List<String> list = new ArrayList<>();
 
 	private void event() {
 
@@ -34,7 +49,6 @@ public class Search extends JFrame {
 
 			}
 		};
-
 		KeyAdapter listadd = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -70,13 +84,22 @@ public class Search extends JFrame {
 		};
 		allList.addMouseListener(listaddmou);
 	}
-	
-	
 
 	private void musicSearch() {
 
 	}
+
 	private void design() {
+		Client cl = new Client();
+		
+		DefaultListModel<String> model = new DefaultListModel<>();
+				list = cl.serverMusicList(MainUIwin.TOTAL_LIST);
+		
+		for (int i = 0; i < list.size(); i++) {
+			model.addElement(list.get(i));
+		}
+		allList.setModel(model);
+		
 		setContentPane(bg);
 		bg.setBackground(Color.WHITE);
 		bg.add(top);
@@ -90,14 +113,11 @@ public class Search extends JFrame {
 		text.setBounds(5, 5, 200, 30);
 		bt.setBounds(210, 5, 70, 30);
 		top.add(bt);
-		allList.setListData(serverMusic);
+		// allList.setListData(serverMusic);
 		allList.setSelectedIndex(0);
 	}
 
 	public Search() {
-		Client cl = new Client();
-		
-		cl.serverMusicList(MainUIwin.TOTAL_LIST);
 		design();
 		event();
 		setTitle("노래 검색");

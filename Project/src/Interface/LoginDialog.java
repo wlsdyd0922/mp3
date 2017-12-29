@@ -1,6 +1,9 @@
 package Interface;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.*;
 
 public class LoginDialog extends JDialog {
@@ -13,6 +16,8 @@ public class LoginDialog extends JDialog {
  
 	private JButton okButton = new JButton("OK");
 	private JButton cancelButton = new JButton("Cancel");
+	
+	private List<String> clList = new ArrayList<>();
 
 	
 	public LoginDialog(JFrame owner) {
@@ -81,6 +86,15 @@ public class LoginDialog extends JDialog {
 					loginPass();
 					nameField.setText("");
 					passwordField.setText("");
+					
+					Client cl = new Client();
+					clList = cl.clientMusicList(MainUIwin.LIST);
+					DefaultListModel<String> model = new DefaultListModel<>();
+					for (int i = 0; i < clList.size(); i++) {
+						model.addElement(clList.get(i));
+					}
+					MainUIwin.musicList.setModel(model);
+
 				}
 			}
 		});
@@ -89,6 +103,14 @@ public class LoginDialog extends JDialog {
 			loginPass();
 			nameField.setText("");
 			passwordField.setText("");
+			
+			Client cl = new Client();
+			clList = cl.clientMusicList(MainUIwin.LIST);
+			DefaultListModel<String> model = new DefaultListModel<>();
+			for (int i = 0; i < clList.size(); i++) {
+				model.addElement(clList.get(i));
+			}
+			MainUIwin.musicList.setModel(model);
 			}); 
 		cancelButton.addActionListener(e->{
 			LoginDialog.this.setVisible(false);
@@ -105,11 +127,8 @@ public class LoginDialog extends JDialog {
 		for(int i = 0 ; i < pw1.length;i++) {
 			pw += pw1[i];
 		}
-		
 		Client cl = new Client();
-		
 		cl.logInManager(MainUIwin.LOGIN, id, pw);
-		System.out.println(id+" / "+pw);
 		LoginDialog.this.setVisible(false);
 	}
 }
