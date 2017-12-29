@@ -58,8 +58,8 @@ public class NetworkManager extends Thread{
 							new OutputStreamWriter(
 									this.socket.getOutputStream())));
 
-			Oout = new ObjectOutputStream(
-					socket.getOutputStream());
+//			Oout = new ObjectOutputStream(
+//					socket.getOutputStream());
 			
 			this.setDaemon(true);
 			this.start();
