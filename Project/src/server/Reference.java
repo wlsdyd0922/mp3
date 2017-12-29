@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -83,13 +84,18 @@ public class Reference {
 		String ip = "192.168.0.171";
 		int port = 20000;
 		System.out.println(ip);
+		@SuppressWarnings("resource")
 		Scanner s = new Scanner(System.in);
 
 		InetAddress inet = InetAddress.getByName(ip);
 		socket = new Socket(inet, port);
 		
-		BufferedReader bin = new BufferedReader(
-				new InputStreamReader(
+//		BufferedReader bin = new BufferedReader(
+//				new InputStreamReader(
+//						socket.getInputStream()));
+		
+		ObjectInputStream in = new ObjectInputStream(
+				new BufferedInputStream(
 						socket.getInputStream()));
 		
 		System.out.println(socket);
@@ -98,10 +104,6 @@ public class Reference {
 						new OutputStreamWriter(
 								socket.getOutputStream())));
 
-		ObjectInputStream oin = new ObjectInputStream(
-				new BufferedInputStream(
-						socket.getInputStream()));
-		
 		System.out.println("±âµ¿");
 		while (true) 
 		{
@@ -131,7 +133,7 @@ public class Reference {
 				out.println(pw);
 				out.flush();
 				try {
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println(textFS);
 
 				} catch (Exception e) {
@@ -151,7 +153,7 @@ public class Reference {
 				out.flush();
 
 				try {
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
@@ -160,7 +162,7 @@ public class Reference {
 				break;
 
 			case LIST:
-				List<String> list = (ArrayList<String>) oin.readObject();
+				@SuppressWarnings("unchecked") List<String> list = (ArrayList<String>) in.readObject();
 				System.out.println("server : " + list.toString());
 				break;
 
@@ -174,7 +176,7 @@ public class Reference {
 
 			case DROP: // Å»Åð
 				try {
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
@@ -185,7 +187,7 @@ public class Reference {
 			case LOGOUT:
 				try 
 				{
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
@@ -195,7 +197,7 @@ public class Reference {
 
 			case TOTAL_LIST: // ¼­¹ö ÀüÃ¼ À½¾Ç ¸®½ºÆ®
 				
-				List<String> tlist = (ArrayList<String>) oin.readObject();
+				@SuppressWarnings("unchecked") List<String> tlist = (ArrayList<String>) in.readObject();
 				System.out.println("server : " + tlist.toString());
 				break;
 
@@ -206,7 +208,7 @@ public class Reference {
 				out.flush();
 
 				try {
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
@@ -220,7 +222,7 @@ public class Reference {
 				out.println(dsong);
 				out.flush();
 				try {
-					String textFS = bin.readLine();
+					Boolean textFS = (Boolean) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
