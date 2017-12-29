@@ -60,6 +60,7 @@ public class Search extends JFrame {
 						}
 						for (int i = 0; i < allList.getSelectedValuesList().size(); i++) {
 							String str = allList.getSelectedValuesList().get(i);
+							if(!MainUIwin.musicList.getModel().toString().contains(str))
 							model.addElement(str);
 						}
 						MainUIwin.musicList.setModel(model);
@@ -67,6 +68,7 @@ public class Search extends JFrame {
 				}
 			}
 		};
+
 		allList.addKeyListener(listadd);
 
 		MouseAdapter listaddmou = new MouseAdapter() {
@@ -91,15 +93,15 @@ public class Search extends JFrame {
 
 	private void design() {
 		Client cl = new Client();
-		
+
 		DefaultListModel<String> model = new DefaultListModel<>();
-				list = cl.serverMusicList(MainUIwin.TOTAL_LIST);
-		
+		list = cl.serverMusicList(MainUIwin.TOTAL_LIST);
+
 		for (int i = 0; i < list.size(); i++) {
 			model.addElement(list.get(i));
 		}
 		allList.setModel(model);
-		
+
 		setContentPane(bg);
 		bg.setBackground(Color.WHITE);
 		bg.add(top);

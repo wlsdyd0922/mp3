@@ -18,7 +18,7 @@ public class Client {
 
 	public Client() {
 		try {
-			inet = InetAddress.getByName("192.168.0.171");
+			inet = InetAddress.getByName("localhost");
 			socket = new Socket(inet, 20000);
 			out = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
@@ -68,7 +68,7 @@ public class Client {
 	public List<String> serverMusicList(int total_list) {
 		out.println(total_list);
 		out.flush();
-		out.println(Client.id);
+		out.println(123);
 		out.flush();
 		try {
 		List<String> list = (ArrayList<String>) in.readObject();
@@ -81,20 +81,20 @@ public class Client {
 	public void musicAdd(int music_add) {
 		out.println(music_add);
 		out.flush();
-		out.println(Client.id);
+		out.println(123);
 		out.flush();
 	}
 	
-	public List<String> clientMusicList(int cllist) {
-		out.println(cllist);
-		out.flush();
-		out.println(Client.id);
-		out.flush();
-		try {
-		List<String> list = (ArrayList<String>) in.readObject();
-		return list;
-		}catch (Exception e) {
-			return null;
-		}
-	}
+//	public List<String> clientMusicList(int cllist) {
+//		out.println(cllist);
+//		out.flush();
+//		out.println(123);
+//		out.flush();
+//		try {
+//		List<String> list = (ArrayList<String>) in.readObject();
+//		return list;
+//		}catch (Exception e) {
+//			return null;
+//		}
+//	}
 }

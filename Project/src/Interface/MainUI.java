@@ -218,7 +218,7 @@ class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(900, 600);
+		setSize(1100, 700);
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);

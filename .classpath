@@ -6,37 +6,37 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/customizer.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/customizer.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/jaudiotagger-2.2.6-SNAPSHOT.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/jaudiotagger-2.2.6-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/jl1.0.1.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/jl1.0.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/jmf.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/jmf.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/mediaplayer.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/mediaplayer.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/multiplayer.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/multiplayer.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/git/mp3/Project/library/sound.jar">
+	<classpathentry kind="lib" path="C:/Users/owner/git/mp3/Project/library/sound.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
