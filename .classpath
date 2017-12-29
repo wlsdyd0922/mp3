@@ -6,12 +6,37 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/204-21/Downloads/JLayer1.0.1/jl1.0.1.jar">
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/customizer.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="Project/jaudiotagger-2.2.6-SNAPSHOT.jar">
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/jaudiotagger-2.2.6-SNAPSHOT.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/jl1.0.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/jmf.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/mediaplayer.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/multiplayer.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/204-15/Downloads/jar/sound.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
