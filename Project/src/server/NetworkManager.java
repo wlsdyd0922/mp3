@@ -10,6 +10,7 @@ public class NetworkManager extends Thread{
 	private boolean status = false;
 	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
+	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
 	final static int LOGIN = 0;					//로그인 요청
 	final static int JOIN = 1;						//회원 가입
 	final static int LIST = 2;						//개인 리스트 요청
@@ -120,6 +121,7 @@ public class NetworkManager extends Thread{
 //					if(!status)
 //					{
 //						System.out.println("로그인 상태가 아님");
+//						out.println(LOGIN_CONFIRM);
 //						out.println("로그인 필요");
 //						out.flush();
 //					}
