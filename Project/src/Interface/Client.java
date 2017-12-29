@@ -27,12 +27,14 @@ public class Client {
 		out.flush();
 		out.println(pw);
 		out.flush();
+		login();
 		out.close();
 		return login();
 	}
 	private boolean login() {
 		try {
 			String log= in.readLine();
+			System.out.println(log);
 			return Boolean.parseBoolean(log);
 		} catch (IOException e) {
 			return false;

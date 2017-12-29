@@ -130,8 +130,9 @@ public class Reference {
 				String pw = s.next();
 				out.println(pw);
 				out.flush();
-				try {String textFS = bin.readLine();
-					System.out.println("server : " + textFS);
+				try {
+					String textFS = bin.readLine();
+					System.out.println(textFS);
 
 				} catch (Exception e) {
 					System.err.println("받기 실패");
