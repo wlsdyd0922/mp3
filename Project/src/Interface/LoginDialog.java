@@ -13,6 +13,7 @@ public class LoginDialog extends JDialog {
  
 	private JButton okButton = new JButton("OK");
 	private JButton cancelButton = new JButton("Cancel");
+
 	
 	public LoginDialog(JFrame owner) {
 		setupUI();
@@ -106,7 +107,6 @@ public class LoginDialog extends JDialog {
 		}
 		
 		Client cl = new Client();
-		
 		
 		cl.logInManager(MainUIwin.LOGIN, id, pw);
 		System.out.println(id+" / "+pw);

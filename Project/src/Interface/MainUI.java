@@ -12,11 +12,13 @@ import javafx.stage.FileChooser;
 class MainUIwin extends JFrame {
 	final static int LOGIN = 0; // 로그인 요청
 	final static int JOIN = 1; // 회원 가입
-	final static int LIST = 2; // 로그인 성공 후 리스트 요청
-	final static int MUSIC = 3; // 개인 리스트 요청
+	final static int LIST = 2; // 개인 리스트 요청
+	final static int MUSIC = 3; // 음악 파일 다운 요청
 	final static int DROP = 4; // 탈퇴
 	final static int LOGOUT = 5; // 로그아웃
-	final static int TOTAL_LIST = 6;
+	final static int TOTAL_LIST = 6; // 서버 전체 음악 리스트
+	final static int MUSIC_ADD = 7; // 음악 추가
+	final static int MUSIC_DEL = 8; // 음악 삭제
 
 	private JFileChooser chooser = new JFileChooser();
 	private JPanel bg1 = new JPanel(null);
@@ -27,6 +29,10 @@ class MainUIwin extends JFrame {
 	private JPanel scrollLine = new JPanel(new BorderLayout());
 
 	protected static JList<String> musicList = new JList<>(new DefaultListModel<>());
+	protected static int x;
+	protected static int y;
+//	protected static boolean logInflag = false;
+
 	private JScrollPane scroll = new JScrollPane();
 	private String[] str1 = new String[] { "노래1", "노래2", "노래3", "노래4" };
 
@@ -38,16 +44,14 @@ class MainUIwin extends JFrame {
 	private JButton[] bt = new JButton[6];
 	private JButton bt1 = new JButton("로그인");
 	private JButton bt2 = new JButton("회원가입");
-	private JButton bt3 = new JButton("서버음악검색");
+	protected static JButton bt3 = new JButton("서버음악검색");
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
 	private JMenu menu2 = new JMenu("Option");
 	private JMenuItem open = new JMenuItem("Open");
 
-	protected static int x;
-	protected static int y;
-	private JFrame search = null;
+	
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
 
@@ -74,7 +78,6 @@ class MainUIwin extends JFrame {
 						model.removeElement(str);
 					}
 					musicList.setModel(model);
-
 				}
 			}
 		};
@@ -122,7 +125,7 @@ class MainUIwin extends JFrame {
 		});
 
 		bt3.addActionListener(e -> {
-			search.setVisible(true);
+			Client.search.setVisible(true);
 		});
 	}
 
@@ -177,7 +180,7 @@ class MainUIwin extends JFrame {
 		la1.setBounds(10, 10, 400, 20);
 		bt1.setBounds(495, 10, 80, 40);
 		bt2.setBounds(490, 60, 90, 40);
-
+		bt3.setEnabled(false);
 		bg.add(la3);
 		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
 		la3.setBorder(lyrics);
@@ -192,7 +195,6 @@ class MainUIwin extends JFrame {
 	}
 
 	public MainUIwin() {
-		search = new Search();
 		design();
 		event();
 		menu();
@@ -201,14 +203,6 @@ class MainUIwin extends JFrame {
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
-	}
-
-	private void add() {
-		musicList.setListData(str1);
-	}
-
-	private void delete() {
-		musicList.getSelectedValuesList();
 	}
 }
 
