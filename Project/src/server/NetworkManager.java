@@ -8,6 +8,7 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
+	private String uId;
 	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
