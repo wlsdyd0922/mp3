@@ -2,15 +2,8 @@ package Interface;
 
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
 public class Search extends JFrame {
 	private JPanel bg = new JPanel(new BorderLayout());
@@ -21,10 +14,8 @@ public class Search extends JFrame {
 
 	private JTextField text = new JTextField();
 	private JButton bt = new JButton("검색");
-	private List list;
 
 	private void event() {
-		list = new List();
 
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
@@ -85,10 +76,6 @@ public class Search extends JFrame {
 	private void musicSearch() {
 
 	}
-	
-	
-	
-
 	private void design() {
 		setContentPane(bg);
 		bg.setBackground(Color.WHITE);
@@ -106,11 +93,11 @@ public class Search extends JFrame {
 		allList.setListData(serverMusic);
 		allList.setSelectedIndex(0);
 	}
-	
-	
-	
 
 	public Search() {
+		Client cl = new Client();
+		
+		cl.serverMusicList(MainUIwin.TOTAL_LIST);
 		design();
 		event();
 		setTitle("노래 검색");
