@@ -23,8 +23,8 @@ public class NetworkManager extends Thread{
 	
 	private Socket socket;
 	private BufferedReader in;
-	private PrintWriter out;
-	private ObjectOutputStream Oout; 
+//	private PrintWriter out;
+	private ObjectOutputStream out; 
 	private int port;
 	
 	private MemberManager memM;
@@ -53,13 +53,13 @@ public class NetworkManager extends Thread{
 					new InputStreamReader(
 							this.socket.getInputStream()));
 
-			out = new PrintWriter(
-						new BufferedWriter(
-							new OutputStreamWriter(
-									this.socket.getOutputStream())));
+//			out = new PrintWriter(
+//						new BufferedWriter(
+//							new OutputStreamWriter(
+//									this.socket.getOutputStream())));
 
-//			Oout = new ObjectOutputStream(
-//					socket.getOutputStream());
+			out = new ObjectOutputStream(
+					socket.getOutputStream());
 			
 			this.setDaemon(true);
 			this.start();
@@ -91,7 +91,8 @@ public class NetworkManager extends Thread{
 					System.out.println(socket.getInetAddress() + " email : " + email);
 
 					boolean joinResult = memM.memberAccept(id, pw, email);
-					out.println(joinResult);
+					//out.println(joinResult);
+					out.writeObject(joinResult);
 					out.flush();
 
 					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
@@ -108,12 +109,11 @@ public class NetworkManager extends Thread{
 					System.out.println(socket.getInetAddress() + " : pw " + pw);
 
 					boolean loginResult = memM.login(id, pw);
-					out.println(loginResult);
+					//out.println(loginResult);
+					out.writeObject(loginResult);
 					out.flush();
 					status = loginResult;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
-					//listSender(id);
-					//socket.close();
 					break;
 
 				case LIST:
@@ -170,7 +170,7 @@ public class NetworkManager extends Thread{
 //					out.flush();
 //				}
 					System.out.println(id + " 로그아웃");
-					out.println(true);
+					out.writeObject(true);
 					out.flush();
 					kill();
 					break;
@@ -187,13 +187,15 @@ public class NetworkManager extends Thread{
 					boolean dropResult = memM.memberDrop(id);
 					if (dropResult)
 					{
-						out.println(dropResult);
+						//out.println(dropResult);
+						out.writeObject(dropResult);
 						out.flush();
 						kill();
 					}
 					else
 					{
-						out.println("다시 로그인");
+						//out.println("다시 로그인");
+						out.writeObject("다시 로그인");
 						out.flush();
 						kill();
 					}
@@ -212,7 +214,8 @@ public class NetworkManager extends Thread{
 					System.out.println(id + " : " + addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
 					boolean addResult =musM.addToMusicList(id, addmusic);
-					out.println(addResult);
+					//out.println(addResult);
+					out.writeObject(addResult);
 					out.flush();
 					status = true;
 					break;
@@ -229,7 +232,8 @@ public class NetworkManager extends Thread{
 					String delmusic = in.readLine();
 					System.out.println(id + " " + delmusic + "삭제");
 					boolean delResult =musM.deleteMusic(id, delmusic);
-					out.println(delResult);
+					//out.println(delResult);
+					out.writeObject(delResult);
 					out.flush();
 					break;
 					
@@ -242,7 +246,8 @@ public class NetworkManager extends Thread{
 //					out.println("로그인 필요");
 //					out.flush();
 //				}
-					out.println("잘못된 접근");
+					//out.println("잘못된 접근");
+					out.writeObject("잘못된 접근");
 					out.flush();
 					break;
 				}
@@ -275,8 +280,8 @@ public class NetworkManager extends Thread{
 		{
 			System.out.println("서버 리스트 전송 : " + music);
 			
-			Oout.writeObject(music);
-			Oout.flush();
+			out.writeObject(music);
+			out.flush();
 		} 
 		catch (Exception e) 
 		{
