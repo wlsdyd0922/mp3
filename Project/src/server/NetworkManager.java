@@ -75,7 +75,7 @@ public class NetworkManager extends Thread{
 			while (flag) {
 				System.out.println(socket.toString());
 				int state;
-				String id = null;
+				//String id = null;
 				String pw = null;
 				String email = null;
 				String musicTitle = null;
@@ -84,14 +84,14 @@ public class NetworkManager extends Thread{
 				{
 				case JOIN:
 					System.out.println(socket.toString() + " 가입 요청");
-					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " id : " + id);
+					uId = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " id : " + uId);
 					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " pw : " + pw);
 					email = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " email : " + email);
 
-					boolean joinResult = memM.memberAccept(id, pw, email);
+					boolean joinResult = memM.memberAccept(uId, pw, email);
 					out.writeObject(joinResult);
 					out.flush();
 
@@ -103,16 +103,16 @@ public class NetworkManager extends Thread{
 				case LOGIN:
 					System.out.println(socket.getInetAddress() + " 로그인 시도");
 
-					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " : id " + id);
+					uId = (String)in.readObject();
+					System.out.println(socket.getInetAddress() + " : id " + uId);
 					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " : pw " + pw);
 
-					boolean loginResult = memM.login(id, pw);
+					boolean loginResult = memM.login(uId, pw);
 					out.writeObject(loginResult);
 					out.flush();
 					status = loginResult;
-					uId = id;
+					//uId = id;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
 					break;
 
@@ -236,7 +236,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(socket.getInetAddress() +" " + id + " : 음악 삭제 신청");
+					System.out.println(socket.getInetAddress() +" " + uId + " : 음악 삭제 신청");
 					String delmusic = (String)in.readObject();
 					System.out.println(uId + " " + delmusic + "삭제");
 					boolean delResult =musM.deleteMusic(uId, delmusic);
