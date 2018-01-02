@@ -7,7 +7,16 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
-	private String uId="";
+	private String uId;
+	
+	public String getuId() {
+		return uId;
+	}
+
+	public void setuId(String uId) {
+		this.uId = uId;
+	}
+
 	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
@@ -75,7 +84,7 @@ public class NetworkManager extends Thread{
 			while (flag) {
 				System.out.println(socket.toString());
 				int state;
-				//String id = null;
+				String id = null;
 				String pw = null;
 				String email = null;
 				String musicTitle = null;
@@ -84,7 +93,7 @@ public class NetworkManager extends Thread{
 				{
 				case JOIN:
 					System.out.println(socket.toString() + " 가입 요청");
-					uId = (String)in.readObject();
+					id = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " id : " + uId);
 					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " pw : " + pw);
@@ -103,12 +112,13 @@ public class NetworkManager extends Thread{
 				case LOGIN:
 					System.out.println(socket.getInetAddress() + " 로그인 시도");
 
-					uId = (String)in.readObject();
+					id = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " : id " + uId);
+					setuId(id);
 					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " : pw " + pw);
 
-					boolean loginResult = memM.login(uId, pw);
+					boolean loginResult = memM.login(getuId(), pw);
 					out.writeObject(loginResult);
 					out.flush();
 					status = loginResult;
@@ -125,8 +135,8 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(uId + " 개인 리스트 요청");
-					listSender(uId);
+					System.out.println(getuId() + " 개인 리스트 요청");
+					listSender(getuId());
 					break;
 
 				case TOTAL_LIST:
@@ -138,7 +148,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(uId + " 전체 리스트 요청");
+					System.out.println(getuId() + " 전체 리스트 요청");
 					listSender("server");
 					break;
 
@@ -151,9 +161,9 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(uId + " 음악 파일 요청");
+					System.out.println(getuId() + " 음악 파일 요청");
 					musicTitle = (String)in.readObject();
-					musicSender(uId, musicTitle);
+					musicSender(getuId(), musicTitle);
 					break;
 
 				// case UPLOAD:
@@ -172,7 +182,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(uId + " 로그아웃");
+					System.out.println(getuId() + " 로그아웃");
 					out.writeObject(true);
 					out.flush();
 					kill();
@@ -187,8 +197,8 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(uId + " 탈퇴");
-					boolean dropResult = memM.memberDrop(uId);
+					System.out.println(getuId() + " 탈퇴");
+					boolean dropResult = memM.memberDrop(getuId());
 					if (dropResult)
 					{
 						//out.println(dropResult);
@@ -214,13 +224,13 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(socket.getInetAddress() +" " + uId + " : 음악 추가 신청");
+					System.out.println(socket.getInetAddress() +" " + getuId() + " : 음악 추가 신청");
 //					String addmusic = in.readLine();
 					@SuppressWarnings("unchecked") 
 					List<String> addmusic = (List<String>) in.readObject();
-					System.out.println(uId + " : " + addmusic);
+					System.out.println(getuId() + " : " + addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
-					boolean addResult =musM.addToMusicList(uId, addmusic);
+					boolean addResult =musM.addToMusicList(getuId(), addmusic);
 					//out.println(addResult);
 					out.writeObject(addResult);
 					out.flush();
@@ -236,10 +246,10 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
-					System.out.println(socket.getInetAddress() +" " + uId + " : 음악 삭제 신청");
+					System.out.println(socket.getInetAddress() +" " + getuId() + " : 음악 삭제 신청");
 					String delmusic = (String)in.readObject();
-					System.out.println(uId + " " + delmusic + "삭제");
-					boolean delResult =musM.deleteMusic(uId, delmusic);
+					System.out.println(getuId() + " " + delmusic + "삭제");
+					boolean delResult =musM.deleteMusic(getuId(), delmusic);
 					//out.println(delResult);
 					out.writeObject(delResult);
 					out.flush();
@@ -247,7 +257,7 @@ public class NetworkManager extends Thread{
 					
 				default:
 					//id = (String)in.readObject();
-					System.out.println(uId + ": 잘못된 요청");
+					System.out.println(getuId() + ": 잘못된 요청");
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
