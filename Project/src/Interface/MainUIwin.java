@@ -137,6 +137,13 @@ public class MainUIwin extends JFrame {
 					} else if (e.getActionCommand() == "목록저장") {
 						Client cl = new Client();
 						cl.clientMusicListSave(MUSIC_ADD);
+					} else if (e.getActionCommand() == "로그아웃") {
+						bt1.setText("로그인");
+						bt2.setText("회원가입");
+						Client cl = new Client();
+						cl.logOut(LOGOUT);
+						String[] str = new String[] {};
+						Search.allList.setListData(str);
 					} else if (e.getActionCommand() == "Open") {
 						chooser.setMultiSelectionEnabled(true);
 						chooser.setFileFilter(
@@ -169,7 +176,7 @@ public class MainUIwin extends JFrame {
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		bg1.add(scrollLine);
-		
+
 		scrollLine.add(scroll, BorderLayout.CENTER);
 		scrollLine.add(bt3, BorderLayout.SOUTH);
 
@@ -222,6 +229,7 @@ public class MainUIwin extends JFrame {
 	}
 
 	public MainUIwin() {
+
 		design();
 		event();
 		menu();

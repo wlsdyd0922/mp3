@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
 public class Client {
@@ -15,7 +16,7 @@ public class Client {
 	protected static String id;
 	protected static Search search = null;
 	protected static boolean logInflag = false;
-	private List<String> list = new ArrayList();
+	private List<String> list = new ArrayList<>();
 
 	public Client() {
 		try {
@@ -35,40 +36,61 @@ public class Client {
 			out.flush();
 			out.writeObject(id);
 			out.flush();
+			this.id = id;
 			out.writeObject(pw);
 			out.flush();
-			login();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void login() {
-		try {
 			logInflag = (boolean) in.readObject();
 			if (logInflag) {
 				search = new Search();
 				MainUIwin.bt3.setEnabled(true);
 				MainUIwin.bt1.setText("로그아웃");
 				MainUIwin.bt2.setText("목록저장");
+				clientMusicList(MainUIwin.LIST);
 			} else {
 				MainUIwin.bt3.setEnabled(false);
 			}
-		} catch (Exception e) {
-			System.out.println("???");
+			out.close();
+			in.close();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+	
+	}
+
+	public void logOut(int logout) {
+		try {
+			out.writeObject(logout);
+			out.writeObject(id);
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logInflag = false;
+		String[] str = new String[] {""};
+		MainUIwin.musicList.setListData(str);
+		MainUIwin.bt3.setEnabled(false);
+		search.setVisible(false);
 	}
 
 	public void signUpManager(int join, String id, String pw, String email) {
 		try {
 			out.writeObject(join);
 			out.flush();
+			out.writeObject(id);
+			out.flush();
 			out.writeObject(pw);
 			out.flush();
 			out.writeObject(email);
 			out.flush();
+			boolean a = (boolean) in.readObject();
+			if (a) {
+				System.out.println("회원가입 완료");
+			} else {
+				System.out.println("id 중복");
+			}
 			out.close();
-		} catch (IOException e) {
+			in.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -77,7 +99,12 @@ public class Client {
 		try {
 			out.writeObject(total_list);
 			out.flush();
+			out.writeObject(id);
+			out.flush();
 			List<String> list = (ArrayList<String>) in.readObject();
+			System.out.println(list);
+			out.close();
+			in.close();
 			return list;
 		} catch (Exception e) {
 			return null;
@@ -88,22 +115,29 @@ public class Client {
 		try {
 			out.writeObject(music_add);
 			out.flush();
-			out.writeObject(123);
+			out.writeObject(id);
 			out.flush();
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public boolean clientMusicListSave(int cllist) {
+	public boolean clientMusicListSave(int cllistSave) {
 		try {
-			out.writeObject(cllist);
+			out.writeObject(cllistSave);
+			out.flush();
+			out.writeObject(id);
 			out.flush();
 			for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
-				list.add(MainUIwin.musicList.getModel().getElementAt(0));
+				list.add(MainUIwin.musicList.getModel().getElementAt(i));
 			}
 			out.writeObject(list);
+			out.flush();
+			System.out.println(list.toString());
 			boolean a = (boolean) in.readObject();
+			out.close();
+			in.close();
 			return a;
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
@@ -111,7 +145,25 @@ public class Client {
 		}
 	}
 
-	public void clientMusicList() {
-
+	public List<String> clientMusicList(int cllist) {
+		try {
+			out.writeObject(cllist);
+			out.flush();
+			out.writeObject(id);
+			out.flush();
+			List<String> list = (ArrayList<String>) in.readObject();
+			if (!(list.size() == 0)) {
+				String[] str = new String[list.size()];
+				for (int i = 0; i < list.size(); i++) {
+					str[i] = list.get(i);
+				}
+				MainUIwin.musicList.setListData(str);
+			}
+			out.close();
+			in.close();
+			return list;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

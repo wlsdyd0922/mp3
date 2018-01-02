@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 public class Search extends JFrame {
 	private JPanel bg = new JPanel(new BorderLayout());
 	private JPanel top = new JPanel(null);
-	private JList<String> allList = new JList<>(new DefaultListModel<>());
+	protected static JList<String> allList = new JList<>(new DefaultListModel<>());
 	private JScrollPane scroll = new JScrollPane();
 	private JTextField text = new JTextField();
 	private JButton bt = new JButton("°Ë»ö");
@@ -42,11 +42,7 @@ public class Search extends JFrame {
 		bt.addActionListener(e -> {
 			musicSearch();
 		});
-		WindowListener win = new WindowAdapter() {
-			public void windowClosing(WindowEvent arg0) {
 
-			}
-		};
 		KeyAdapter listadd = new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -83,6 +79,7 @@ public class Search extends JFrame {
 	}
 
 	private void musicSearch() {
+		
 
 	}
 

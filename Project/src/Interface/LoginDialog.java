@@ -75,6 +75,7 @@ public class LoginDialog extends JDialog {
 				setVisible(false);
 				nameField.setText("");
 				passwordField.setText("");
+				MainUIwin.bt1.setText("로그인");
 				super.windowClosing(arg0);
 			}
 		};
@@ -116,7 +117,7 @@ public class LoginDialog extends JDialog {
 			LoginDialog.this.setVisible(false);
 			nameField.setText("");
 			passwordField.setText("");
-			MainUIwin.bt1.setText("");
+			MainUIwin.bt1.setText("로그인");
 		});
 	}
 

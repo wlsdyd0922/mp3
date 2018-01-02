@@ -128,7 +128,6 @@ public class SignUpDialog extends JDialog {
 		Client cl = new Client();
 		cl.signUpManager(MainUIwin.JOIN, id, pw, email);
 		System.out.println("id : " + id + "/ pw : " + pw + "/ email : " + email);
-		System.out.println("회원가입 완료");
 		SignUpDialog.this.setVisible(false);
 	}
 }
