@@ -173,8 +173,8 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(id + " 로그아웃");
-					out.writeObject(true);
-					out.flush();
+//					out.writeObject(true);
+//					out.flush();
 					kill();
 					break;
 
@@ -281,8 +281,8 @@ public class NetworkManager extends Thread{
 		else
 			music = musM.loadServerList();
 		
-		if (music.isEmpty())
-		music.add("추가된 음악이 없습니다");
+//		if (music.isEmpty())
+//		music.add("추가된 음악이 없습니다");
 		
 		try
 		{
