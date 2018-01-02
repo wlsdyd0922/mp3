@@ -4,11 +4,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
-	private String uId;
+	//private String uId;
 	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
@@ -23,7 +22,8 @@ public class NetworkManager extends Thread{
 	final static int MUSIC_DEL = 8;			//음악 삭제
 	
 	private Socket socket;
-	private BufferedReader in;
+	//private BufferedReader in;
+	private ObjectInputStream in;
 	private ObjectOutputStream out; 
 	private int port;
 	
@@ -49,12 +49,19 @@ public class NetworkManager extends Thread{
 		memM = new MemberManager();
 		musM = new MusicManager();
 		try {
-			in = new BufferedReader(
-					new InputStreamReader(
-							this.socket.getInputStream()));
+//			in = new BufferedReader(
+//					new InputStreamReader(
+//							this.socket.getInputStream()));
 
+			
 			out = new ObjectOutputStream(
 					socket.getOutputStream());
+			System.out.println(out);
+			
+			in = new ObjectInputStream(
+					new BufferedInputStream(
+							this.socket.getInputStream()));
+			System.out.println(in);
 			
 			this.setDaemon(true);
 			this.start();
@@ -73,20 +80,19 @@ public class NetworkManager extends Thread{
 				String pw = null;
 				String email = null;
 				String musicTitle = null;
-				state = Integer.parseInt(in.readLine());
+				state = (int)in.readObject();
 				switch (state) 
 				{
 				case JOIN:
 					System.out.println(socket.toString() + " 가입 요청");
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " id : " + id);
-					pw = in.readLine();
+					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " pw : " + pw);
-					email = in.readLine();
+					email = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " email : " + email);
 
 					boolean joinResult = memM.memberAccept(id, pw, email);
-					//out.println(joinResult);
 					out.writeObject(joinResult);
 					out.flush();
 
@@ -98,13 +104,12 @@ public class NetworkManager extends Thread{
 				case LOGIN:
 					System.out.println(socket.getInetAddress() + " 로그인 시도");
 
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " : id " + id);
-					pw = in.readLine();
+					pw = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " : pw " + pw);
 
 					boolean loginResult = memM.login(id, pw);
-					//out.println(loginResult);
 					out.writeObject(loginResult);
 					out.flush();
 					status = loginResult;
@@ -112,7 +117,7 @@ public class NetworkManager extends Thread{
 					break;
 
 				case LIST:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -125,7 +130,7 @@ public class NetworkManager extends Thread{
 					break;
 
 				case TOTAL_LIST:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -138,7 +143,7 @@ public class NetworkManager extends Thread{
 					break;
 
 				case MUSIC:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -147,7 +152,7 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(id + " 음악 파일 요청");
-					musicTitle = in.readLine();
+					musicTitle = (String)in.readObject();
 					musicSender(id, musicTitle);
 					break;
 
@@ -159,7 +164,7 @@ public class NetworkManager extends Thread{
 				// break;
 
 				case LOGOUT:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -174,7 +179,7 @@ public class NetworkManager extends Thread{
 					break;
 
 				case DROP:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -201,7 +206,7 @@ public class NetworkManager extends Thread{
 					break;
 					
 				case MUSIC_ADD :
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -210,7 +215,8 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(socket.getInetAddress() +" " + id + " : 음악 추가 신청");
-					String addmusic = in.readLine();
+//					String addmusic = in.readLine();
+					@SuppressWarnings("unchecked") List<String> addmusic = (List<String>) in.readObject();
 					System.out.println(id + " : " + addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
 					boolean addResult =musM.addToMusicList(id, addmusic);
@@ -221,7 +227,7 @@ public class NetworkManager extends Thread{
 					break;
 					
 				case MUSIC_DEL:
-					id = in.readLine();
+					id = (String)in.readObject();
 //					if(!status)
 //					{
 //						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
@@ -230,7 +236,7 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(socket.getInetAddress() +" " + id + " : 음악 삭제 신청");
-					String delmusic = in.readLine();
+					String delmusic = (String)in.readObject();
 					System.out.println(id + " " + delmusic + "삭제");
 					boolean delResult =musM.deleteMusic(id, delmusic);
 					//out.println(delResult);
@@ -239,7 +245,7 @@ public class NetworkManager extends Thread{
 					break;
 					
 				default:
-					id = in.readLine();
+					id = (String)in.readObject();
 					System.out.println(id + ": 잘못된 요청");
 //					if(!status)
 //					{
@@ -298,7 +304,8 @@ public class NetworkManager extends Thread{
 		DatagramSocket ds = null;
 		InetAddress inet = socket.getInetAddress();
 		
-		if (!file.exists()) {
+		if (!file.exists())
+		{
 			System.out.println("File not exist");
 			return false;
 		}

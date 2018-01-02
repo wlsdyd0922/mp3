@@ -181,10 +181,11 @@ public class MusicManager /*extends Thread */{
 		return true;
 	}
 	
-	public boolean addToMusicList(String id, String music)
+	public boolean addToMusicList(String id, List<String> music)
 	{
 		List<String> list = readMusicList(id);
-		if(!list.add(music))
+		for(String s : music)
+		if(!list.add(s))
 		{
 			System.err.println("music add failed");
 			return false;

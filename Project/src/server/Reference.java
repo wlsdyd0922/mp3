@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
@@ -90,20 +91,17 @@ public class Reference {
 		InetAddress inet = InetAddress.getByName(ip);
 		socket = new Socket(inet, port);
 		
-//		BufferedReader bin = new BufferedReader(
-//				new InputStreamReader(
-//						socket.getInputStream()));
-		
 		ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(
 						socket.getInputStream()));
 		
-		System.out.println(socket);
-		PrintWriter out = new PrintWriter(
-				new BufferedWriter(
-						new OutputStreamWriter(
-								socket.getOutputStream())));
+		System.out.println(in);
+		
+		ObjectOutputStream out = new ObjectOutputStream(
+				socket.getOutputStream());
 
+		System.out.println(out);
+		
 		System.out.println("기동");
 		while (true) 
 		{
@@ -118,19 +116,19 @@ public class Reference {
 					+ "8 음악 삭제\n");
 
 			int state = s.nextInt();
-			out.println(state);
+			out.writeObject(state);
 			out.flush();
 
 			System.out.println("ID 입력");
 			String id = s.next();
-			out.println(id);
+			out.writeObject(id);
 			out.flush();
 
 			switch (state) {
 			case LOGIN:
 				System.out.println("PW 입력");
 				String pw = s.next();
-				out.println(pw);
+				out.writeObject(pw);
 				out.flush();
 				try {
 					Boolean textFS = (Boolean) in.readObject();
@@ -144,12 +142,12 @@ public class Reference {
 			case JOIN:
 				System.out.println("PW 입력");
 				pw = s.next();
-				out.println(pw);
+				out.writeObject(pw);
 				out.flush();
 
 				System.out.println("email 입력");
 				String email = s.next();
-				out.println(email);
+				out.writeObject(email);
 				out.flush();
 
 				try {
@@ -169,7 +167,7 @@ public class Reference {
 			case MUSIC:
 				System.out.println("파일명 입력");
 				String music = s.next();
-				out.println(music);
+				out.writeObject(music);
 				out.flush();
 				musicReceive(port, music);
 				break;
@@ -197,14 +195,15 @@ public class Reference {
 
 			case TOTAL_LIST: // 서버 전체 음악 리스트
 				
-				@SuppressWarnings("unchecked") List<String> tlist = (ArrayList<String>) in.readObject();
+				@SuppressWarnings("unchecked")
+				List<String> tlist = (ArrayList<String>) in.readObject();
 				System.out.println("server : " + tlist.toString());
 				break;
 
 			case MUSIC_ADD: // 음악 추가
 				System.out.println("곡 제목 입력");
 				String song = s.next();
-				out.println(song);
+				out.writeObject(song);
 				out.flush();
 
 				try {
@@ -219,7 +218,7 @@ public class Reference {
 			case MUSIC_DEL: // 음악 삭제
 				System.out.println("곡 제목 입력");
 				String dsong = s.next();
-				out.println(dsong);
+				out.writeObject(dsong);
 				out.flush();
 				try {
 					Boolean textFS = (Boolean) in.readObject();
