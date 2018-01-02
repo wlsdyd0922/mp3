@@ -7,7 +7,7 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	private boolean status = false;
-	private String uId;
+	private String uId="";
 	private Map<String,ArrayList<String>> ipList = new HashMap<>();
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
@@ -216,7 +216,8 @@ public class NetworkManager extends Thread{
 //					}
 					System.out.println(socket.getInetAddress() +" " + uId + " : 음악 추가 신청");
 //					String addmusic = in.readLine();
-					@SuppressWarnings("unchecked") List<String> addmusic = (List<String>) in.readObject();
+					@SuppressWarnings("unchecked") 
+					List<String> addmusic = (List<String>) in.readObject();
 					System.out.println(uId + " : " + addmusic);
 					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
 					boolean addResult =musM.addToMusicList(uId, addmusic);
