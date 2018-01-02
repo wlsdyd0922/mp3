@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -12,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +32,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileFilter;
 
-class MainUIwin extends JFrame {
+import javafx.stage.FileChooser;
+
+class MainUIwin extends JFrame implements ActionListener{
 	final static int LOGIN = 0; // 로그인 요청
 	final static int JOIN = 1; // 회원 가입
 	final static int LIST = 2; // 개인 리스트 요청
@@ -133,21 +139,41 @@ class MainUIwin extends JFrame {
 			signup.setVisible(true);
 		});
 
-		open.addActionListener(e -> {
-			chooser.setMultiSelectionEnabled(true);
-			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)", ".mp3"));
-			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("mpeg File (*.mpeg)", ".mpeg"));
-			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wav File (*.wav)", ".wav"));
-			chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)", ".wma"));
-			chooser.showOpenDialog(bg);
-		});
-
 		bt3.addActionListener(e -> {
 			Client.search.setVisible(true);
 		});
 
 	}
 
+	
+	public void actionPerformed(ActionEvent evt) {
+	    Object source = evt.getSource();
+	    if (source == open) {
+	      JFileChooser chooser = new JFileChooser();
+	      chooser.setCurrentDirectory(new File("."));
+	      chooser.setMultiSelectionEnabled(true);
+	      chooser.setFileFilter(new FileFilter() {
+	    	  
+	        public boolean accept(File f) {
+	          return f.getName().toLowerCase().endsWith(".mp3")|| f.isDirectory();
+	        }
+	        
+
+	        public String getDescription() {
+	          return "mp3 Files";
+	        }
+	       
+	      });
+	      int r = chooser.showOpenDialog(bg);
+	      
+	      if (r == JFileChooser.APPROVE_OPTION) {
+	        String mp3name = chooser.getSelectedFile().getPath();
+	        System.out.println(mp3name);
+	      }
+	      
+	    } 
+	  }
+	
 	private void design() {
 
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
@@ -222,11 +248,13 @@ class MainUIwin extends JFrame {
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
+		open.addActionListener(this);
 	}
 }
 
 public class MainUI {
 	public static void main(String[] args) {
 		JFrame mainui = new MainUIwin();
+		mainui.show();
 	}
 }
