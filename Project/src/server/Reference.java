@@ -200,7 +200,7 @@ public class Reference {
 				System.out.println("server : " + tlist.toString());
 				break;
 
-			case MUSIC_ADD: // 음악 추가
+			case MUSIC_ADD: // 음악 추가, 리스트화 되었으므로 주의
 				System.out.println("곡 제목 입력");
 				String song = s.next();
 				out.writeObject(song);
