@@ -31,7 +31,6 @@ public class Search extends JFrame {
 	private List<String> list = new ArrayList<>();
 
 	private void event() {
-
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -44,13 +43,11 @@ public class Search extends JFrame {
 			musicSearch();
 		});
 		WindowListener win = new WindowAdapter() {
-			@Override
 			public void windowClosing(WindowEvent arg0) {
 
 			}
 		};
 		KeyAdapter listadd = new KeyAdapter() {
-			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (allList.getSelectedValuesList() != null) {
@@ -68,11 +65,9 @@ public class Search extends JFrame {
 				}
 			}
 		};
-
 		allList.addKeyListener(listadd);
 
 		MouseAdapter listaddmou = new MouseAdapter() {
-			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					DefaultListModel<String> model = new DefaultListModel<>();

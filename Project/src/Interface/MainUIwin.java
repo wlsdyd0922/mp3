@@ -1,15 +1,12 @@
-package 시험형;
-
-
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+package Interface;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -34,13 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
-import javax.swing.filechooser.FileFilter;
 
-
-import javafx.stage.FileChooser;
-
-class MainUIwin extends JFrame implements ActionListener{
-
+public class MainUIwin extends JFrame {
 	final static int LOGIN = 0; // 로그인 요청
 	final static int JOIN = 1; // 회원 가입
 	final static int LIST = 2; // 개인 리스트 요청
@@ -71,8 +63,8 @@ class MainUIwin extends JFrame implements ActionListener{
 
 	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", };
 	private JButton[] bt = new JButton[6];
-	private JButton bt1 = new JButton("로그인");
-	private JButton bt2 = new JButton("회원가입");
+	protected static JButton bt1 = new JButton("로그인");
+	protected static JButton bt2 = new JButton("회원가입");
 	protected static JButton bt3 = new JButton("서버음악검색");
 
 	private JMenuBar bar = new JMenuBar();
@@ -135,65 +127,49 @@ class MainUIwin extends JFrame implements ActionListener{
 		};
 		musicList.addMouseListener(playMusicMou);
 
-		bt1.addActionListener(e -> {
-			login.setVisible(true);
-		});
-
-		bt2.addActionListener(e -> {
-			signup.setVisible(true);
-		});
-
-		bt3.addActionListener(e -> {
-			Client.search.setVisible(true);
-		});
-
+		ActionListener act = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() instanceof JButton) {
+					if (e.getActionCommand() == "로그인") {
+						login.setVisible(true);
+					} else if (e.getActionCommand() == "회원가입") {
+						signup.setVisible(true);
+					} else if (e.getActionCommand() == "목록저장") {
+						Client cl = new Client();
+						cl.clientMusicListSave(MUSIC_ADD);
+					} else if (e.getActionCommand() == "Open") {
+						chooser.setMultiSelectionEnabled(true);
+						chooser.setFileFilter(
+								new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)", ".mp3"));
+						chooser.setFileFilter(
+								new javax.swing.filechooser.FileNameExtensionFilter("mpeg File (*.mpeg)", ".mpeg"));
+						chooser.setFileFilter(
+								new javax.swing.filechooser.FileNameExtensionFilter("wav File (*.wav)", ".wav"));
+						chooser.setFileFilter(
+								new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)", ".wma"));
+						chooser.showOpenDialog(bg);
+					} else if (e.getActionCommand() == "서버음악검색") {
+						Client.search.setVisible(true);
+					}
+				}
+			}
+		};
+		bt1.addActionListener(act);
+		bt2.addActionListener(act);
+		open.addActionListener(act);
+		bt3.addActionListener(act);
 	}
 
-	
-	public void actionPerformed(ActionEvent evt) {
-	    Object source = evt.getSource();
-	    if (source == open) {
-	      JFileChooser chooser = new JFileChooser();
-	      chooser.setCurrentDirectory(new File("."));
-	      chooser.setMultiSelectionEnabled(true);
-	      chooser.setFileFilter(new FileFilter() {
-	    	  
-	        public boolean accept(File f) {
-	          return f.getName().toLowerCase().endsWith(".mp3")|| f.isDirectory();
-	        }
-	        
-
-	        public String getDescription() {
-	          return "mp3 Files";
-	        }
-	       
-	      });
-	      int r = chooser.showOpenDialog(bg);
-	      
-	      if (r == JFileChooser.APPROVE_OPTION) {
-	        String mp3name = chooser.getSelectedFile().getPath();
-	        System.out.println(mp3name);
-	      }
-	      
-	    } 
-	  }
-	
-	
 	private void design() {
-
-		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) d.getWidth() / 5 * 2 - 40;
-		int y = (int) d.getHeight() / 5 * 3 - 4;
-		int xp = (int) d.getWidth() / 5 - 30;
 		setContentPane(bg1);
 		bg1.add(bg, BorderLayout.CENTER);
-		bg.setBounds(0, 0, x, y);
+		bg.setBounds(0, 0, 600, 635);
 
 		scroll.setViewportView(musicList);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		bg1.add(scrollLine);
-		scrollLine.setBounds(x + 1, 0, xp - 7, y);
+		
 		scrollLine.add(scroll, BorderLayout.CENTER);
 		scrollLine.add(bt3, BorderLayout.SOUTH);
 
@@ -221,6 +197,8 @@ class MainUIwin extends JFrame implements ActionListener{
 		}
 		bt1.setBackground(Color.white);
 		bt2.setBackground(Color.white);
+
+		scrollLine.setBounds(600, 0, 283, 635);
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
 		bt[2].setBounds(210, 10, 80, 40);
@@ -228,12 +206,11 @@ class MainUIwin extends JFrame implements ActionListener{
 		bt[4].setBounds(420, 10, 90, 40);
 		bt[5].setBounds(515, 10, 60, 40);
 		la1.setBounds(10, 10, 400, 20);
-		bt1.setBounds(495, 10, 80, 40);
+		bt1.setBounds(490, 10, 90, 40);
 		bt2.setBounds(490, 60, 90, 40);
 		bt3.setEnabled(false);
 		bg.add(la3);
-		Border lyrics = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사");
-		la3.setBorder(lyrics);
+		la3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사"));
 		la3.setBackground(Color.WHITE);
 	}
 
@@ -242,7 +219,6 @@ class MainUIwin extends JFrame implements ActionListener{
 		bar.add(menu);
 		bar.add(menu2);
 		menu.add(open);
-		
 	}
 
 	public MainUIwin() {
@@ -250,17 +226,9 @@ class MainUIwin extends JFrame implements ActionListener{
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(1100, 700);
+		setSize(900, 700);
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
-		open.addActionListener(this);
-	}
-}
-
-public class MainUIex {
-	public static void main(String[] args) {
-		JFrame mainui = new MainUIwin();
-		mainui.show();
 	}
 }

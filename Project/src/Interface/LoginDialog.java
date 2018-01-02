@@ -116,6 +116,7 @@ public class LoginDialog extends JDialog {
 			LoginDialog.this.setVisible(false);
 			nameField.setText("");
 			passwordField.setText("");
+			MainUIwin.bt1.setText("");
 		});
 	}
 
