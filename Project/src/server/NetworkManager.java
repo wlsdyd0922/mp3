@@ -173,8 +173,8 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(id + " ·Î±×¾Æ¿ô");
-					out.writeObject(true);
-					out.flush();
+//					out.writeObject(true);
+//					out.flush();
 					kill();
 					break;
 
