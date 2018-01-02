@@ -109,6 +109,8 @@ public class MainUIwin extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (musicList.getSelectedValue() != null) {
 						System.out.println(musicList.getSelectedValue() + "½ÇÇà");
+						Client cl = new Client();
+						cl.play(MUSIC);
 					}
 				}
 			}
