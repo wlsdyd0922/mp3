@@ -35,7 +35,7 @@ public class Reference {
 
 	public static void musicReceive(int port, String music) {
 		////////////////////// udp 파일전송////////////////////////
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[8192];
 		long fileSize;
 		long totalReadBytes = 0;
 

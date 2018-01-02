@@ -2,6 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class NetworkManager extends Thread{
@@ -20,6 +21,9 @@ public class NetworkManager extends Thread{
 	final static int TOTAL_LIST = 6;		//서버 전체 음악 리스트
 	final static int MUSIC_ADD = 7;		//음악 추가
 	final static int MUSIC_DEL = 8;			//음악 삭제
+	
+	private Date today = new Date();
+	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
 	
 	private Socket socket;
 	//private BufferedReader in;
@@ -83,6 +87,7 @@ public class NetworkManager extends Thread{
 				switch (state) 
 				{
 				case JOIN:
+					System.out.println(f.format(today));
 					System.out.println(socket.toString() + " 가입 요청");
 					id = (String)in.readObject();
 					System.out.println(socket.getInetAddress() + " id : " + id);
@@ -101,6 +106,7 @@ public class NetworkManager extends Thread{
 					break;
 
 				case LOGIN:
+					System.out.println(f.format(today));
 					System.out.println(socket.getInetAddress() + " 로그인 시도");
 
 					id = (String)in.readObject();
@@ -125,6 +131,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					break;
@@ -138,6 +145,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(id + " 전체 리스트 요청");
 					listSender("server");
 					break;
@@ -151,6 +159,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(id + " 음악 파일 요청");
 					musicTitle = (String)in.readObject();
 					musicSender(id, musicTitle);
@@ -172,6 +181,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(id + " 로그아웃");
 //					out.writeObject(true);
 //					out.flush();
@@ -187,6 +197,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if (dropResult)
@@ -214,6 +225,7 @@ public class NetworkManager extends Thread{
 //						out.writeObject("로그인 필요");
 //						out.flush();
 //					}
+					System.out.println(f.format(today));
 					System.out.println(socket.getInetAddress() +" " + id + " : 음악 추가 신청");
 //					String addmusic = in.readLine();
 					@SuppressWarnings("unchecked") 
@@ -238,6 +250,7 @@ public class NetworkManager extends Thread{
 //					}
 					System.out.println(socket.getInetAddress() +" " + id + " : 음악 삭제 신청");
 					String delmusic = (String)in.readObject();
+					System.out.println(f.format(today));
 					System.out.println(id + " " + delmusic + "삭제");
 					boolean delResult =musM.deleteMusic(id, delmusic);
 					//out.println(delResult);
@@ -247,6 +260,7 @@ public class NetworkManager extends Thread{
 					
 				default:
 					id = (String)in.readObject();
+					System.out.println(f.format(today));
 					System.out.println(id + ": 잘못된 요청");
 //					if(!status)
 //					{
@@ -319,7 +333,7 @@ public class NetworkManager extends Thread{
 			DatagramPacket dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
 			ds.send(dp);
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[8192];
 
 			str = String.valueOf(fileSize);
 			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
