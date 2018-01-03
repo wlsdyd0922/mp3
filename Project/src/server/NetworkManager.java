@@ -335,7 +335,7 @@ public class NetworkManager extends Thread{
 			DatagramPacket dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
 			ds.send(dp);
 			FileInputStream fis = new FileInputStream(file);
-			byte[] buffer = new byte[16384];
+			byte[] buffer = new byte[65535];
 
 			str = String.valueOf(fileSize);
 			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
