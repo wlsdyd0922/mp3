@@ -300,7 +300,7 @@ public class NetworkManager extends Thread{
 		
 		try
 		{
-			System.out.println("서버 리스트 전송 : " + music);
+			System.out.println(socket.getInetAddress() + " : "+id +" 서버 리스트 전송 : " + music);
 			
 			out.writeObject(music);
 			out.flush();
@@ -353,14 +353,14 @@ public class NetworkManager extends Thread{
 			str = "end";
 			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
 			ds.send(dp);
-			System.out.println("음악 전송 완료");
+			System.out.println(socket.getInetAddress() + " : "+id + "음악 전송 완료");
 			fis.close();
 			ds.close();
 			return true;
 		} 
 		catch (Exception e) 
 		{
-			System.out.println("음악 전송 실패");
+			System.out.println(socket.getInetAddress() + " : "+id + "음악 전송 실패");
 			return false;
 		}
 	}
