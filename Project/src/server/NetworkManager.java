@@ -52,6 +52,8 @@ public class NetworkManager extends Thread{
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 		musM = new MusicManager();
+		
+//		musM.loadServerListUsingClass();
 		try {
 //			in = new BufferedReader(
 //					new InputStreamReader(
@@ -160,8 +162,8 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(f.format(today));
-					System.out.println(id + " 음악 파일 요청");
 					musicTitle = (String)in.readObject();
+					System.out.println(id + " 음악 파일 요청 " + musicTitle);
 					musicSender(id, musicTitle);
 					break;
 

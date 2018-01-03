@@ -108,9 +108,9 @@ public class MusicManager /*extends Thread */{
 				if(artist == null)artist="불명";
 				String genre = tag.getFirst(FieldKey.GENRE);
 				if(genre == null)genre="불명";
-//				System.out.println("Song Name : " + title);
-//				System.out.println("Artist : " + artist);
-//				System.out.println("Genre : " + genre);
+				System.out.println(fileName + "PlayTime : " + mp3.getAudioHeader().getTrackLength());
+				//System.out.println("Artist : " + artist);
+				//System.out.println("Genre : " + genre);
 				mList.add(new MusicInfo(fileName,artist,genre,len,bitRate));
 			} catch (Exception e) {
 				e.printStackTrace();
