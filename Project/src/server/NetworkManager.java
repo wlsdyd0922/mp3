@@ -104,7 +104,8 @@ public class NetworkManager extends Thread{
 
 					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
 					memM.memberDisplay();
-					socket.close();
+//					socket.close();
+					kill();
 					break;
 
 				case LOGIN:
@@ -122,6 +123,7 @@ public class NetworkManager extends Thread{
 					status = loginResult;
 					//uId = id;
 					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
+					kill();
 					break;
 
 				case LIST:
@@ -136,6 +138,7 @@ public class NetworkManager extends Thread{
 					System.out.println(f.format(today));
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
+					kill();
 					break;
 
 				case TOTAL_LIST:
@@ -150,6 +153,7 @@ public class NetworkManager extends Thread{
 					System.out.println(f.format(today));
 					System.out.println(id + " 전체 리스트 요청");
 					listSender("server");
+					kill();
 					break;
 
 				case MUSIC:
@@ -165,6 +169,7 @@ public class NetworkManager extends Thread{
 					musicTitle = (String)in.readObject();
 					System.out.println(id + " 음악 파일 요청 " + musicTitle);
 					musicSender(id, musicTitle);
+					kill();
 					break;
 
 				// case UPLOAD:
@@ -185,8 +190,6 @@ public class NetworkManager extends Thread{
 //					}
 					System.out.println(f.format(today));
 					System.out.println(id + " 로그아웃");
-//					out.writeObject(true);
-//					out.flush();
 					kill();
 					break;
 
@@ -258,6 +261,7 @@ public class NetworkManager extends Thread{
 					//out.println(delResult);
 					out.writeObject(delResult);
 					out.flush();
+					kill();
 					break;
 					
 				default:
@@ -273,6 +277,7 @@ public class NetworkManager extends Thread{
 //					}
 					out.writeObject("잘못된 접근");
 					out.flush();
+					kill();
 					break;
 				}
 			}
@@ -349,8 +354,8 @@ public class NetworkManager extends Thread{
 				ds.send(dp);
 				totalReadBytes += readBytes;
 				Thread.sleep(1);
-				System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
-						+ (totalReadBytes * 100 / fileSize) + " %)");
+//				System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
+//						+ (totalReadBytes * 100 / fileSize) + " %)");
 			}
 			str = "end";
 			dp = new DatagramPacket(str.getBytes(), str.getBytes().length, inet, port);
