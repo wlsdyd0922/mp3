@@ -44,7 +44,7 @@ public class Reference {
 			System.out.println("Waitng.....");
 			DatagramSocket ds = new DatagramSocket(port);
 			FileOutputStream fos = null;
-			fos = new FileOutputStream(music);
+			fos = new FileOutputStream(new File("E:\\GNS3",music));
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			ds.receive(dp);
 			String str = new String(dp.getData()).trim();
