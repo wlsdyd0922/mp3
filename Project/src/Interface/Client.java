@@ -2,11 +2,7 @@ package Interface;
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
+import java.util.*;
 
 public class Client {
 	private InetAddress inet;
@@ -18,6 +14,7 @@ public class Client {
 	protected static boolean logInflag = false;
 	private List<String> list = new ArrayList<>();
 	private int port = 20000;
+	private long size = 0;
 
 	public Client() {
 		try {
@@ -168,8 +165,11 @@ public class Client {
 			return null;
 		}
 	}
+	public long getFileSize() {
+		return this.size;
+	}
 
-	public void play(int play) {
+	public String play(int play) {
 		try {
 			String music = MainUIwin.musicList.getSelectedValue();
 			out.writeObject(play);
@@ -178,33 +178,32 @@ public class Client {
 			out.flush();
 			out.writeObject(music);
 			out.flush();
-			musicReceive(port, music);
+			size = musicReceive(port, music);
 			System.out.println("실행준비 완료");
 			out.close();
 			in.close();
-			//파일 실행
+			music = "E:\\mp3tmp\\"+music;
+			return music;
 			//끝나면 지움
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 	}
 
-	public static void musicReceive(int port, String music) {
-		byte[] buffer = new byte[8192];
-		long fileSize;
+	public static long musicReceive(int port, String music) {
+		byte[] buffer = new byte[65000];
+		long fileSize = 0;
 		long totalReadBytes = 0;
 
 		try {
 			DatagramSocket ds = new DatagramSocket(port); 
-			FileOutputStream fos = new FileOutputStream(music);
+			FileOutputStream fos = new FileOutputStream(new File("E:\\mp3tmp",music));
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			int nReadSize = 0;
 			System.out.println("Waitng.....");
-			System.out.println("1");
 			ds.receive(dp);
-			System.out.println("2");
 			String str = new String(dp.getData()).trim();
-			System.out.println("3");
 			if (str.equals("start")) {
 				System.out.println(str);
 				ds.receive(new DatagramPacket(buffer, buffer.length));
@@ -216,11 +215,13 @@ public class Client {
 					fos.write(dp.getData(), 0, nReadSize);
 					Thread.sleep(1);
 					totalReadBytes += nReadSize;
-					System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
-							+ (totalReadBytes * 100 / fileSize) + " %)");
+//					System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
+//							+ (totalReadBytes * 100 / fileSize) + " %)");
 					if (totalReadBytes >= fileSize)
 						break;
 				}
+				ds.close();
+				fos.close();
 				System.out.println("File transfer completed");
 			} else {
 				System.out.println("Start Error");
@@ -229,5 +230,6 @@ public class Client {
 			e.printStackTrace();
 		}
 		System.out.println("Process Close");
+		return fileSize;
 	}
 }

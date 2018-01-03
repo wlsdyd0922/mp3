@@ -1,36 +1,9 @@
 package Interface;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javazoom.jl.player.Player;
 
 public class MainUIwin extends JFrame {
 	final static int LOGIN = 0; // 로그인 요청
@@ -43,7 +16,12 @@ public class MainUIwin extends JFrame {
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
 
+	private PlayThread t;
+	private Client cl = null;
+	private Player p;
+
 	private JFileChooser chooser = new JFileChooser();
+	
 	private JPanel bg1 = new JPanel(null);
 	private JPanel bg = new JPanel(new GridLayout(4, 1));
 	private JPanel lyricline = new JPanel(new BorderLayout());
@@ -57,12 +35,14 @@ public class MainUIwin extends JFrame {
 	// protected static boolean logInflag = false;
 
 	private JScrollPane scroll = new JScrollPane();
-	private JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
+	protected static JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
 	private JLabel la3 = new JLabel("가사", JLabel.CENTER);
+	protected static JLabel la4 = new JLabel("비트레이트", JLabel.LEFT);
+	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
-	private String[] str = new String[] { "◀◀", "▶■", "▶▶", "반복", "Random", "All", };
-	private JButton[] bt = new JButton[6];
+	private String[] str = new String[] { "◀◀", "▶", "▶▶", "반복", "Random", "All", "■" };
+	private JButton[] bt = new JButton[7];
 	protected static JButton bt1 = new JButton("로그인");
 	protected static JButton bt2 = new JButton("회원가입");
 	protected static JButton bt3 = new JButton("서버음악검색");
@@ -74,6 +54,7 @@ public class MainUIwin extends JFrame {
 
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
+
 
 	private void event() {
 		WindowListener win = new WindowAdapter() {
@@ -108,9 +89,22 @@ public class MainUIwin extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (musicList.getSelectedValue() != null) {
-						System.out.println(musicList.getSelectedValue() + "실행");
-						Client cl = new Client();
-						cl.play(MUSIC);
+						if (t == null) {
+							t = new PlayThread();
+							t.setDaemon(true);
+							t.start();
+						} else {
+							t.kill();
+							t = new PlayThread();
+							t.setDaemon(true);
+							t.start();
+							System.out.println(t.getState());
+						}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
@@ -122,7 +116,23 @@ public class MainUIwin extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					if (musicList.getSelectedValue() != null) {
-						System.out.println(musicList.getSelectedValue() + "실행");
+						if (t == null) {
+							t = new PlayThread();
+							t.setDaemon(true);
+							t.start();
+							
+						} else {
+							t.kill();
+							t = new PlayThread();
+							t.setDaemon(true);
+							t.start();
+							System.out.println(t.getState());
+						}
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
@@ -132,21 +142,26 @@ public class MainUIwin extends JFrame {
 		ActionListener act = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() instanceof JButton) {
-					if (e.getActionCommand() == "로그인") {
+					switch (e.getActionCommand()) {
+					case "로그인":
 						login.setVisible(true);
-					} else if (e.getActionCommand() == "회원가입") {
+						break;
+					case "회원가입":
 						signup.setVisible(true);
-					} else if (e.getActionCommand() == "목록저장") {
-						Client cl = new Client();
+						break;
+					case "목록저장":
+						cl = new Client();
 						cl.clientMusicListSave(MUSIC_ADD);
-					} else if (e.getActionCommand() == "로그아웃") {
+						break;
+					case "로그아웃":
 						bt1.setText("로그인");
 						bt2.setText("회원가입");
-						Client cl = new Client();
+						cl = new Client();
 						cl.logOut(LOGOUT);
 						String[] str = new String[] {};
 						Search.allList.setListData(str);
-					} else if (e.getActionCommand() == "Open") {
+						break;
+					case "Open":
 						chooser.setMultiSelectionEnabled(true);
 						chooser.setFileFilter(
 								new javax.swing.filechooser.FileNameExtensionFilter("mp3 File (*.mp3)", ".mp3"));
@@ -157,8 +172,35 @@ public class MainUIwin extends JFrame {
 						chooser.setFileFilter(
 								new javax.swing.filechooser.FileNameExtensionFilter("wma File (*.wma)", ".wma"));
 						chooser.showOpenDialog(bg);
-					} else if (e.getActionCommand() == "서버음악검색") {
+						break;
+					case "서버음악검색":
 						Client.search.setVisible(true);
+						break;
+					case "▶":
+						if (musicList.getSelectedValue() != null) {
+							if (t == null) {
+								t = new PlayThread();
+								t.setDaemon(true);
+								t.start();
+								System.out.println(t.getState());
+							} else {
+								t.kill();
+								t = new PlayThread();
+								t.setDaemon(true);
+								t.start();
+								System.out.println(t.getState());
+							}
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+						}
+						System.out.println("스레드 개수 : " + Thread.activeCount());
+						break;
+					case "■":
+						t.kill();
+						break;
 					}
 				}
 			}
@@ -167,6 +209,8 @@ public class MainUIwin extends JFrame {
 		bt2.addActionListener(act);
 		open.addActionListener(act);
 		bt3.addActionListener(act);
+		bt[1].addActionListener(act);
+		bt[6].addActionListener(act);
 	}
 
 	private void design() {
@@ -193,9 +237,12 @@ public class MainUIwin extends JFrame {
 
 		bg.add(titleLine);
 		titleLine.add(la1);
+		titleLine.add(la4);
+		titleLine.add(la5);
 		titleLine.add(bt1);
 		titleLine.add(bt2);
-
+		
+		
 		bg.add(la2);
 		bg.add(buttonline);
 
@@ -214,7 +261,10 @@ public class MainUIwin extends JFrame {
 		bt[3].setBounds(355, 10, 60, 40);
 		bt[4].setBounds(420, 10, 90, 40);
 		bt[5].setBounds(515, 10, 60, 40);
+		bt[6].setBounds(110, 49, 80, 40);
 		la1.setBounds(10, 10, 400, 20);
+		la4.setBounds(10, 40, 400, 20);
+		la5.setBounds(10, 60, 400, 20);
 		bt1.setBounds(490, 10, 90, 40);
 		bt2.setBounds(490, 60, 90, 40);
 		bt3.setEnabled(false);
@@ -231,7 +281,6 @@ public class MainUIwin extends JFrame {
 	}
 
 	public MainUIwin() {
-
 		design();
 		event();
 		menu();
