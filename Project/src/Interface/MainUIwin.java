@@ -19,6 +19,8 @@ public class MainUIwin extends JFrame {
 	private PlayThread t;
 	private Client cl = null;
 	private Player p;
+	private int skip;
+	protected static boolean allFlag = false;
 
 	private JFileChooser chooser = new JFileChooser();
 
@@ -41,7 +43,7 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la4 = new JLabel("비트레이트", JLabel.LEFT);
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
-	private String[] str = new String[] { "◀◀", "▶", "▶▶", "반복", "Random", "All", "■", "∥" };
+	private String[] str = new String[] { "◀◀", "▶", "▶▶", "All", "Random", "반복", "■", "∥" };
 	private JButton[] bt = new JButton[8];
 	protected static JButton bt1 = new JButton("로그인");
 	protected static JButton bt2 = new JButton("회원가입");
@@ -89,12 +91,20 @@ public class MainUIwin extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					if (musicList.getSelectedValue() != null) {
 						if (t == null) {
-							t = new PlayThread();
+							if (skip != 0) {
+								t = new PlayThread(skip);
+							} else {
+								t = new PlayThread();
+							}
 							t.setDaemon(true);
 							t.start();
 						} else {
 							t.kill();
-							t = new PlayThread();
+							if (skip != 0) {
+								t = new PlayThread(skip);
+							} else {
+								t = new PlayThread();
+							}
 							t.setDaemon(true);
 							t.start();
 							System.out.println(t.getState());
@@ -116,12 +126,20 @@ public class MainUIwin extends JFrame {
 				if (e.getClickCount() == 2) {
 					if (musicList.getSelectedValue() != null) {
 						if (t == null) {
-							t = new PlayThread();
+							if (skip != 0) {
+								t = new PlayThread(skip);
+							} else {
+								t = new PlayThread();
+							}
 							t.setDaemon(true);
 							t.start();
 						} else {
 							t.kill();
-							t = new PlayThread();
+							if (skip != 0) {
+								t = new PlayThread(skip);
+							} else {
+								t = new PlayThread();
+							}
 							t.setDaemon(true);
 							t.start();
 							System.out.println(t.getState());
@@ -177,16 +195,22 @@ public class MainUIwin extends JFrame {
 					case "▶":
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
-								t = new PlayThread();
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
 								t.setDaemon(true);
 								t.start();
-								System.out.println(t.getState());
 							} else {
 								t.kill();
-								t = new PlayThread();
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
 								t.setDaemon(true);
 								t.start();
-								System.out.println(t.getState());
 							}
 							try {
 								Thread.sleep(1000);
@@ -194,14 +218,28 @@ public class MainUIwin extends JFrame {
 								e1.printStackTrace();
 							}
 						}
-						System.out.println("스레드 개수 : " + Thread.activeCount());
 						break;
 					case "■":
 						t.kill();
 						break;
 					case "∥":
-						t.stopper();
+						skip = t.stopper();
 						break;
+					case "All":
+						allFlag = true;
+						bt[3].setText("All X");
+						break;
+					case "All X":
+						bt[3].setText("All");
+						allFlag = false;
+						break;
+					case "▶▶":
+						String select = MainUIwin.musicList.getSelectedValue();
+						if (skip != 0) {
+							t = new PlayThread(skip);
+						} else {
+							t = new PlayThread();
+						}
 					}
 				}
 			}
@@ -211,6 +249,7 @@ public class MainUIwin extends JFrame {
 		open.addActionListener(act);
 		bt3.addActionListener(act);
 		bt[1].addActionListener(act);
+		bt[3].addActionListener(act);
 		bt[6].addActionListener(act);
 		bt[7].addActionListener(act);
 	}

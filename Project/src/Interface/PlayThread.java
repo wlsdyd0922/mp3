@@ -18,9 +18,12 @@ public class PlayThread extends Thread {
 	private BufferedInputStream bis;
 	private int total;
 	private int stopped;
-	private int pos = -1;
+	private int skip;
 
 	public PlayThread() {
+	}
+	public PlayThread(int skip) {
+		this.skip = skip;
 	}
 
 	public void run() {
@@ -35,13 +38,11 @@ public class PlayThread extends Thread {
 				fis = new FileInputStream(a);
 
 				total = fis.available();
-				System.out.println(total);
-				fis.skip(0);
+				fis.skip(skip);
 				bis = new BufferedInputStream(fis);
 				ap = new Player(bis);
 				Bitstream bit = new Bitstream(fis);
 
-				System.out.println(bit.readFrame());
 				MainUIwin.la1.setText(select);
 				MainUIwin.musicList.setSelectedValue(select, true);
 				MainUIwin.la4.setText("비트레이트 : " + (bit.readFrame().bitrate() / 1000) + "Kbps");
@@ -54,8 +55,7 @@ public class PlayThread extends Thread {
 				ap.close();
 				if (allFlag) {
 					if (selectNext > MainUIwin.musicList.getLastVisibleIndex()) {
-						playflag = false;
-						System.out.println(MainUIwin.musicList.getLastVisibleIndex());
+						select = MainUIwin.musicList.getModel().getElementAt(0).toString();
 					} else {
 						select = MainUIwin.musicList.getModel().getElementAt(selectNext).toString();
 						System.out.println(select);
@@ -72,14 +72,16 @@ public class PlayThread extends Thread {
 		this.playflag = false;
 	}
 
-	public void stopper() {
+	public int stopper() {
 		try {
 			stopped = fis.available();
 			ap.close();
 			System.out.println(stopped);
+			skip = total-stopped;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.playflag = false;
+		return skip;
 	}
 }
