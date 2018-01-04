@@ -21,7 +21,7 @@ public class MainUIwin extends JFrame {
 	private Player p;
 
 	private JFileChooser chooser = new JFileChooser();
-	
+
 	private JPanel bg1 = new JPanel(null);
 	private JPanel bg = new JPanel(new GridLayout(4, 1));
 	private JPanel lyricline = new JPanel(new BorderLayout());
@@ -41,8 +41,8 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la4 = new JLabel("비트레이트", JLabel.LEFT);
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
-	private String[] str = new String[] { "◀◀", "▶", "▶▶", "반복", "Random", "All", "■" };
-	private JButton[] bt = new JButton[7];
+	private String[] str = new String[] { "◀◀", "▶", "▶▶", "반복", "Random", "All", "■", "∥" };
+	private JButton[] bt = new JButton[8];
 	protected static JButton bt1 = new JButton("로그인");
 	protected static JButton bt2 = new JButton("회원가입");
 	protected static JButton bt3 = new JButton("서버음악검색");
@@ -54,7 +54,6 @@ public class MainUIwin extends JFrame {
 
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
-
 
 	private void event() {
 		WindowListener win = new WindowAdapter() {
@@ -120,7 +119,6 @@ public class MainUIwin extends JFrame {
 							t = new PlayThread();
 							t.setDaemon(true);
 							t.start();
-							
 						} else {
 							t.kill();
 							t = new PlayThread();
@@ -201,6 +199,9 @@ public class MainUIwin extends JFrame {
 					case "■":
 						t.kill();
 						break;
+					case "∥":
+						t.stopper();
+						break;
 					}
 				}
 			}
@@ -211,6 +212,7 @@ public class MainUIwin extends JFrame {
 		bt3.addActionListener(act);
 		bt[1].addActionListener(act);
 		bt[6].addActionListener(act);
+		bt[7].addActionListener(act);
 	}
 
 	private void design() {
@@ -241,8 +243,7 @@ public class MainUIwin extends JFrame {
 		titleLine.add(la5);
 		titleLine.add(bt1);
 		titleLine.add(bt2);
-		
-		
+
 		bg.add(la2);
 		bg.add(buttonline);
 
@@ -262,6 +263,7 @@ public class MainUIwin extends JFrame {
 		bt[4].setBounds(420, 10, 90, 40);
 		bt[5].setBounds(515, 10, 60, 40);
 		bt[6].setBounds(110, 49, 80, 40);
+		bt[7].setBounds(210, 49, 80, 40);
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);

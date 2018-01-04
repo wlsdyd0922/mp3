@@ -169,9 +169,8 @@ public class Client {
 		return this.size;
 	}
 
-	public String play(int play) {
+	public String play(int play,String music) {
 		try {
-			String music = MainUIwin.musicList.getSelectedValue();
 			out.writeObject(play);
 			out.flush();
 			out.writeObject(id);
@@ -215,8 +214,6 @@ public class Client {
 					fos.write(dp.getData(), 0, nReadSize);
 					Thread.sleep(1);
 					totalReadBytes += nReadSize;
-//					System.out.println("In progress: " + totalReadBytes + "/" + fileSize + " Byte(s) ("
-//							+ (totalReadBytes * 100 / fileSize) + " %)");
 					if (totalReadBytes >= fileSize)
 						break;
 				}

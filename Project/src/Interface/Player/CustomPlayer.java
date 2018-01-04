@@ -65,18 +65,7 @@ public boolean play(int pos){
     if(pos > -1) FIS.skip(pos);
     BIS = new BufferedInputStream(FIS);
     player = new Player(BIS);
-    new Thread(
-            new Runnable(){
-                public void run(){
-                    try{
-                        player.play();
-                    }catch(Exception e){
-                        JOptionPane.showMessageDialog(null, "Error playing mp3 file");
-                        valid = false;
-                    }
-                }
-            }
-    ).start();
+    player.play();
     }catch(Exception e){
         JOptionPane.showMessageDialog(null, "Error playing mp3 file");
         valid = false;
