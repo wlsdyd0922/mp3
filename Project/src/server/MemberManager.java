@@ -46,7 +46,6 @@ public class MemberManager {
 
 	public boolean updateMemberList()
 	{
-		//memberDB = new File("members", "member.db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
 																new FileOutputStream(memberDB)));)
@@ -62,7 +61,6 @@ public class MemberManager {
 	
 	public boolean readMemberList()
 	{
-		//memberDB = new File("members", "member.db");
 		try(ObjectInputStream in = new ObjectInputStream(
 				new BufferedInputStream(
 						new FileInputStream(memberDB)));)
@@ -79,7 +77,6 @@ public class MemberManager {
 
 	public boolean login(String id, String pw)  
 	{
-		//for (Member m : clientList)
 		if (clientList.get(id).getPassword().equals(pw))
 				return true;
 		return false;
@@ -90,7 +87,6 @@ public class MemberManager {
 		readMemberList();
 		if(clientList.containsKey(id))
 			return false;
-		//Member newMember = new Member(id, pw);
 		musicManager.createMusicList(id);
 		clientList.put(id, new Member(id,pw,email));//(newMember);
 		updateMemberList();
@@ -109,7 +105,6 @@ public class MemberManager {
 	}
 
 	public void memberDisplay() {
-		//memberDB = new File("members", "member.db");
 		try (ObjectInputStream obj = new ObjectInputStream(
 															new BufferedInputStream(
 															new FileInputStream(memberDB)));) {

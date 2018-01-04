@@ -233,22 +233,6 @@ public class Reference {
 				System.out.println("다시 입력");
 				break;
 			}
-
-			//////////////// 일반 데이터 수신//////////////////////////////
-			// try (BufferedReader bin = new BufferedReader(
-			// new InputStreamReader(
-			// socket.getInputStream()));)
-			// {
-			// String textFS = bin.readLine();
-			// System.out.println("server : " + textFS);
-			//
-			// } catch (Exception e) {
-			// System.err.println("받기 실패");
-			// }
-
-			///////////////////////////////////////////////////////////////////////
 		}
-		// socket.close();
-		// System.out.println("connection end");
 	}
 }

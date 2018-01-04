@@ -38,12 +38,4 @@ public class Member implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-//	public List<String> getMusicList() {
-//		return musicList;
-//	}
-//
-//	public void setMusicList(List<String> musicList) {
-//		this.musicList = musicList;
-//	}
 }
