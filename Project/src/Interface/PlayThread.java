@@ -10,20 +10,14 @@ import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.player.Player;
 
 public class PlayThread extends Thread {
-	private Player p;
 	private boolean playflag = true;
 	private float playTime = 0;
 	private Player ap;
-	private int pauseFrame = 0;
 	private boolean allFlag = true;
 	private FileInputStream fis;
 	private BufferedInputStream bis;
 	private int total;
 	private int stopped;
-	private Player player;
-	private boolean canResume;
-	private String path;
-	private boolean valid;
 	private int pos = -1;
 
 	public PlayThread() {
@@ -90,7 +84,6 @@ public class PlayThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(pauseFrame);
 		this.playflag = false;
 	}
 }
