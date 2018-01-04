@@ -36,11 +36,7 @@ public class PlayThread extends Thread {
 
 				total = fis.available();
 				System.out.println(total);
-				if (total - stopped == total) {
-					fis.skip(0);
-				} else {
-					fis.skip(total - stopped);
-				}
+				fis.skip(0);
 				bis = new BufferedInputStream(fis);
 				ap = new Player(bis);
 				Bitstream bit = new Bitstream(fis);
