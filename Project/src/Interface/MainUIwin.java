@@ -22,7 +22,6 @@ public class MainUIwin extends JFrame {
 	private int skip;
 	private boolean allFLag;
 	private boolean infFLag;
-	
 
 	private JFileChooser chooser = new JFileChooser();
 
@@ -58,7 +57,7 @@ public class MainUIwin extends JFrame {
 
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
-
+	
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			@Override
@@ -250,9 +249,14 @@ public class MainUIwin extends JFrame {
 						bt[3].setText("All");
 						break;
 					case "◀◀":
-						/////////////////////////////////////////////
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
+								int a = musicList.getSelectedIndex() - 1;
+								if (a < 0) {
+									musicList.setSelectedIndex(musicList.getLastVisibleIndex());
+								} else {
+									musicList.setSelectedIndex(a);
+								}
 								if (skip != 0) {
 									t = new PlayThread(skip);
 								} else {
@@ -264,6 +268,7 @@ public class MainUIwin extends JFrame {
 								t.start();
 							} else {
 								t.kill();
+								musicList.setSelectedIndex(t.getSelectPrev());
 								if (skip != 0) {
 									t = new PlayThread(skip);
 								} else {
@@ -280,12 +285,16 @@ public class MainUIwin extends JFrame {
 								e1.printStackTrace();
 							}
 						}
-						//////////////////////////////////////////////
 						break;
 					case "▶▶":
-						/////////////////////////////////////////////
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
+								int a = musicList.getSelectedIndex() + 1;
+								if (a > musicList.getLastVisibleIndex()) {
+									musicList.setSelectedIndex(0);
+								} else {
+									musicList.setSelectedIndex(a);
+								}
 								if (skip != 0) {
 									t = new PlayThread(skip);
 								} else {
@@ -297,6 +306,7 @@ public class MainUIwin extends JFrame {
 								t.start();
 							} else {
 								t.kill();
+								musicList.setSelectedIndex(t.getSelectNext());
 								if (skip != 0) {
 									t = new PlayThread(skip);
 								} else {
@@ -313,14 +323,13 @@ public class MainUIwin extends JFrame {
 								e1.printStackTrace();
 							}
 						}
-						//////////////////////////////////////////////
 						break;
-					case"반복":
+					case "반복":
 						t.setInfFlag(true);
 						infFLag = t.getInfFlag();
 						bt[5].setText("반복X");
 						break;
-					case"반복X":
+					case "반복X":
 						t.setInfFlag(false);
 						infFLag = t.getInfFlag();
 						bt[5].setText("반복");
@@ -333,6 +342,7 @@ public class MainUIwin extends JFrame {
 		bt2.addActionListener(act);
 		open.addActionListener(act);
 		bt3.addActionListener(act);
+		bt[0].addActionListener(act);
 		bt[1].addActionListener(act);
 		bt[2].addActionListener(act);
 		bt[3].addActionListener(act);
