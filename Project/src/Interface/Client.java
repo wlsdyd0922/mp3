@@ -15,6 +15,7 @@ public class Client {
 	private List<String> list = new ArrayList<>();
 	private int port = 20000;
 	private long size = 0;
+	private String dir = "C:\\mp3tmp\\";
 
 	public Client() {
 		try {
@@ -181,7 +182,7 @@ public class Client {
 			System.out.println("실행준비 완료");
 			out.close();
 			in.close();
-			music = "E:\\mp3tmp\\"+music;
+			music = dir+music;
 			return music;
 			//끝나면 지움
 		} catch (Exception e) {
@@ -189,20 +190,22 @@ public class Client {
 			return null;
 		}
 	}
+	public String getDir(){
+		return this.dir;
+	}
 
-	public static long musicReceive(int port, String music) {
+	public long musicReceive(int port, String music) {
 		byte[] buffer = new byte[65000];
 		long fileSize = 0;
 		long totalReadBytes = 0;
 
 		try {
-			File file = new File("C:\\mp3tmp");
+			File file = new File(dir);
 			if(!file.mkdir()) {
 				System.out.println("파일 생성 안댐");
 			}
 			DatagramSocket ds = new DatagramSocket(20000); 
-			FileOutputStream fos = new FileOutputStream(music);
-			
+			FileOutputStream fos = new FileOutputStream(new File(dir,music));
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			int nReadSize = 0;
 			System.out.println("Waitng.....");

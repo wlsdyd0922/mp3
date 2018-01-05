@@ -42,7 +42,7 @@ public class PlayThread extends Thread {
 			selectNext = MainUIwin.musicList.getSelectedIndex() + 1;
 			while (playflag) {
 				Client cl = new Client();
-				String a = cl.play(MainUIwin.MUSIC, select);
+				String a =cl.play(MainUIwin.MUSIC, select);
 				MainUIwin.musicList.setSelectedValue(select, true);
 
 				fis = new FileInputStream(a);
