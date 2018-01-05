@@ -19,7 +19,7 @@ public class PlayThread extends Thread {
 	private int skip;
 	private int selectNext;
 	private int selectPrev;
-	private String select;
+	private int select;
 
 	private float playTime = 0;
 	private Player ap;
@@ -38,22 +38,25 @@ public class PlayThread extends Thread {
 	public void run() {
 		try {
 			selectPrev = MainUIwin.musicList.getSelectedIndex() - 1;
-			select = MainUIwin.musicList.getSelectedValue();
+			select = MainUIwin.musicList.getSelectedIndex();
 			selectNext = MainUIwin.musicList.getSelectedIndex() + 1;
 			while (playflag) {
+				if (ranFlag) {
+					selectNext = (int) (Math.random() * MainUIwin.musicList.getLastVisibleIndex());
+				}
 				Client cl = new Client();
-				String a = cl.play(MainUIwin.MUSIC, select);
-				MainUIwin.musicList.setSelectedValue(select, true);
+				String a = cl.play(MainUIwin.MUSIC, MainUIwin.musicList.getModel().getElementAt(select).toString());
+				MainUIwin.musicList.setSelectedIndex(select);
 
 				fis = new FileInputStream(a);
 
 				total = fis.available();
-				fis.skip(total - 50000);
+				fis.skip(skip);
 				bis = new BufferedInputStream(fis);
 				ap = new Player(bis);
 				Bitstream bit = new Bitstream(fis);
-				
-				MainUIwin.la1.setText(select);
+
+				MainUIwin.la1.setText(MainUIwin.musicList.getModel().getElementAt(select).toString());
 				MainUIwin.la4.setText("비트레이트 : " + (bit.readFrame().bitrate() / 1000) + "Kbps");
 				MainUIwin.la5.setText("주파수 : " + (bit.readFrame().frequency() / 1000.0) + "Khz");
 				playTime = (int) ((float) cl.getFileSize() * 8 / bit.readFrame().bitrate() * 10);
@@ -68,11 +71,11 @@ public class PlayThread extends Thread {
 						if (!infiFlag) {
 							playflag = false;
 						} else {
-							select = MainUIwin.musicList.getModel().getElementAt(0).toString();
+							select = 0;
 							selectNext = 1;
 						}
 					} else {
-						select = MainUIwin.musicList.getModel().getElementAt(selectNext).toString();
+						select = selectNext;
 						selectNext = selectNext + 1;
 					}
 				} else {
@@ -118,6 +121,9 @@ public class PlayThread extends Thread {
 		}
 		return this.selectNext;
 	}
+	public int getSelect() {
+		return this.select;
+	}
 
 	public int getSelectPrev() {
 		if (selectPrev < 0) {
@@ -130,15 +136,15 @@ public class PlayThread extends Thread {
 		this.infiFlag = infflag;
 	}
 
-	public boolean getInfFlag() {
-		return this.infiFlag;
+	public void setRanFlag(boolean ranFlag) {
+		this.ranFlag = ranFlag;
 	}
 
-	public void suffe() {
-		for (int i = 0; i < MainUIwin.musicList.getLastVisibleIndex(); i++) {
+	public boolean getRanFlag() {
+		return this.ranFlag;
+	}
 
-			suff.add(i);
-		}
-		Collections.shuffle(suff);
+	public boolean getInfFlag() {
+		return this.infiFlag;
 	}
 }

@@ -104,14 +104,7 @@ public class LoginDialog extends JDialog {
 			loginPass();
 			nameField.setText("");
 			passwordField.setText("");
-//
-//			Client cl = new Client();
-//			clList = cl.clientMusicList(MainUIwin.LIST);
-//			DefaultListModel<String> model = new DefaultListModel<>();
-//			for (int i = 0; i < clList.size(); i++) {
-//				model.addElement(clList.get(i));
-//			}
-//			MainUIwin.musicList.setModel(model);
+			
 		});
 		cancelButton.addActionListener(e -> {
 			LoginDialog.this.setVisible(false);

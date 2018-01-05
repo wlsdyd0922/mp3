@@ -22,6 +22,8 @@ public class MainUIwin extends JFrame {
 	private int skip;
 	private boolean allFLag;
 	private boolean infFLag;
+	private boolean ranFlag;
+	private int sel = 0;
 
 	private JFileChooser chooser = new JFileChooser();
 
@@ -44,11 +46,14 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la4 = new JLabel("비트레이트", JLabel.LEFT);
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
-	private String[] str = new String[] { "◀◀", "▶", "▶▶", "All", "Random", "반복", "■", "∥" };
-	private JButton[] bt = new JButton[8];
+	private String[] str = new String[] { "◀◀", "▶", "▶▶", "■", "∥" };
+	private JButton[] bt = new JButton[5];
 	protected static JButton bt1 = new JButton("로그인");
 	protected static JButton bt2 = new JButton("회원가입");
 	protected static JButton bt3 = new JButton("서버음악검색");
+	protected static JButton bt4 = new JButton("All");
+	protected static JButton bt5 = new JButton("Random");
+	protected static JButton bt6 = new JButton("반복");
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
@@ -57,7 +62,7 @@ public class MainUIwin extends JFrame {
 
 	private LoginDialog login = new LoginDialog(this);
 	private SignUpDialog signup = new SignUpDialog(this);
-	
+
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			@Override
@@ -90,6 +95,9 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					if (sel != musicList.getSelectedIndex()) {
+						skip = 0;
+					}
 					if (musicList.getSelectedValue() != null) {
 						if (t == null) {
 							if (skip != 0) {
@@ -97,6 +105,7 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setRanFlag(ranFlag);
 							t.setAllFlag(allFLag);
 							t.setInfFlag(infFLag);
 							t.setDaemon(true);
@@ -108,6 +117,7 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setRanFlag(ranFlag);
 							t.setAllFlag(allFLag);
 							t.setInfFlag(infFLag);
 							t.setDaemon(true);
@@ -129,6 +139,9 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
+					if (sel != musicList.getSelectedIndex()) {
+						skip = 0;
+					}
 					if (musicList.getSelectedValue() != null) {
 						if (t == null) {
 							if (skip != 0) {
@@ -136,6 +149,7 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setRanFlag(ranFlag);
 							t.setAllFlag(allFLag);
 							t.setInfFlag(infFLag);
 							t.setDaemon(true);
@@ -147,11 +161,11 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setRanFlag(ranFlag);
 							t.setAllFlag(allFLag);
 							t.setInfFlag(infFLag);
 							t.setDaemon(true);
 							t.start();
-							System.out.println(t.getState());
 						}
 						try {
 							Thread.sleep(1000);
@@ -202,6 +216,9 @@ public class MainUIwin extends JFrame {
 						Client.search.setVisible(true);
 						break;
 					case "▶":
+						if (sel != musicList.getSelectedIndex()) {
+							skip = 0;
+						}
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
 								if (skip != 0) {
@@ -209,6 +226,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -220,6 +238,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -233,20 +252,30 @@ public class MainUIwin extends JFrame {
 						}
 						break;
 					case "■":
-						t.kill();
+						if (t != null) {
+							t.kill();
+							skip = 0;
+						}
 						break;
 					case "∥":
-						skip = t.stopper();
+						if (t != null) {
+							skip = t.stopper();
+							sel = t.getSelect();
+						}
 						break;
 					case "All":
-						t.setAllFlag(true);
-						allFLag = t.getAllFlag();
-						bt[3].setText("All X");
+						if (t != null) {
+							t.setAllFlag(true);
+							allFLag = t.getAllFlag();
+							bt[3].setText("All X");
+						}
 						break;
 					case "All X":
-						t.setAllFlag(false);
-						allFLag = t.getAllFlag();
-						bt[3].setText("All");
+						if (t != null) {
+							t.setAllFlag(false);
+							allFLag = t.getAllFlag();
+							bt[3].setText("All");
+						}
 						break;
 					case "◀◀":
 						if (musicList.getSelectedValue() != null) {
@@ -262,6 +291,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -274,6 +304,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -300,6 +331,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -312,6 +344,7 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setRanFlag(ranFlag);
 								t.setAllFlag(allFLag);
 								t.setInfFlag(infFLag);
 								t.setDaemon(true);
@@ -325,30 +358,52 @@ public class MainUIwin extends JFrame {
 						}
 						break;
 					case "반복":
-						t.setInfFlag(true);
-						infFLag = t.getInfFlag();
-						bt[5].setText("반복X");
+						if (t != null) {
+							t.setInfFlag(true);
+							infFLag = t.getInfFlag();
+							bt6.setText("반복X");
+						}
 						break;
 					case "반복X":
-						t.setInfFlag(false);
-						infFLag = t.getInfFlag();
-						bt[5].setText("반복");
+						if (t != null) {
+							t.setInfFlag(false);
+							infFLag = t.getInfFlag();
+							bt6.setText("반복");
+						}
+						break;
+					case "Random":
+						if (t != null) {
+							t.setRanFlag(true);
+							ranFlag = t.getRanFlag();
+							bt5.setText("Random X");
+							bt6.setEnabled(false);
+						}
+						break;
+					case "Random X":
+						if (t != null) {
+							t.setRanFlag(false);
+							ranFlag = t.getRanFlag();
+							bt5.setText("Random");
+							bt6.setEnabled(true);
+						}
 						break;
 					}
 				}
 			}
 		};
+		open.addActionListener(act);
 		bt1.addActionListener(act);
 		bt2.addActionListener(act);
-		open.addActionListener(act);
 		bt3.addActionListener(act);
+		bt4.addActionListener(act);
+		bt5.addActionListener(act);
+		bt6.addActionListener(act);
 		bt[0].addActionListener(act);
 		bt[1].addActionListener(act);
 		bt[2].addActionListener(act);
 		bt[3].addActionListener(act);
-		bt[5].addActionListener(act);
-		bt[6].addActionListener(act);
-		bt[7].addActionListener(act);
+		bt[4].addActionListener(act);
+
 	}
 
 	private void design() {
@@ -388,18 +443,27 @@ public class MainUIwin extends JFrame {
 			buttonline.add(bt[i]);
 			bt[i].setBackground(Color.WHITE);
 		}
+		buttonline.add(bt4);
+		buttonline.add(bt5);
+		buttonline.add(bt6);
 		bt1.setBackground(Color.white);
 		bt2.setBackground(Color.white);
+		bt4.setBackground(Color.white);
+		bt5.setBackground(Color.white);
+		bt6.setBackground(Color.white);
+		bt4.setEnabled(false);
+		bt5.setEnabled(false);
+		bt6.setEnabled(false);
 
 		scrollLine.setBounds(600, 0, 283, 635);
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
 		bt[2].setBounds(210, 10, 80, 40);
-		bt[3].setBounds(355, 10, 60, 40);
-		bt[4].setBounds(420, 10, 90, 40);
-		bt[5].setBounds(515, 10, 60, 40);
-		bt[6].setBounds(110, 49, 80, 40);
-		bt[7].setBounds(210, 49, 80, 40);
+		bt4.setBounds(355, 10, 60, 40);
+		bt5.setBounds(420, 10, 90, 40);
+		bt6.setBounds(515, 10, 60, 40);
+		bt[3].setBounds(110, 49, 80, 40);
+		bt[4].setBounds(210, 49, 80, 40);
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);

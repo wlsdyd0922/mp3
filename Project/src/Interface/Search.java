@@ -51,6 +51,7 @@ public class Search extends JFrame {
 						for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
 							model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
 						}
+						
 						for (int i = 0; i < allList.getSelectedValuesList().size(); i++) {
 							String str = allList.getSelectedValuesList().get(i);
 							if(!MainUIwin.musicList.getModel().toString().contains(str))

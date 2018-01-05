@@ -45,6 +45,9 @@ public class Client {
 				MainUIwin.bt3.setEnabled(true);
 				MainUIwin.bt1.setText("로그아웃");
 				MainUIwin.bt2.setText("목록저장");
+				MainUIwin.bt4.setEnabled(true);
+				MainUIwin.bt5.setEnabled(true);
+				MainUIwin.bt6.setEnabled(true);
 				clientMusicList(MainUIwin.LIST);
 			} else {
 				MainUIwin.bt3.setEnabled(false);
