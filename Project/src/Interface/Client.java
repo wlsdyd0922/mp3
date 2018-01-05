@@ -196,8 +196,13 @@ public class Client {
 		long totalReadBytes = 0;
 
 		try {
-			DatagramSocket ds = new DatagramSocket(port); 
-			FileOutputStream fos = new FileOutputStream(new File("E:\\mp3tmp",music));
+			File file = new File("C:\\mp3tmp");
+			if(!file.mkdir()) {
+				System.out.println("颇老 积己 救达");
+			}
+			DatagramSocket ds = new DatagramSocket(20000); 
+			FileOutputStream fos = new FileOutputStream(music);
+			
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			int nReadSize = 0;
 			System.out.println("Waitng.....");

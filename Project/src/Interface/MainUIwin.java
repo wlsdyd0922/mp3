@@ -249,7 +249,71 @@ public class MainUIwin extends JFrame {
 						allFLag = t.getAllFlag();
 						bt[3].setText("All");
 						break;
+					case "◀◀":
+						/////////////////////////////////////////////
+						if (musicList.getSelectedValue() != null) {
+							if (t == null) {
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
+								t.setDaemon(true);
+								t.start();
+							} else {
+								t.kill();
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
+								t.setDaemon(true);
+								t.start();
+							}
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+						}
+						//////////////////////////////////////////////
+						break;
 					case "▶▶":
+						/////////////////////////////////////////////
+						if (musicList.getSelectedValue() != null) {
+							if (t == null) {
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
+								t.setDaemon(true);
+								t.start();
+							} else {
+								t.kill();
+								if (skip != 0) {
+									t = new PlayThread(skip);
+								} else {
+									t = new PlayThread();
+								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
+								t.setDaemon(true);
+								t.start();
+							}
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e1) {
+								e1.printStackTrace();
+							}
+						}
+						//////////////////////////////////////////////
 						break;
 					case"반복":
 						t.setInfFlag(true);
@@ -258,6 +322,7 @@ public class MainUIwin extends JFrame {
 						break;
 					case"반복X":
 						t.setInfFlag(false);
+						infFLag = t.getInfFlag();
 						bt[5].setText("반복");
 						break;
 					}
@@ -269,6 +334,7 @@ public class MainUIwin extends JFrame {
 		open.addActionListener(act);
 		bt3.addActionListener(act);
 		bt[1].addActionListener(act);
+		bt[2].addActionListener(act);
 		bt[3].addActionListener(act);
 		bt[5].addActionListener(act);
 		bt[6].addActionListener(act);

@@ -10,18 +10,24 @@ import javazoom.jl.player.Player;
 
 public class PlayThread extends Thread {
 	private boolean playflag = true;
-	private float playTime = 0;
-	private Player ap;
 	private boolean allFlag = false;
-	private FileInputStream fis;
-	private BufferedInputStream bis;
+	private boolean infiFlag = false;
+	private boolean ranFlag = false;
 	private int total;
 	private int stopped;
 	private int skip;
-	private boolean infiFlag = false;
-	private boolean ranFlag = false;
+	private int selectNext;
+	private String select;
+	
+	private float playTime = 0;
+	private Player ap;
+	private FileInputStream fis;
+	private BufferedInputStream bis;
+
+
 	private int[] suf = new int[MainUIwin.musicList.getLastVisibleIndex()];
 	private List<Integer> suff = new ArrayList<>();
+
 
 	public PlayThread() {
 	}
@@ -32,8 +38,8 @@ public class PlayThread extends Thread {
 
 	public void run() {
 		try {
-			String select = MainUIwin.musicList.getSelectedValue();
-			int selectNext = MainUIwin.musicList.getSelectedIndex() + 1;
+			select = MainUIwin.musicList.getSelectedValue();
+			selectNext = MainUIwin.musicList.getSelectedIndex() + 1;
 			while (playflag) {
 				Client cl = new Client();
 				String a = cl.play(MainUIwin.MUSIC, select);
@@ -69,9 +75,10 @@ public class PlayThread extends Thread {
 						select = MainUIwin.musicList.getModel().getElementAt(selectNext).toString();
 						selectNext = selectNext + 1;
 					}
-				}
-				if (!infiFlag && !allFlag) {
-					playflag = false;
+				}else {
+					if(!infiFlag) {
+						playflag = false;	
+					}
 				}
 			}
 		} catch (Exception e) {
