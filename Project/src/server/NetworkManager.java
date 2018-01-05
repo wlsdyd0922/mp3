@@ -22,7 +22,7 @@ public class NetworkManager extends Thread{
 	final static int MUSIC_DEL = 8;			//음악 삭제
 	
 	private Date today = new Date();
-	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss");
 	
 	private Socket socket;
 	private ObjectInputStream in;
@@ -54,12 +54,12 @@ public class NetworkManager extends Thread{
 		try {
 			out = new ObjectOutputStream(
 					socket.getOutputStream());
-			System.out.println(out);
+			//System.out.println(out);
 			
 			in = new ObjectInputStream(
 					new BufferedInputStream(
 							this.socket.getInputStream()));
-			System.out.println(in);
+			//System.out.println(in);
 			
 			this.setDaemon(true);
 			this.start();
@@ -72,6 +72,7 @@ public class NetworkManager extends Thread{
 	{
 		try {
 			while (flag) {
+				System.out.println(f.format(today));
 				System.out.println(socket.toString());
 				int state;
 				String id = null;
@@ -105,9 +106,9 @@ public class NetworkManager extends Thread{
 					System.out.println(socket.getInetAddress() + " 로그인 시도");
 
 					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " : id " + id);
+					System.out.println(socket.getInetAddress() + " : id = " + id);
 					pw = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " : pw " + pw);
+					System.out.println(socket.getInetAddress() + " : pw = " + pw);
 
 					boolean loginResult = memM.login(id, pw);
 					out.writeObject(loginResult);
@@ -125,6 +126,7 @@ public class NetworkManager extends Thread{
 //						out.flush();
 //					}
 					System.out.println(f.format(today));
+					System.out.println(socket.getInetAddress());
 					System.out.println(id + " 개인 리스트 요청");
 					listSender(id);
 					kill();
@@ -133,6 +135,7 @@ public class NetworkManager extends Thread{
 				case TOTAL_LIST:
 					id = (String)in.readObject();
 					System.out.println(f.format(today));
+					System.out.println(socket.getInetAddress());
 					System.out.println(id + " 전체 리스트 요청");
 					listSender("server");
 					break;
@@ -141,6 +144,7 @@ public class NetworkManager extends Thread{
 					id = (String)in.readObject();
 					System.out.println(f.format(today));
 					musicTitle = (String)in.readObject();
+					System.out.println(socket.getInetAddress());
 					System.out.println(id + " 음악 파일 요청 " + musicTitle);
 					musicSender(id, musicTitle);
 					break;
@@ -148,12 +152,14 @@ public class NetworkManager extends Thread{
 				case LOGOUT:
 					id = (String)in.readObject();
 					System.out.println(f.format(today));
+					System.out.println(socket.getInetAddress());
 					System.out.println(id + " 로그아웃");
 					break;
 
 				case DROP:
 					id = (String)in.readObject();
 					System.out.println(f.format(today));
+					System.out.println(socket.getInetAddress());
 					System.out.println(id + " 탈퇴");
 					boolean dropResult = memM.memberDrop(id);
 					if (dropResult)

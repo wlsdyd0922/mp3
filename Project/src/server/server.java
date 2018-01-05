@@ -11,7 +11,7 @@ public class server {
 			{
 				Socket s = server.accept();
 				NetworkManager nm = new NetworkManager(s);
-				System.out.println("匙飘况农 概聪历 积己");
+				System.out.println("Client Accessed");
 			}
 			
 		}catch(Exception e) {
