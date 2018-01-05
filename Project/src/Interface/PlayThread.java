@@ -3,8 +3,7 @@ package Interface;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.swing.JOptionPane;
+import java.util.*;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.player.Player;
@@ -13,15 +12,20 @@ public class PlayThread extends Thread {
 	private boolean playflag = true;
 	private float playTime = 0;
 	private Player ap;
-	private boolean allFlag = true;
+	private boolean allFlag = false;
 	private FileInputStream fis;
 	private BufferedInputStream bis;
 	private int total;
 	private int stopped;
 	private int skip;
+	private boolean infiFlag = false;
+	private boolean ranFlag = false;
+	private int[] suf = new int[MainUIwin.musicList.getLastVisibleIndex()];
+	private List<Integer> suff = new ArrayList<>();
 
 	public PlayThread() {
 	}
+
 	public PlayThread(int skip) {
 		this.skip = skip;
 	}
@@ -38,13 +42,12 @@ public class PlayThread extends Thread {
 				fis = new FileInputStream(a);
 
 				total = fis.available();
-				fis.skip(skip);
+				fis.skip(total - 50000);
 				bis = new BufferedInputStream(fis);
 				ap = new Player(bis);
 				Bitstream bit = new Bitstream(fis);
 
 				MainUIwin.la1.setText(select);
-				MainUIwin.musicList.setSelectedValue(select, true);
 				MainUIwin.la4.setText("비트레이트 : " + (bit.readFrame().bitrate() / 1000) + "Kbps");
 				MainUIwin.la5.setText("주파수 : " + (bit.readFrame().frequency() / 1000.0) + "Khz");
 				playTime = (int) ((float) cl.getFileSize() * 8 / bit.readFrame().bitrate() * 10);
@@ -53,13 +56,22 @@ public class PlayThread extends Thread {
 
 				ap.play();
 				ap.close();
+
 				if (allFlag) {
 					if (selectNext > MainUIwin.musicList.getLastVisibleIndex()) {
-						select = MainUIwin.musicList.getModel().getElementAt(0).toString();
+						if (!infiFlag) {
+							playflag = false;
+						} else {
+							select = MainUIwin.musicList.getModel().getElementAt(0).toString();
+							selectNext = 1;
+						}
 					} else {
 						select = MainUIwin.musicList.getModel().getElementAt(selectNext).toString();
-						System.out.println(select);
+						selectNext = selectNext + 1;
 					}
+				}
+				if (!infiFlag && !allFlag) {
+					playflag = false;
 				}
 			}
 		} catch (Exception e) {
@@ -77,11 +89,35 @@ public class PlayThread extends Thread {
 			stopped = fis.available();
 			ap.close();
 			System.out.println(stopped);
-			skip = total-stopped;
+			skip = total - stopped;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.playflag = false;
 		return skip;
+	}
+
+	public void setAllFlag(boolean allflag) {
+		this.allFlag = allflag;
+	}
+
+	public boolean getAllFlag() {
+		return this.allFlag;
+	}
+
+	public void setInfFlag(boolean infflag) {
+		this.infiFlag = infflag;
+	}
+
+	public boolean getInfFlag() {
+		return this.infiFlag;
+	}
+
+	public void suffe() {
+		for (int i = 0; i < suf.length; i++) {
+			suf[i] = i;
+			suff.add(i);
+		}
+		Collections.shuffle(suff);
 	}
 }

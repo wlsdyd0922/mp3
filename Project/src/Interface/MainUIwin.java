@@ -20,7 +20,9 @@ public class MainUIwin extends JFrame {
 	private Client cl = null;
 	private Player p;
 	private int skip;
-	protected static boolean allFlag = false;
+	private boolean allFLag;
+	private boolean infFLag;
+	
 
 	private JFileChooser chooser = new JFileChooser();
 
@@ -96,6 +98,8 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setAllFlag(allFLag);
+							t.setInfFlag(infFLag);
 							t.setDaemon(true);
 							t.start();
 						} else {
@@ -105,6 +109,8 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setAllFlag(allFLag);
+							t.setInfFlag(infFLag);
 							t.setDaemon(true);
 							t.start();
 							System.out.println(t.getState());
@@ -131,6 +137,8 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setAllFlag(allFLag);
+							t.setInfFlag(infFLag);
 							t.setDaemon(true);
 							t.start();
 						} else {
@@ -140,6 +148,8 @@ public class MainUIwin extends JFrame {
 							} else {
 								t = new PlayThread();
 							}
+							t.setAllFlag(allFLag);
+							t.setInfFlag(infFLag);
 							t.setDaemon(true);
 							t.start();
 							System.out.println(t.getState());
@@ -200,6 +210,8 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
 								t.setDaemon(true);
 								t.start();
 							} else {
@@ -209,6 +221,8 @@ public class MainUIwin extends JFrame {
 								} else {
 									t = new PlayThread();
 								}
+								t.setAllFlag(allFLag);
+								t.setInfFlag(infFLag);
 								t.setDaemon(true);
 								t.start();
 							}
@@ -226,20 +240,26 @@ public class MainUIwin extends JFrame {
 						skip = t.stopper();
 						break;
 					case "All":
-						allFlag = true;
+						t.setAllFlag(true);
+						allFLag = t.getAllFlag();
 						bt[3].setText("All X");
 						break;
 					case "All X":
+						t.setAllFlag(false);
+						allFLag = t.getAllFlag();
 						bt[3].setText("All");
-						allFlag = false;
 						break;
 					case "▶▶":
-						String select = MainUIwin.musicList.getSelectedValue();
-						if (skip != 0) {
-							t = new PlayThread(skip);
-						} else {
-							t = new PlayThread();
-						}
+						break;
+					case"반복":
+						t.setInfFlag(true);
+						infFLag = t.getInfFlag();
+						bt[5].setText("반복X");
+						break;
+					case"반복X":
+						t.setInfFlag(false);
+						bt[5].setText("반복");
+						break;
 					}
 				}
 			}
@@ -250,6 +270,7 @@ public class MainUIwin extends JFrame {
 		bt3.addActionListener(act);
 		bt[1].addActionListener(act);
 		bt[3].addActionListener(act);
+		bt[5].addActionListener(act);
 		bt[6].addActionListener(act);
 		bt[7].addActionListener(act);
 	}
