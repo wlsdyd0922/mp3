@@ -17,8 +17,7 @@ import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
-public class MusicManager /*extends Thread */{ 
-	//private static List<String> list;
+public class MusicManager{ 
 	MusicManager() 
 	{
 	}
@@ -49,21 +48,7 @@ public class MusicManager /*extends Thread */{
 	public boolean createMusicList(String id)
 	{
 		List<String> list = new ArrayList<>();
-		//list.add(" ");
 		File musicList = new File("members",id+".db");
-//		if(!musicList.exists())
-//		{
-//			try {
-//				musicList.createNewFile();
-//				System.out.println(id+".db 생성");
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//				return false;
-//			}
-//			return true;
-//		}
-//		else
-//			return false;
 		try (ObjectOutputStream obj = new ObjectOutputStream(
 				new BufferedOutputStream(
 						new FileOutputStream(musicList)));) {
@@ -108,9 +93,7 @@ public class MusicManager /*extends Thread */{
 				if(artist == null)artist="불명";
 				String genre = tag.getFirst(FieldKey.GENRE);
 				if(genre == null)genre="불명";
-				System.out.println(fileName + "PlayTime : " + mp3.getAudioHeader().getTrackLength());
-				//System.out.println("Artist : " + artist);
-				//System.out.println("Genre : " + genre);
+			
 				mList.add(new MusicInfo(fileName,artist,genre,len,bitRate));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -136,16 +119,6 @@ public class MusicManager /*extends Thread */{
 		}
 	}
 	
-//	public boolean addMusic(String id,String music)
-//	{
-//		list = readMusicList(id);
-//		if(!list.add(music))
-//		{
-//			System.err.println("music add failed");
-//		}
-//		return updateMusicList(id);
-//	}
-	
 	public boolean deleteMusic(String id, String music)
 	{
 		List<String> list = readMusicList(id);
@@ -165,7 +138,6 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean updateMusicList(String id,List<String> list)
 	{
-		//List<String> list = readMusicList(id);
 		File musicList = new File("members",id+".db");
 		try(ObjectOutputStream obj = new ObjectOutputStream(
 															new BufferedOutputStream(
@@ -183,13 +155,6 @@ public class MusicManager /*extends Thread */{
 	
 	public boolean addToMusicList(String id, List<String> music)
 	{
-//		List<String> list = readMusicList(id);
-//		for(String s : music)
-//		if(!list.add(s))
-//		{
-//			System.err.println("music add failed");
-//			return false;
-//		}
 		return updateMusicList(id,music);
 	}
 	
@@ -200,5 +165,37 @@ public class MusicManager /*extends Thread */{
 			return true;
 		else
 			return false;
+	}
+	public boolean saveLyric(String music,String lyrics)
+	{
+		File musicLyric = new File("musics",music+".lr");
+		try(ObjectOutputStream obj = new ObjectOutputStream(
+															new BufferedOutputStream(
+															  new FileOutputStream(musicLyric)));)
+		{
+			obj.writeObject(lyrics);
+		}
+		catch (Exception e) 
+		{
+			System.err.println("music list update failed");
+			return false;
+		}
+		return true;
+	}
+	public String loadLyric(String music) 
+	{
+		File musicLyric = new File("musics",music+".lr");
+		try (ObjectInputStream obj = new ObjectInputStream(
+														  new BufferedInputStream(
+														   new FileInputStream(musicLyric)));)
+		{
+			String list;
+			list = (String) obj.readObject();
+			return list;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

@@ -32,7 +32,9 @@ public class Reference {
 	final static int TOTAL_LIST = 6; // 서버 전체 음악 리스트
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
-
+	final static int LYRIC_CALL = 9;		//가사 요청
+	final static int LYRIC_ADD = 1024735;			//가사 추가
+	
 	public static void musicReceive(int port, String music) {
 		////////////////////// udp 파일전송////////////////////////
 		byte[] buffer = new byte[8192];
@@ -113,7 +115,8 @@ public class Reference {
 					+ "5 로그아웃\n" 
 					+ "6 서버 음악 리스트\n"
 					+ "7 음악 추가\n" 
-					+ "8 음악 삭제\n");
+					+ "8 음악 삭제\n"
+					+ "1024735 가사 추가");
 
 			int state = s.nextInt();
 			out.writeObject(state);
@@ -229,6 +232,19 @@ public class Reference {
 				}
 				break;
 
+			case LYRIC_ADD:
+				System.out.println("곡 제목 입력");
+				String title = s.next();
+				out.writeObject(title);
+				out.flush();
+				System.out.println("가사 입력");
+				String lyric = s.next();
+				out.writeObject(lyric);
+				out.flush();
+				boolean result = (Boolean)in.readObject();
+				System.out.println(result);
+				break;
+				
 			default:
 				System.out.println("다시 입력");
 				break;

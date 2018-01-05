@@ -20,6 +20,8 @@ public class NetworkManager extends Thread{
 	final static int TOTAL_LIST = 6;		//서버 전체 음악 리스트
 	final static int MUSIC_ADD = 7;		//음악 추가
 	final static int MUSIC_DEL = 8;			//음악 삭제
+	final static int LYRIC_CALL = 9;		//가사 요청
+	final static int LYRIC_ADD = 1024735;			//가사 추가
 	
 	private Date today = new Date();
 	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss");
@@ -34,7 +36,6 @@ public class NetworkManager extends Thread{
 	
 	public void kill()
 	{
-//		status = false;
 		flag = false;
 		try {
 			socket.close();
@@ -50,16 +51,13 @@ public class NetworkManager extends Thread{
 		System.out.println("networkManager : " + socket.toString());
 		memM = new MemberManager();
 		musM = new MusicManager();
-		
 		try {
 			out = new ObjectOutputStream(
 					socket.getOutputStream());
-			//System.out.println(out);
 			
 			in = new ObjectInputStream(
 					new BufferedInputStream(
 							this.socket.getInputStream()));
-			//System.out.println(in);
 			
 			this.setDaemon(true);
 			this.start();
@@ -201,6 +199,27 @@ public class NetworkManager extends Thread{
 					kill();
 					break;
 					
+				case  LYRIC_CALL :
+					System.out.println(f.format(today));
+					id = (String)in.readObject();
+					System.out.println(id + " : 가사 요청");
+					String music = (String)in.readObject();
+					String lyric = musM.loadLyric(music);
+					out.writeObject(lyric);
+					out.flush();
+					break;
+					
+				case LYRIC_ADD:
+					System.out.println(f.format(today));
+					id = (String)in.readObject();
+					System.out.println(id + " : 가사 추가 시도");
+					String title = (String)in.readObject();
+					System.out.println(id + " : 목표 -> " + title);
+					String recvLyric = (String)in.readObject();
+					boolean lyricResult = musM.saveLyric(title, recvLyric);
+					out.writeObject(lyricResult);
+					break;
+					
 				default:
 					id = (String)in.readObject();
 					System.out.println(f.format(today));
@@ -214,11 +233,6 @@ public class NetworkManager extends Thread{
 		}
 		catch (Exception e) 
 		{
-//			try {
-//				socket.close();
-//			} catch (IOException e1) {
-//				e1.printStackTrace();
-//			}
 		}
 	}
 	
