@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInput;
@@ -83,8 +84,16 @@ public class Reference {
 		System.out.println("Process Close");
 	}
 	static Socket socket;
+	
 	public static void main(String[] args) throws Exception {
-		String ip = "192.168.0.171";
+		File target = new File("data","IP.txt");
+		int size = (int) target.length();
+		byte[] buffer = new byte[size];
+		FileInputStream ipIn = new FileInputStream(target);
+		int n = ipIn.read(buffer);
+		ipIn.close();
+		
+		String ip = new String(buffer);
 		int port = 20000;
 		System.out.println(ip);
 		@SuppressWarnings("resource")
