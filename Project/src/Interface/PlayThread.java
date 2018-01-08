@@ -97,7 +97,6 @@ public class PlayThread extends Thread {
 		try {
 			stopped = fis.available();
 			ap.close();
-			System.out.println(stopped);
 			skip = total - stopped;
 		} catch (IOException e) {
 			e.printStackTrace();

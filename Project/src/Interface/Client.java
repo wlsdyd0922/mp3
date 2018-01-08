@@ -119,7 +119,6 @@ public class Client {
 			out.writeObject(id);
 			out.flush();
 			List<String> list = (ArrayList<String>) in.readObject();
-			System.out.println(list);
 			out.close();
 			in.close();
 			return list;
