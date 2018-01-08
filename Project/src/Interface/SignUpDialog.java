@@ -18,16 +18,16 @@ public class SignUpDialog extends JDialog {
 	JButton cancelButton = new JButton("Cancel");
 
 	public SignUpDialog(JFrame owner) {
-		setupUI();
-		setUpListeners();
+		desgin();
+		event();
 		setSize(400, 215);
 		setLocationRelativeTo(owner);
 		setVisible(false);
 	}
 
-	public void setupUI() {
+	public void desgin() {
 		this.setTitle("Login");
-
+		nameField.setFocusable(true);
 		JPanel topPanel = new JPanel(new GridBagLayout());
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -77,7 +77,7 @@ public class SignUpDialog extends JDialog {
 		this.add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	private void setUpListeners() {
+	private void event() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		emailField.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {

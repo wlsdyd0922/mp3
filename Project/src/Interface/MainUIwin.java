@@ -125,6 +125,7 @@ public class MainUIwin extends JFrame {
 					case "목록저장":
 						cl = new Client();
 						cl.clientMusicListSave(MUSIC_ADD);
+						JOptionPane.showMessageDialog(bg1, "목록 저장 성공");
 						break;
 					case "로그아웃":
 						bts[0].setText("로그인");
@@ -309,9 +310,12 @@ public class MainUIwin extends JFrame {
 			bt[i] = new JButton(str[i]);
 			buttonline.add(bt[i]);
 			bt[i].setBackground(Color.WHITE);
+			bt[i].setFocusable(false);
+			
 		}
 		for (int i = 0; i < bts.length; i++) {
 			bts[i] = new JButton(str1[i]);
+			bts[i].setFocusable(false);
 		}
 
 		setContentPane(bg1);
@@ -356,9 +360,11 @@ public class MainUIwin extends JFrame {
 		bts[4].setBackground(Color.white);
 		bts[5].setBackground(Color.white);
 
+		bts[2].setEnabled(false);
 		bts[3].setEnabled(false);
 		bts[4].setEnabled(false);
 		bts[5].setEnabled(false);
+
 
 		scrollLine.setBounds(600, 0, 283, 635);
 		bt[0].setBounds(10, 10, 80, 40);
@@ -377,7 +383,6 @@ public class MainUIwin extends JFrame {
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
 
-		bts[2].setEnabled(false);
 
 		bg.add(bg3);
 		bg3.add(scroll1);
