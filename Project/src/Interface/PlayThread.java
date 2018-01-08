@@ -20,6 +20,7 @@ public class PlayThread extends Thread {
 	private int selectNext;
 	private int selectPrev;
 	private int select;
+	private int skip11;
 
 	private float playTime = 0;
 	private Player ap;
@@ -62,8 +63,12 @@ public class PlayThread extends Thread {
 				playTime = (int) ((float) cl.getFileSize() * 8 / bit.readFrame().bitrate() * 10);
 				playTime = playTime / 10;
 				//System.out.println(playTime);
+				MainUIwin.sl.setMinimum(0);
+				MainUIwin.sl.setMaximum(total);
+				
 				ap.play();
 				ap.close();
+//				MainUIwin.sl.setValue(0);
 
 				if (allFlag) {
 					if (selectNext > MainUIwin.musicList.getLastVisibleIndex()) {
@@ -103,6 +108,16 @@ public class PlayThread extends Thread {
 		}
 		this.playflag = false;
 		return skip;
+	}
+	public int stopper11() {
+		try {
+			stopped = fis.available();
+			skip11 = total - stopped;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.playflag = false;
+		return skip11;
 	}
 	public float getPlayTime() {
 		return this.playTime;
@@ -147,5 +162,8 @@ public class PlayThread extends Thread {
 
 	public boolean getInfFlag() {
 		return this.infiFlag;
+	}
+	public int getTotal() {
+		return this.total;
 	}
 }
