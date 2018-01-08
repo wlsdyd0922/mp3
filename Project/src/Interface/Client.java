@@ -19,11 +19,18 @@ public class Client {
 
 	public Client() {
 		try {
-			inet = InetAddress.getByName("192.168.0.171");
+			File target = new File("Project\\data","IP.txt");
+			int bufSize = (int) target.length();
+			byte[] buffer = new byte[bufSize];
+			FileInputStream ipIn = new FileInputStream(target);
+			int n = ipIn.read(buffer);
+			ipIn.close();
+			
+			String ip = new String(buffer);
+			inet = InetAddress.getByName(ip);
 			socket = new Socket(inet, port);
 			out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-			
 		} catch (IOException e) {
 			logInflag = false;
 			e.printStackTrace();
@@ -36,7 +43,7 @@ public class Client {
 			out.flush();
 			out.writeObject(id);
 			out.flush();
-			this.id = id;
+			Client.id = id;
 			out.writeObject(pw);
 			out.flush();
 			logInflag = (boolean) in.readObject();

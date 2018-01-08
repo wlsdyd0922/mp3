@@ -29,34 +29,65 @@ public class Search extends JFrame {
 	private JTextField text = new JTextField();
 	private JButton bt = new JButton("검색");
 	private List<String> list = new ArrayList<>();
+	private DefaultListModel<String> modelserver = new DefaultListModel<>();
+	private DefaultListModel<String> searchmodel = new DefaultListModel<>();
+	private boolean sear = true;
+
+	private void search() {
+		musicSearch();
+		bt.setText("취소");
+		sear = false;
+	}
+
+	private void cancel() {
+		searchmodel.removeAllElements();
+		allList.setModel(modelserver);
+		bt.setText("검색");
+		sear = true;
+	}
 
 	private void event() {
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					musicSearch();
+					if (sear) {
+						search();
+					} else {
+						cancel();
+					}
 				}
 			}
-
 		});
+
 		bt.addActionListener(e -> {
-			musicSearch();
+			if (e.getActionCommand() == "검색") {
+				search();
+			} else if (e.getActionCommand() == "취소") {
+				cancel();
+			}
 		});
 
 		KeyAdapter listadd = new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (allList.getSelectedValuesList() != null) {
-						DefaultListModel<String> model = new DefaultListModel<>();
-						for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
-							model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
-						}
-						
-						for (int i = 0; i < allList.getSelectedValuesList().size(); i++) {
-							String str = allList.getSelectedValuesList().get(i);
-							if(!MainUIwin.musicList.getModel().toString().contains(str))
+					DefaultListModel<String> model = new DefaultListModel<>();
+					// for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
+					// model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
+					// }
+					// if (allList.getSelectedValuesList() != null) {
+					//
+					//
+					// }
+					for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
+						model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
+					}
+					for (int i = 0; i < allList.getSelectedValuesList().size(); i++) {
+						String str = allList.getSelectedValuesList().get(i);
+						if (!model.contains(str)) {
 							model.addElement(str);
+							System.out.println(str);
 						}
+						MainUIwin.musicList.removeAll();
 						MainUIwin.musicList.setModel(model);
 					}
 				}
@@ -66,8 +97,8 @@ public class Search extends JFrame {
 
 		MouseAdapter listaddmou = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
+				DefaultListModel<String> model = new DefaultListModel<>();
 				if (e.getClickCount() == 2) {
-					DefaultListModel<String> model = new DefaultListModel<>();
 					for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
 						model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
 					}
@@ -80,19 +111,21 @@ public class Search extends JFrame {
 	}
 
 	private void musicSearch() {
-		
+		for (int i = 0; i < allList.getModel().getSize(); i++) {
+			if (allList.getModel().getElementAt(i).toLowerCase().contains(text.getText().toLowerCase())) {
+				searchmodel.addElement(allList.getModel().getElementAt(i));
+			}
+		}
+		allList.setModel(searchmodel);
 	}
 
 	private void design() {
 		Client cl = new Client();
-
-		DefaultListModel<String> model = new DefaultListModel<>();
 		list = cl.serverMusicList(MainUIwin.TOTAL_LIST);
-
 		for (int i = 0; i < list.size(); i++) {
-			model.addElement(list.get(i));
+			modelserver.addElement(list.get(i));
 		}
-		allList.setModel(model);
+		allList.setModel(modelserver);
 
 		setContentPane(bg);
 		bg.setBackground(Color.WHITE);
