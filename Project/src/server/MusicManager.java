@@ -177,7 +177,7 @@ public class MusicManager{
 		}
 		catch (Exception e) 
 		{
-			System.err.println("music list update failed");
+			System.err.println("lyric save failed");
 			return false;
 		}
 		return true;
@@ -185,6 +185,8 @@ public class MusicManager{
 	public String loadLyric(String music) 
 	{
 		File musicLyric = new File("musics",music+".lr");
+		if(!musicLyric.exists())
+			return "등록된 가사가 없습니다";
 		try (ObjectInputStream obj = new ObjectInputStream(
 														  new BufferedInputStream(
 														   new FileInputStream(musicLyric)));)
@@ -194,7 +196,8 @@ public class MusicManager{
 			return list;
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.err.println("lyric load failed");
 			return null;
 		}
 	}

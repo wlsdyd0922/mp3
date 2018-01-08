@@ -312,13 +312,6 @@ public class NetworkManager extends Thread{
 			return false;
 		}
 	}
-
-	public boolean lyricSender(String id,String musicTitle)
-	{
-		String lyric = musM.loadLyric(musicTitle);
-		
-		return true;
-	}
 	
 	public void ipSave(String id) 
 	{
