@@ -77,9 +77,10 @@ public class MemberManager {
 
 	public boolean login(String id, String pw)  
 	{
-		if (clientList.get(id).getPassword().equals(pw))
-				return true;
-		return false;
+		if(clientList.containsKey(id))
+			return clientList.get(id).getPassword().equals(pw);
+		else
+			return false;
 	}
 
 	public boolean memberAccept(String id, String pw, String email)

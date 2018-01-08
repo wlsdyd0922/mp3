@@ -316,6 +316,7 @@ public class NetworkManager extends Thread{
 	public boolean lyricSender(String id,String musicTitle)
 	{
 		String lyric = musM.loadLyric(musicTitle);
+		
 		return true;
 	}
 	
