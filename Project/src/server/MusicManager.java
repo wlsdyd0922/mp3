@@ -4,18 +4,11 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
-
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 
 public class MusicManager{ 
 	MusicManager() 
@@ -61,7 +54,6 @@ public class MusicManager{
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<String> loadServerList()
 	{
 		System.out.println("load Server List");
@@ -80,12 +72,11 @@ public class MusicManager{
 		List<MusicInfo> mList = new ArrayList<>();
 		System.out.println("mp3 정보 리스트 생성");
 		File dir = new File("musics");
-		Player p;
 		File[] flist = dir.listFiles();
 		for (File f : flist) {
 			try {
 				MP3File mp3 = (MP3File) AudioFileIO.read(f);
-				String fileName = mp3.getBaseFilename(f);
+				String fileName = AudioFile.getBaseFilename(f);
 				Tag tag = mp3.getTagOrCreateDefault();
 				int len = mp3.getAudioHeader().getTrackLength();
 				int bitRate = Integer.parseInt(mp3.getAudioHeader().getBitRate());
@@ -93,7 +84,6 @@ public class MusicManager{
 				if(artist == null)artist="불명";
 				String genre = tag.getFirst(FieldKey.GENRE);
 				if(genre == null)genre="불명";
-			
 				mList.add(new MusicInfo(fileName,artist,genre,len,bitRate));
 			} catch (Exception e) {
 				e.printStackTrace();

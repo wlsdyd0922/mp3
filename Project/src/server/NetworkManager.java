@@ -73,160 +73,55 @@ public class NetworkManager extends Thread{
 				System.out.println(f.format(today));
 				System.out.println(socket.toString());
 				int state;
-				String id = null;
-				String pw = null;
-				String email = null;
-				String musicTitle = null;
 				state = (int)in.readObject();
 				switch (state) 
 				{
 				case JOIN:
-					System.out.println(f.format(today));
-					System.out.println(socket.toString() + " 가입 요청");
-					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " id : " + id);
-					pw = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " pw : " + pw);
-					email = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " email : " + email);
-
-					boolean joinResult = memM.memberAccept(id, pw, email);
-					out.writeObject(joinResult);
-					out.flush();
-
-					System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
-					memM.memberDisplay();
-					kill();
+					joiner();
 					break;
 
 				case LOGIN:
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress() + " 로그인 시도");
-
-					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " : id = " + id);
-					pw = (String)in.readObject();
-					System.out.println(socket.getInetAddress() + " : pw = " + pw);
-
-					boolean loginResult = memM.login(id, pw);
-					out.writeObject(loginResult);
-					out.flush();
-					System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
+					loginer();
 					break;
 
 				case LIST:
-					id = (String)in.readObject();
-//					if(!status)
-//					{
-//						System.out.println(socket.getInetAddress() + " : 비 로그인 상태로 접속 시도");
-//						out.writeObject(LOGIN_CONFIRM);
-//						out.writeObject("로그인 필요");
-//						out.flush();
-//					}
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress());
-					System.out.println(id + " 개인 리스트 요청");
-					listSender(id);
-					kill();
+					userList();
 					break;
 
 				case TOTAL_LIST:
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress());
-					System.out.println(id + " 전체 리스트 요청");
-					listSender("server");
+					totalList();
 					break;
 
 				case MUSIC:
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					musicTitle = (String)in.readObject();
-					System.out.println(socket.getInetAddress());
-					System.out.println(id + " 음악 파일 요청 " + musicTitle);
-					musicSender(id, musicTitle);
+					musicFile();
 					break;
 
 				case LOGOUT:
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress());
-					System.out.println(id + " 로그아웃");
+					logout();
 					break;
 
 				case DROP:
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress());
-					System.out.println(id + " 탈퇴");
-					boolean dropResult = memM.memberDrop(id);
-					if (dropResult)
-					{
-						out.writeObject(dropResult);
-						out.flush();
-						kill();
-					}
-					else
-					{
-						out.writeObject("다시 로그인");
-						out.flush();
-						kill();
-					}
+					drop();
 					break;
 					
 				case MUSIC_ADD :
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(socket.getInetAddress() +" " + id + " : 음악 추가 신청");
-					@SuppressWarnings("unchecked") 
-					List<String> addmusic = (List<String>) in.readObject();
-					System.out.println(id + " : " + addmusic);
-					System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
-					boolean addResult =musM.addToMusicList(id, addmusic);
-					out.writeObject(addResult);
-					out.flush();
+					musicAdd();
 					break;
 					
 				case MUSIC_DEL:
-					id = (String)in.readObject();
-					System.out.println(socket.getInetAddress() +" " + id + " : 음악 삭제 신청");
-					String delmusic = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(id + " " + delmusic + "삭제");
-					boolean delResult =musM.deleteMusic(id, delmusic);
-					out.writeObject(delResult);
-					out.flush();
-					kill();
+					musicDel();
 					break;
 					
 				case  LYRIC_CALL :
-					System.out.println(f.format(today));
-					id = (String)in.readObject();
-					System.out.println(id + " : 가사 요청");
-					String music = (String)in.readObject();
-					String lyric = musM.loadLyric(music);
-					out.writeObject(lyric);
-					out.flush();
+					lyricCall();
 					break;
 					
 				case LYRIC_ADD:
-					System.out.println(f.format(today));
-					id = (String)in.readObject();
-					System.out.println(id + " : 가사 추가 시도");
-					String title = (String)in.readObject();
-					System.out.println(id + " : 목표 -> " + title);
-					String recvLyric = (String)in.readObject();
-					boolean lyricResult = musM.saveLyric(title, recvLyric);
-					out.writeObject(lyricResult);
+					lyricAdd();
 					break;
 					
 				default:
-					id = (String)in.readObject();
-					System.out.println(f.format(today));
-					System.out.println(id + ": 잘못된 요청");
-					out.writeObject("잘못된 접근");
-					out.flush();
-					kill();
+					illegalAcception();
 					break;
 				}
 			}
@@ -310,6 +205,229 @@ public class NetworkManager extends Thread{
 		{
 			System.out.println(socket.getInetAddress() + " : "+id + "음악 전송 실패");
 			return false;
+		}
+	}
+	
+	public void joiner()
+	{
+		try {
+		System.out.println(f.format(today));
+		System.out.println(socket.toString() + " 가입 요청");
+		String id = (String)in.readObject();
+		System.out.println(socket.getInetAddress() + " id : " + id);
+		String pw = (String)in.readObject();
+		System.out.println(socket.getInetAddress() + " pw : " + pw);
+		String email = (String)in.readObject();
+		System.out.println(socket.getInetAddress() + " email : " + email);
+
+		boolean joinResult = memM.memberAccept(id, pw, email);
+		out.writeObject(joinResult);
+		out.flush();
+
+		System.out.println(socket.getInetAddress() + " : 회원가입 결과 " + joinResult);
+		memM.memberDisplay();
+		kill();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("join method error");
+		}
+	}
+	
+	public void loginer()
+	{
+		try {
+		System.out.println(f.format(today));
+		System.out.println(socket.getInetAddress() + " 로그인 시도");
+
+		String id = (String)in.readObject();
+		System.out.println(socket.getInetAddress() + " : id = " + id);
+		String pw = (String)in.readObject();
+		System.out.println(socket.getInetAddress() + " : pw = " + pw);
+
+		boolean loginResult = memM.login(id, pw);
+		out.writeObject(loginResult);
+		out.flush();
+		System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("login method error");
+		}
+	}
+	
+	public void userList()
+	{
+		try {
+		String id = (String)in.readObject();
+		System.out.println(f.format(today));
+		System.out.println(socket.getInetAddress());
+		System.out.println(id + " 개인 리스트 요청");
+		listSender(id);
+		kill();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("user list method error");
+		}
+	}
+	
+	public void totalList()
+	{
+		try {
+		String id = (String)in.readObject();
+		System.out.println(f.format(today));
+		System.out.println(socket.getInetAddress());
+		System.out.println(id + " 전체 리스트 요청");
+		listSender("server");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("total list method error");
+		}
+	}
+	
+	public void musicFile()
+	{
+		try {
+		String id = (String)in.readObject();
+		System.out.println(f.format(today));
+		String musicTitle = (String)in.readObject();
+		System.out.println(socket.getInetAddress());
+		System.out.println(id + " 음악 파일 요청 " + musicTitle);
+		musicSender(id, musicTitle);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("musicFile method error");
+		}
+	}
+	
+	private void logout()
+	{
+		try {
+		String id = (String)in.readObject();
+		System.out.println(f.format(today));
+		System.out.println(socket.getInetAddress());
+		System.out.println(id + " 로그아웃");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.err.println("logout method error");
+		}
+	}
+	
+	private void drop()
+	{
+		try {
+			String id = (String) in.readObject();
+			System.out.println(f.format(today));
+			System.out.println(socket.getInetAddress());
+			System.out.println(id + " 탈퇴");
+			boolean dropResult = memM.memberDrop(id);
+			if (dropResult) {
+				out.writeObject(dropResult);
+				out.flush();
+				kill();
+			} else {
+				out.writeObject("다시 로그인");
+				out.flush();
+				kill();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("drop method error");
+		}
+	}
+	
+	private void musicAdd()
+	{
+		try {
+			String id = (String) in.readObject();
+			System.out.println(f.format(today));
+			System.out.println(socket.getInetAddress() + " " + id + " : 음악 추가 신청");
+			@SuppressWarnings("unchecked")
+			List<String> addmusic = (List<String>) in.readObject();
+			System.out.println(id + " : " + addmusic);
+			System.out.println(socket.getInetAddress() + " " + addmusic + "리스트에 추가");
+			boolean addResult = musM.addToMusicList(id, addmusic);
+			out.writeObject(addResult);
+			out.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("musicAdd method error");
+		}
+	}
+	
+	private void musicDel()
+	{
+		try {
+			String id = (String) in.readObject();
+			System.out.println(socket.getInetAddress() + " " + id + " : 음악 삭제 신청");
+			String delmusic = (String) in.readObject();
+			System.out.println(f.format(today));
+			System.out.println(id + " " + delmusic + "삭제");
+			boolean delResult = musM.deleteMusic(id, delmusic);
+			out.writeObject(delResult);
+			out.flush();
+			kill();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("musicDel method error");
+		}
+	}
+	
+	private void lyricCall()
+	{
+		try {
+		System.out.println(f.format(today));
+		String id = (String)in.readObject();
+		System.out.println(id + " : 가사 요청");
+		String music = (String)in.readObject();
+		String lyric = musM.loadLyric(music);
+		out.writeObject(lyric);
+		out.flush();
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("lyricCall method error");
+		}
+	}
+	
+	private void lyricAdd()
+	{
+		try {
+		System.out.println(f.format(today));
+		String id = (String)in.readObject();
+		System.out.println(id + " : 가사 추가 시도");
+		String title = (String)in.readObject();
+		System.out.println(id + " : 목표 -> " + title);
+		String recvLyric = (String)in.readObject();
+		boolean lyricResult = musM.saveLyric(title, recvLyric);
+		out.writeObject(lyricResult);
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("lyricAdd method error");
+		}
+	}
+	
+	private void illegalAcception()
+	{
+		try {
+		String id = (String)in.readObject();
+		System.out.println(f.format(today));
+		System.out.println(id + ": 잘못된 요청");
+		out.writeObject("잘못된 접근");
+		out.flush();
+		kill();
+		}catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("iA method error");
 		}
 	}
 	

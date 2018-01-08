@@ -10,7 +10,7 @@ public class server {
 			while(true)
 			{
 				Socket s = server.accept();
-				NetworkManager nm = new NetworkManager(s);
+				new NetworkManager(s);
 				System.out.println("Client Accessed");
 			}
 			
