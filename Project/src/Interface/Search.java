@@ -71,13 +71,6 @@ public class Search extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					DefaultListModel<String> model = new DefaultListModel<>();
-					// for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
-					// model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
-					// }
-					// if (allList.getSelectedValuesList() != null) {
-					//
-					//
-					// }
 					for (int i = 0; i < MainUIwin.musicList.getModel().getSize(); i++) {
 						model.addElement(MainUIwin.musicList.getModel().getElementAt(i));
 					}

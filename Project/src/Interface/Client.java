@@ -51,15 +51,15 @@ public class Client {
 			logInflag = (boolean) in.readObject();
 			if (logInflag) {
 				search = new Search();
-				MainUIwin.bt3.setEnabled(true);
-				MainUIwin.bt1.setText("로그아웃");
-				MainUIwin.bt2.setText("목록저장");
-				MainUIwin.bt4.setEnabled(true);
-				MainUIwin.bt5.setEnabled(true);
-				MainUIwin.bt6.setEnabled(true);
+				MainUIwin.bts[2].setEnabled(true);
+				MainUIwin.bts[0].setText("로그아웃");
+				MainUIwin.bts[1].setText("목록저장");
+				MainUIwin.bts[3].setEnabled(true);
+				MainUIwin.bts[4].setEnabled(true);
+				MainUIwin.bts[5].setEnabled(true);
 				clientMusicList(MainUIwin.LIST);
 			} else {
-				MainUIwin.bt3.setEnabled(false);
+				MainUIwin.bts[2].setEnabled(false);
 			}
 			out.close();
 			in.close();
@@ -80,7 +80,7 @@ public class Client {
 		logInflag = false;
 		String[] str = new String[] { "" };
 		MainUIwin.musicList.setListData(str);
-		MainUIwin.bt3.setEnabled(false);
+		MainUIwin.bts[2].setEnabled(false);
 		search.setVisible(false);
 	}
 
@@ -202,6 +202,18 @@ public class Client {
 			return null;
 		}
 	}
+	public void lyricAdd(String lyric) {
+		try {
+			out.writeObject(MainUIwin.musicList.getSelectedValue());
+			out.flush();
+			out.writeObject(lyric);
+			out.flush();
+			boolean result = (boolean) in.readObject();
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	public String getDir(){
 		return this.dir;
 	}
@@ -213,6 +225,7 @@ public class Client {
 
 		try {
 			File file = new File(dir);
+			file.deleteOnExit();
 			if(!file.mkdir()) {
 				System.out.println("파일 생성 안댐");
 			}

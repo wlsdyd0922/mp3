@@ -106,6 +106,9 @@ public class PlayThread extends Thread {
 		this.playflag = false;
 		return skip;
 	}
+	public float getPlayTime() {
+		return this.playTime;
+	}
 
 	public void setAllFlag(boolean allflag) {
 		this.allFlag = allflag;

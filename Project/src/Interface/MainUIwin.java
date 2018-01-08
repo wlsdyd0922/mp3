@@ -2,6 +2,8 @@ package Interface;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
 import javax.swing.*;
 import javazoom.jl.player.Player;
 
@@ -15,7 +17,9 @@ public class MainUIwin extends JFrame {
 	final static int TOTAL_LIST = 6; // 서버 전체 음악 리스트
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
-
+	final static int LYRIC_CALL = 9;
+	final static int LYRIC_ADD = 1024735;			//가사 추가
+	
 	private PlayThread t;
 	private Client cl = null;
 	private Player p;
@@ -47,13 +51,10 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
 	private String[] str = new String[] { "◀◀", "▶", "▶▶", "■", "∥" };
+	private String[] str1 = new String[] {"로그인","회원가입","서버음악검색","All","Random","반복"};
 	private JButton[] bt = new JButton[5];
-	protected static JButton bt1 = new JButton("로그인");
-	protected static JButton bt2 = new JButton("회원가입");
-	protected static JButton bt3 = new JButton("서버음악검색");
-	protected static JButton bt4 = new JButton("All");
-	protected static JButton bt5 = new JButton("Random");
-	protected static JButton bt6 = new JButton("반복");
+	protected static JButton[] bts = new JButton[6];
+	
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
@@ -65,7 +66,6 @@ public class MainUIwin extends JFrame {
 
 	private void event() {
 		WindowListener win = new WindowAdapter() {
-			@Override
 			public void windowClosing(WindowEvent arg0) {
 				System.exit(0);
 			}
@@ -193,8 +193,8 @@ public class MainUIwin extends JFrame {
 						cl.clientMusicListSave(MUSIC_ADD);
 						break;
 					case "로그아웃":
-						bt1.setText("로그인");
-						bt2.setText("회원가입");
+						bts[0].setText("로그인");
+						bts[1].setText("회원가입");
 						cl = new Client();
 						cl.logOut(LOGOUT);
 						String[] str = new String[] {};
@@ -361,30 +361,30 @@ public class MainUIwin extends JFrame {
 						if (t != null) {
 							t.setInfFlag(true);
 							infFLag = t.getInfFlag();
-							bt6.setText("반복X");
+							bts[5].setText("반복X");
 						}
 						break;
 					case "반복X":
 						if (t != null) {
 							t.setInfFlag(false);
 							infFLag = t.getInfFlag();
-							bt6.setText("반복");
+							bts[5].setText("반복");
 						}
 						break;
 					case "Random":
 						if (t != null) {
 							t.setRanFlag(true);
 							ranFlag = t.getRanFlag();
-							bt5.setText("Random X");
-							bt6.setEnabled(false);
+							bts[4].setText("Random X");
+							bts[5].setEnabled(false);
 						}
 						break;
 					case "Random X":
 						if (t != null) {
 							t.setRanFlag(false);
 							ranFlag = t.getRanFlag();
-							bt5.setText("Random");
-							bt6.setEnabled(true);
+							bts[4].setText("Random");
+							bts[5].setEnabled(true);
 						}
 						break;
 					}
@@ -392,12 +392,12 @@ public class MainUIwin extends JFrame {
 			}
 		};
 		open.addActionListener(act);
-		bt1.addActionListener(act);
-		bt2.addActionListener(act);
-		bt3.addActionListener(act);
-		bt4.addActionListener(act);
-		bt5.addActionListener(act);
-		bt6.addActionListener(act);
+		bts[0].addActionListener(act);
+		bts[1].addActionListener(act);
+		bts[2].addActionListener(act);
+		bts[3].addActionListener(act);
+		bts[4].addActionListener(act);
+		bts[5].addActionListener(act);
 		bt[0].addActionListener(act);
 		bt[1].addActionListener(act);
 		bt[2].addActionListener(act);
@@ -407,6 +407,15 @@ public class MainUIwin extends JFrame {
 	}
 
 	private void design() {
+		for (int i = 0; i < bt.length; i++) {
+			bt[i] = new JButton(str[i]);
+			buttonline.add(bt[i]);
+			bt[i].setBackground(Color.WHITE);
+		}
+		for(int i = 0 ; i < bts.length ; i++) {
+			bts[i] = new JButton(str1[i]);
+		}
+		
 		setContentPane(bg1);
 		bg1.add(bg, BorderLayout.CENTER);
 		bg.setBounds(0, 0, 600, 635);
@@ -417,7 +426,7 @@ public class MainUIwin extends JFrame {
 		bg1.add(scrollLine);
 
 		scrollLine.add(scroll, BorderLayout.CENTER);
-		scrollLine.add(bt3, BorderLayout.SOUTH);
+		scrollLine.add(bts[2], BorderLayout.SOUTH);
 
 		bg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "MP3플레이어"));
 
@@ -432,45 +441,43 @@ public class MainUIwin extends JFrame {
 		titleLine.add(la1);
 		titleLine.add(la4);
 		titleLine.add(la5);
-		titleLine.add(bt1);
-		titleLine.add(bt2);
+		titleLine.add(bts[0]);
+		titleLine.add(bts[1]);
 
 		bg.add(la2);
 		bg.add(buttonline);
 
-		for (int i = 0; i < bt.length; i++) {
-			bt[i] = new JButton(str[i]);
-			buttonline.add(bt[i]);
-			bt[i].setBackground(Color.WHITE);
-		}
-		buttonline.add(bt4);
-		buttonline.add(bt5);
-		buttonline.add(bt6);
-		bt1.setBackground(Color.white);
-		bt2.setBackground(Color.white);
-		bt4.setBackground(Color.white);
-		bt5.setBackground(Color.white);
-		bt6.setBackground(Color.white);
-		bt4.setEnabled(false);
-		bt5.setEnabled(false);
-		bt6.setEnabled(false);
+
+		buttonline.add(bts[3]);
+		buttonline.add(bts[4]);
+		buttonline.add(bts[5]);
+		bts[0].setBackground(Color.white);
+		bts[1].setBackground(Color.white);
+		bts[3].setBackground(Color.white);
+		bts[4].setBackground(Color.white);
+		bts[5].setBackground(Color.white);
+		
+		bts[3].setEnabled(false);
+		bts[4].setEnabled(false);
+		bts[5].setEnabled(false);
 
 		scrollLine.setBounds(600, 0, 283, 635);
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
 		bt[2].setBounds(210, 10, 80, 40);
-		bt4.setBounds(355, 10, 60, 40);
-		bt5.setBounds(420, 10, 90, 40);
-		bt6.setBounds(515, 10, 60, 40);
+		bts[3].setBounds(355, 10, 60, 40);
+		bts[4].setBounds(420, 10, 90, 40);
+		bts[5].setBounds(515, 10, 60, 40);
 		bt[3].setBounds(110, 49, 80, 40);
 		bt[4].setBounds(210, 49, 80, 40);
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
-		bt1.setBounds(490, 10, 90, 40);
-		bt2.setBounds(490, 60, 90, 40);
-		bt3.setEnabled(false);
+		bts[0].setBounds(490, 10, 90, 40);
+		bts[1].setBounds(490, 60, 90, 40);
+		bts[2].setEnabled(false);
 		bg.add(la3);
+		la3.setText("asd");
 		la3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사"));
 		la3.setBackground(Color.WHITE);
 	}

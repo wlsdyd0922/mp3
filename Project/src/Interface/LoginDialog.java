@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.*;
 
 public class LoginDialog extends JDialog {
-
+	private static final long serialVersionUID = 1L;
 	private JLabel nameLabel = new JLabel("Name : ");
 	private JLabel passwordLabel = new JLabel("Password : ");
 
@@ -17,8 +17,6 @@ public class LoginDialog extends JDialog {
 
 	private JButton okButton = new JButton("OK");
 	private JButton cancelButton = new JButton("Cancel");
-
-	private List<String> clList = new ArrayList<>();
 
 	public LoginDialog(JFrame owner) {
 		setupUI();
@@ -75,7 +73,7 @@ public class LoginDialog extends JDialog {
 				setVisible(false);
 				nameField.setText("");
 				passwordField.setText("");
-				MainUIwin.bt1.setText("로그인");
+				MainUIwin.bts[0].setText("로그인");
 				super.windowClosing(arg0);
 			}
 		};
@@ -87,14 +85,6 @@ public class LoginDialog extends JDialog {
 					loginPass();
 					nameField.setText("");
 					passwordField.setText("");
-
-//					Client cl = new Client();
-//					clList = cl.clientMusicList(MainUIwin.LIST);
-//					DefaultListModel<String> model = new DefaultListModel<>();
-//					for (int i = 0; i < clList.size(); i++) {
-//						model.addElement(clList.get(i));
-//					}
-//					MainUIwin.musicList.setModel(model);
 
 				}
 			}
@@ -109,7 +99,7 @@ public class LoginDialog extends JDialog {
 			LoginDialog.this.setVisible(false);
 			nameField.setText("");
 			passwordField.setText("");
-			MainUIwin.bt1.setText("로그인");
+			MainUIwin.bts[0].setText("로그인");
 		});
 	}
 
