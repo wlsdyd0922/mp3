@@ -85,6 +85,41 @@ public class MemberManager {
 
 	public boolean memberAccept(String id, String pw, String email)
 	{
+		if (id.length() <= 3 || id.length() > 10)
+		{
+			System.out.println(id + " 길이가 안맞음");
+			return false;
+		}
+		
+		if (id.contains("Admin")) 
+		{
+			System.out.println("사용 불가 닉네임");
+			return false;
+		}
+		
+		boolean flag = false;
+		for(int i=0;i<id.length();i++)
+		{
+			char ch = id.charAt(i);
+			if(!(ch >='A' && ch<='z' || ch>='0' && ch<='9'))
+			{
+				flag = true;
+				break;
+			}
+		}
+		
+		if (pw.length() <= 3 || pw.length() > 10)
+		{
+			System.out.println(pw + " 길이가 안맞음");
+			return false;
+		}
+		
+		if(flag == true)
+		{
+			System.out.println(id + " 영어만 등록 가능");
+			return false;
+		}
+		
 		readMemberList();
 		if(clientList.containsKey(id))
 			return false;
