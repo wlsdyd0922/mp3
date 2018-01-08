@@ -32,11 +32,12 @@ public class MainUIwin extends JFrame {
 	private JFileChooser chooser = new JFileChooser();
 
 	private JPanel bg1 = new JPanel(null);
-	private JPanel bg = new JPanel(new GridLayout(4, 1));
-	private JPanel lyricline = new JPanel(new BorderLayout());
 	private JPanel buttonline = new JPanel(null);
 	private JPanel titleLine = new JPanel(null);
+	private JPanel bg = new JPanel(new GridLayout(4, 1));
+	private JPanel lyricline = new JPanel(new BorderLayout());
 	private JPanel scrollLine = new JPanel(new BorderLayout());
+	private JPanel bg3 = new JPanel(new BorderLayout());
 
 	protected static JList<String> musicList = new JList<>(new DefaultListModel<>());
 	protected static int x;
@@ -47,6 +48,8 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la1 = new JLabel("mp3파일 이름 출력", JLabel.LEFT);
 	private JLabel la2 = new JLabel("진행시간", JLabel.CENTER);
 	private JLabel la3 = new JLabel("가사", JLabel.CENTER);
+	private JTextArea tp = new JTextArea();
+	private JScrollPane scroll1 = new JScrollPane();
 	protected static JLabel la4 = new JLabel("비트레이트", JLabel.LEFT);
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
@@ -392,18 +395,12 @@ public class MainUIwin extends JFrame {
 			}
 		};
 		open.addActionListener(act);
-		bts[0].addActionListener(act);
-		bts[1].addActionListener(act);
-		bts[2].addActionListener(act);
-		bts[3].addActionListener(act);
-		bts[4].addActionListener(act);
-		bts[5].addActionListener(act);
-		bt[0].addActionListener(act);
-		bt[1].addActionListener(act);
-		bt[2].addActionListener(act);
-		bt[3].addActionListener(act);
-		bt[4].addActionListener(act);
-
+		for(int i = 0 ; i < bts.length;i++) {
+			bts[i].addActionListener(act);
+		}
+		for(int i = 0 ; i < bt.length;i++) {
+			bt[i].addActionListener(act);
+		}
 	}
 
 	private void design() {
@@ -421,7 +418,9 @@ public class MainUIwin extends JFrame {
 		bg.setBounds(0, 0, 600, 635);
 
 		scroll.setViewportView(musicList);
+		scroll1.setViewportView(tp);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		musicList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		bg1.add(scrollLine);
 
@@ -447,7 +446,6 @@ public class MainUIwin extends JFrame {
 		bg.add(la2);
 		bg.add(buttonline);
 
-
 		buttonline.add(bts[3]);
 		buttonline.add(bts[4]);
 		buttonline.add(bts[5]);
@@ -465,21 +463,29 @@ public class MainUIwin extends JFrame {
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
 		bt[2].setBounds(210, 10, 80, 40);
+		bt[3].setBounds(110, 49, 80, 40);
+		bt[4].setBounds(210, 49, 80, 40);
+		
+		bts[0].setBounds(490, 10, 90, 40);
+		bts[1].setBounds(490, 60, 90, 40);
 		bts[3].setBounds(355, 10, 60, 40);
 		bts[4].setBounds(420, 10, 90, 40);
 		bts[5].setBounds(515, 10, 60, 40);
-		bt[3].setBounds(110, 49, 80, 40);
-		bt[4].setBounds(210, 49, 80, 40);
+		
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
-		bts[0].setBounds(490, 10, 90, 40);
-		bts[1].setBounds(490, 60, 90, 40);
+		
 		bts[2].setEnabled(false);
-		bg.add(la3);
-		la3.setText("asd");
-		la3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사"));
-		la3.setBackground(Color.WHITE);
+		
+		bg.add(bg3);
+		bg3.add(scroll1);
+		bg3.setBackground(Color.WHITE);
+		bg3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사"));
+		tp.setBackground(Color.WHITE);
+		tp.setFont(new Font("굴림", Font.PLAIN, 20));
+		tp.setFocusable(false);
+		tp.setText("asdasd\nas\nsddssda\nsds\nsdsd\nasdfds\nsdfdf");
 	}
 
 	private void menu() {
