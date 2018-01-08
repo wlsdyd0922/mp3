@@ -22,18 +22,18 @@ public class Client {
 
 	public Client() {
 		try {
-			File target = new File("Project\\data","IP.txt");
+			File target = new File("Project\\data", "IP.txt");
 			int bufSize = (int) target.length();
 			byte[] buffer = new byte[bufSize];
 			FileInputStream ipIn = new FileInputStream(target);
 			int n = ipIn.read(buffer);
 			ipIn.close();
-			
+
 			String ip = new String(buffer);
 			inet = InetAddress.getByName(ip);
-			
+
 			socket = new Socket(inet, port);
-			
+
 			out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 		} catch (IOException e) {
@@ -62,7 +62,7 @@ public class Client {
 				MainUIwin.bts[5].setEnabled(true);
 				clientMusicList(MainUIwin.LIST);
 			} else {
-				JOptionPane.showMessageDialog(mainUIwin, "입력정보 확인하세요","Login 실패",JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(mainUIwin, "입력정보 확인하세요", "Login 실패", JOptionPane.WARNING_MESSAGE);
 				MainUIwin.bts[2].setEnabled(false);
 			}
 			out.close();
@@ -74,7 +74,7 @@ public class Client {
 	}
 
 	public void logOut(int logout) {
-		try  {
+		try {
 			out.writeObject(logout);
 			out.writeObject(id);
 			out.close();
@@ -90,7 +90,7 @@ public class Client {
 	}
 
 	public void signUpManager(int join, String id, String pw, String email) {
-		try  {
+		try {
 			out.writeObject(join);
 			out.flush();
 			out.writeObject(id);
@@ -103,7 +103,7 @@ public class Client {
 			if (a) {
 				JOptionPane.showMessageDialog(mainUIwin, "회원가입 완료");
 			} else {
-				JOptionPane.showMessageDialog(mainUIwin,"id 중복");
+				JOptionPane.showMessageDialog(mainUIwin, "id 중복");
 			}
 			out.close();
 			in.close();
@@ -113,7 +113,7 @@ public class Client {
 	}
 
 	public List<String> serverMusicList(int total_list) {
-		try  {
+		try {
 			out.writeObject(total_list);
 			out.flush();
 			out.writeObject(id);
@@ -128,7 +128,7 @@ public class Client {
 	}
 
 	public void musicAdd(int music_add) {
-		try  {
+		try {
 			out.writeObject(music_add);
 			out.flush();
 			out.writeObject(id);
@@ -140,7 +140,7 @@ public class Client {
 	}
 
 	public boolean clientMusicListSave(int cllistSave) {
-		try	{
+		try {
 			out.writeObject(cllistSave);
 			out.flush();
 			out.writeObject(id);
@@ -161,7 +161,7 @@ public class Client {
 	}
 
 	public List<String> clientMusicList(int cllist) {
-		try  {
+		try {
 			out.writeObject(cllist);
 			out.flush();
 			out.writeObject(id);
@@ -182,11 +182,12 @@ public class Client {
 			return null;
 		}
 	}
+
 	public long getFileSize() {
 		return this.size;
 	}
 
-	public String play(int play,String music) {
+	public String play(int play, String music) {
 		try {
 			out.writeObject(play);
 			out.flush();
@@ -197,14 +198,15 @@ public class Client {
 			size = musicReceive(port, music);
 			out.close();
 			in.close();
-			music = dir+music;
+			music = dir + music;
 			return music;
-			//끝나면 지움
+			// 끝나면 지움
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+
 	public void lyricAdd(String lyric) {
 		try {
 			out.writeObject(MainUIwin.musicList.getSelectedValue());
@@ -212,12 +214,13 @@ public class Client {
 			out.writeObject(lyric);
 			out.flush();
 			boolean result = (boolean) in.readObject();
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	public String getDir(){
+
+	public String getDir() {
 		return this.dir;
 	}
 
@@ -229,11 +232,13 @@ public class Client {
 		try {
 			File file = new File(dir);
 			file.deleteOnExit();
-			if(!file.mkdir()) {
-				JOptionPane.showMessageDialog(mainUIwin, "파일 생성 실패","ERROR",JOptionPane.WARNING_MESSAGE);
+			if (!file.mkdir()) {
+				if (file.exists()) {
+					JOptionPane.showMessageDialog(mainUIwin, "파일 생성 실패", "ERROR", JOptionPane.WARNING_MESSAGE);
+				}
 			}
-			DatagramSocket ds = new DatagramSocket(20000); 
-			FileOutputStream fos = new FileOutputStream(new File(dir,music));
+			DatagramSocket ds = new DatagramSocket(20000);
+			FileOutputStream fos = new FileOutputStream(new File(dir, music));
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			int nReadSize = 0;
 			ds.receive(dp);
@@ -253,15 +258,16 @@ public class Client {
 				}
 				ds.close();
 				fos.close();
-				
-				//System.out.println("File transfer completed");
+
+				// System.out.println("File transfer completed");
 			} else {
-				JOptionPane.showMessageDialog(mainUIwin, "실행 중 오류가 발생하였습니다.","Start Error",JOptionPane.WARNING_MESSAGE);    
+				JOptionPane.showMessageDialog(mainUIwin, "실행 중 오류가 발생하였습니다.", "Start Error",
+						JOptionPane.WARNING_MESSAGE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//System.out.println("Process Close");
+		// System.out.println("Process Close");
 		return fileSize;
 	}
 }
