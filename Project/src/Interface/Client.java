@@ -169,6 +169,7 @@ public class Client {
 				for (int i = 0; i < list.size(); i++) {
 					str[i] = list.get(i);
 				}
+				MainUIwin.musicList.removeAll();
 				MainUIwin.musicList.setListData(str);
 			}
 			out.close();
