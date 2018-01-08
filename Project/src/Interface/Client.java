@@ -28,7 +28,9 @@ public class Client {
 			
 			String ip = new String(buffer);
 			inet = InetAddress.getByName(ip);
+			
 			socket = new Socket(inet, port);
+			
 			out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
 		} catch (IOException e) {

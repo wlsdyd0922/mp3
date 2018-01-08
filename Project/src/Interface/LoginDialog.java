@@ -104,7 +104,6 @@ public class LoginDialog extends JDialog {
 			loginPass();
 			nameField.setText("");
 			passwordField.setText("");
-			
 		});
 		cancelButton.addActionListener(e -> {
 			LoginDialog.this.setVisible(false);
