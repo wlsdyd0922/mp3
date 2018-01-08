@@ -233,7 +233,7 @@ public class Client {
 			File file = new File(dir);
 			file.deleteOnExit();
 			if (!file.mkdir()) {
-				if (file.exists()) {
+				if (!file.exists()) {
 					JOptionPane.showMessageDialog(mainUIwin, "파일 생성 실패", "ERROR", JOptionPane.WARNING_MESSAGE);
 				}
 			}
