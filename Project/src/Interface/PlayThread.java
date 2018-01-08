@@ -61,8 +61,7 @@ public class PlayThread extends Thread {
 				MainUIwin.la5.setText("ÁÖÆÄ¼ö : " + (bit.readFrame().frequency() / 1000.0) + "Khz");
 				playTime = (int) ((float) cl.getFileSize() * 8 / bit.readFrame().bitrate() * 10);
 				playTime = playTime / 10;
-				System.out.println(playTime);
-
+				//System.out.println(playTime);
 				ap.play();
 				ap.close();
 

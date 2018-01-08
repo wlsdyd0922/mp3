@@ -78,7 +78,6 @@ public class Search extends JFrame {
 						String str = allList.getSelectedValuesList().get(i);
 						if (!model.contains(str)) {
 							model.addElement(str);
-							System.out.println(str);
 						}
 						MainUIwin.musicList.removeAll();
 						MainUIwin.musicList.setModel(model);
@@ -99,7 +98,6 @@ public class Search extends JFrame {
 						String str = allList.getSelectedValuesList().get(i);
 						if (!model.contains(str)) {
 							model.addElement(str);
-							System.out.println(str);
 						}
 						MainUIwin.musicList.removeAll();
 						MainUIwin.musicList.setModel(model);

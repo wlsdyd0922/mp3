@@ -18,8 +18,8 @@ public class MainUIwin extends JFrame {
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
 	final static int LYRIC_CALL = 9;
-	final static int LYRIC_ADD = 1024735;			//가사 추가
-	
+	final static int LYRIC_ADD = 1024735; // 가사 추가
+
 	private PlayThread t;
 	private Client cl = null;
 	private Player p;
@@ -54,10 +54,9 @@ public class MainUIwin extends JFrame {
 	protected static JLabel la5 = new JLabel("주파수", JLabel.LEFT);
 
 	private String[] str = new String[] { "◀◀", "▶", "▶▶", "■", "∥" };
-	private String[] str1 = new String[] {"로그인","회원가입","서버음악검색","All","Random","반복"};
+	private String[] str1 = new String[] { "로그인", "회원가입", "서버음악검색", "All", "Random", "반복" };
 	private JButton[] bt = new JButton[5];
 	protected static JButton[] bts = new JButton[6];
-	
 
 	private JMenuBar bar = new JMenuBar();
 	private JMenu menu = new JMenu("File");
@@ -98,41 +97,7 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (sel != musicList.getSelectedIndex()) {
-						skip = 0;
-					}
-					if (musicList.getSelectedValue() != null) {
-						if (t == null) {
-							if (skip != 0) {
-								t = new PlayThread(skip);
-							} else {
-								t = new PlayThread();
-							}
-							t.setRanFlag(ranFlag);
-							t.setAllFlag(allFLag);
-							t.setInfFlag(infFLag);
-							t.setDaemon(true);
-							t.start();
-						} else {
-							t.kill();
-							if (skip != 0) {
-								t = new PlayThread(skip);
-							} else {
-								t = new PlayThread();
-							}
-							t.setRanFlag(ranFlag);
-							t.setAllFlag(allFLag);
-							t.setInfFlag(infFLag);
-							t.setDaemon(true);
-							t.start();
-							System.out.println(t.getState());
-						}
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-					}
+					playing();
 				}
 			}
 		};
@@ -142,45 +107,11 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					if (sel != musicList.getSelectedIndex()) {
-						skip = 0;
-					}
-					if (musicList.getSelectedValue() != null) {
-						if (t == null) {
-							if (skip != 0) {
-								t = new PlayThread(skip);
-							} else {
-								t = new PlayThread();
-							}
-							t.setRanFlag(ranFlag);
-							t.setAllFlag(allFLag);
-							t.setInfFlag(infFLag);
-							t.setDaemon(true);
-							t.start();
-						} else {
-							t.kill();
-							if (skip != 0) {
-								t = new PlayThread(skip);
-							} else {
-								t = new PlayThread();
-							}
-							t.setRanFlag(ranFlag);
-							t.setAllFlag(allFLag);
-							t.setInfFlag(infFLag);
-							t.setDaemon(true);
-							t.start();
-						}
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-					}
+					playing();
 				}
 			}
 		};
 		musicList.addMouseListener(playMusicMou);
-
 		ActionListener act = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() instanceof JButton) {
@@ -198,6 +129,9 @@ public class MainUIwin extends JFrame {
 					case "로그아웃":
 						bts[0].setText("로그인");
 						bts[1].setText("회원가입");
+						if (t != null) {
+							t.kill();
+						}
 						cl = new Client();
 						cl.logOut(LOGOUT);
 						String[] str = new String[] {};
@@ -219,40 +153,7 @@ public class MainUIwin extends JFrame {
 						Client.search.setVisible(true);
 						break;
 					case "▶":
-						if (sel != musicList.getSelectedIndex()) {
-							skip = 0;
-						}
-						if (musicList.getSelectedValue() != null) {
-							if (t == null) {
-								if (skip != 0) {
-									t = new PlayThread(skip);
-								} else {
-									t = new PlayThread();
-								}
-								t.setRanFlag(ranFlag);
-								t.setAllFlag(allFLag);
-								t.setInfFlag(infFLag);
-								t.setDaemon(true);
-								t.start();
-							} else {
-								t.kill();
-								if (skip != 0) {
-									t = new PlayThread(skip);
-								} else {
-									t = new PlayThread();
-								}
-								t.setRanFlag(ranFlag);
-								t.setAllFlag(allFLag);
-								t.setInfFlag(infFLag);
-								t.setDaemon(true);
-								t.start();
-							}
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e1) {
-								e1.printStackTrace();
-							}
-						}
+						playing();
 						break;
 					case "■":
 						if (t != null) {
@@ -270,14 +171,14 @@ public class MainUIwin extends JFrame {
 						if (t != null) {
 							t.setAllFlag(true);
 							allFLag = t.getAllFlag();
-							bt[3].setText("All X");
+							bts[3].setText("All X");
 						}
 						break;
 					case "All X":
 						if (t != null) {
 							t.setAllFlag(false);
 							allFLag = t.getAllFlag();
-							bt[3].setText("All");
+							bts[3].setText("All");
 						}
 						break;
 					case "◀◀":
@@ -395,10 +296,10 @@ public class MainUIwin extends JFrame {
 			}
 		};
 		open.addActionListener(act);
-		for(int i = 0 ; i < bts.length;i++) {
+		for (int i = 0; i < bts.length; i++) {
 			bts[i].addActionListener(act);
 		}
-		for(int i = 0 ; i < bt.length;i++) {
+		for (int i = 0; i < bt.length; i++) {
 			bt[i].addActionListener(act);
 		}
 	}
@@ -409,10 +310,10 @@ public class MainUIwin extends JFrame {
 			buttonline.add(bt[i]);
 			bt[i].setBackground(Color.WHITE);
 		}
-		for(int i = 0 ; i < bts.length ; i++) {
+		for (int i = 0; i < bts.length; i++) {
 			bts[i] = new JButton(str1[i]);
 		}
-		
+
 		setContentPane(bg1);
 		bg1.add(bg, BorderLayout.CENTER);
 		bg.setBounds(0, 0, 600, 635);
@@ -454,7 +355,7 @@ public class MainUIwin extends JFrame {
 		bts[3].setBackground(Color.white);
 		bts[4].setBackground(Color.white);
 		bts[5].setBackground(Color.white);
-		
+
 		bts[3].setEnabled(false);
 		bts[4].setEnabled(false);
 		bts[5].setEnabled(false);
@@ -465,19 +366,19 @@ public class MainUIwin extends JFrame {
 		bt[2].setBounds(210, 10, 80, 40);
 		bt[3].setBounds(110, 49, 80, 40);
 		bt[4].setBounds(210, 49, 80, 40);
-		
+
 		bts[0].setBounds(490, 10, 90, 40);
 		bts[1].setBounds(490, 60, 90, 40);
-		bts[3].setBounds(355, 10, 60, 40);
-		bts[4].setBounds(420, 10, 90, 40);
-		bts[5].setBounds(515, 10, 60, 40);
-		
+		bts[3].setBounds(330, 10, 60, 40);
+		bts[4].setBounds(400, 10, 100, 40);
+		bts[5].setBounds(510, 10, 70, 40);
+
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
-		
+
 		bts[2].setEnabled(false);
-		
+
 		bg.add(bg3);
 		bg3.add(scroll1);
 		bg3.setBackground(Color.WHITE);
@@ -504,5 +405,42 @@ public class MainUIwin extends JFrame {
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
+	}
+
+	public void playing() {
+		if (sel != musicList.getSelectedIndex()) {
+			skip = 0;
+		}
+		if (musicList.getSelectedValue() != null) {
+			if (t == null) {
+				if (skip != 0) {
+					t = new PlayThread(skip);
+				} else {
+					t = new PlayThread();
+				}
+				t.setRanFlag(ranFlag);
+				t.setAllFlag(allFLag);
+				t.setInfFlag(infFLag);
+				t.setDaemon(true);
+				t.start();
+			} else {
+				t.kill();
+				if (skip != 0) {
+					t = new PlayThread(skip);
+				} else {
+					t = new PlayThread();
+				}
+				t.setRanFlag(ranFlag);
+				t.setAllFlag(allFLag);
+				t.setInfFlag(infFLag);
+				t.setDaemon(true);
+				t.start();
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }

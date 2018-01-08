@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 public class Client {
 	private InetAddress inet;
 	private Socket socket;
@@ -14,6 +16,7 @@ public class Client {
 	protected static boolean logInflag = false;
 	private List<String> list = new ArrayList<>();
 	private int port = 20000;
+	private MainUIwin mainUIwin;
 	private long size = 0;
 	private String dir = "C:\\mp3tmp\\";
 
@@ -59,6 +62,7 @@ public class Client {
 				MainUIwin.bts[5].setEnabled(true);
 				clientMusicList(MainUIwin.LIST);
 			} else {
+				JOptionPane.showMessageDialog(mainUIwin, "입력정보 확인하세요","Login 실패",JOptionPane.WARNING_MESSAGE);
 				MainUIwin.bts[2].setEnabled(false);
 			}
 			out.close();
@@ -74,6 +78,7 @@ public class Client {
 			out.writeObject(logout);
 			out.writeObject(id);
 			out.close();
+			JOptionPane.showMessageDialog(mainUIwin, "Logout 완료");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,9 +101,9 @@ public class Client {
 			out.flush();
 			boolean a = (boolean) in.readObject();
 			if (a) {
-				System.out.println("회원가입 완료");
+				JOptionPane.showMessageDialog(mainUIwin, "회원가입 완료");
 			} else {
-				System.out.println("id 중복");
+				JOptionPane.showMessageDialog(mainUIwin,"id 중복");
 			}
 			out.close();
 			in.close();
@@ -146,7 +151,6 @@ public class Client {
 			}
 			out.writeObject(list);
 			out.flush();
-			System.out.println(list.toString());
 			boolean a = (boolean) in.readObject();
 			out.close();
 			in.close();
@@ -192,7 +196,6 @@ public class Client {
 			out.writeObject(music);
 			out.flush();
 			size = musicReceive(port, music);
-			System.out.println("실행준비 완료");
 			out.close();
 			in.close();
 			music = dir+music;
@@ -228,17 +231,15 @@ public class Client {
 			File file = new File(dir);
 			file.deleteOnExit();
 			if(!file.mkdir()) {
-				System.out.println("파일 생성 안댐");
+				JOptionPane.showMessageDialog(mainUIwin, "파일 생성 실패","ERROR",JOptionPane.WARNING_MESSAGE);
 			}
 			DatagramSocket ds = new DatagramSocket(20000); 
 			FileOutputStream fos = new FileOutputStream(new File(dir,music));
 			DatagramPacket dp = new DatagramPacket(buffer, buffer.length);
 			int nReadSize = 0;
-			System.out.println("Waitng.....");
 			ds.receive(dp);
 			String str = new String(dp.getData()).trim();
 			if (str.equals("start")) {
-				System.out.println(str);
 				ds.receive(new DatagramPacket(buffer, buffer.length));
 				fileSize = Long.parseLong(new String(dp.getData()).trim());
 				while (true) {
@@ -253,14 +254,15 @@ public class Client {
 				}
 				ds.close();
 				fos.close();
-				System.out.println("File transfer completed");
+				
+				//System.out.println("File transfer completed");
 			} else {
-				System.out.println("Start Error");
+				JOptionPane.showMessageDialog(mainUIwin, "실행 중 오류가 발생하였습니다.","Start Error",JOptionPane.WARNING_MESSAGE);    
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Process Close");
+		//System.out.println("Process Close");
 		return fileSize;
 	}
 }
