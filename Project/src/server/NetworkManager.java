@@ -220,7 +220,7 @@ public class NetworkManager extends Thread{
 		String email = (String)in.readObject();
 		System.out.println(socket.getInetAddress() + " email : " + email);
 
-		boolean joinResult = memM.memberAccept(id, pw, email);
+		int joinResult = memM.memberAccept(id, pw, email);
 		out.writeObject(joinResult);
 		out.flush();
 

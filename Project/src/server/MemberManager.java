@@ -2,11 +2,20 @@ package server;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class MemberManager {
 	private Map<String,Member> clientList = new HashMap<>();
 	private MusicManager musicManager;
 	File memberDB;
+
+	final static int SUCCES = 0;
+	final static int DUPLICATE = 1;
+	final static int IDFORMAT = 2;
+	final static int PWFORMAT = 3;
+	final static int EMAILFORMAT = 4;
+	final static int ADMIN = 5;
+	final static int IDLENGTH = 6;
 
 	public void InitList()
 	{
@@ -83,18 +92,18 @@ public class MemberManager {
 			return false;
 	}
 
-	public boolean memberAccept(String id, String pw, String email)
+	public int memberAccept(String id, String pw, String email)
 	{
 		if (id.length() <= 3 || id.length() > 10)
 		{
 			System.out.println(id + " 길이가 안맞음");
-			return false;
+			return IDLENGTH;
 		}
 		
 		if (id.contains("Admin")) 
 		{
 			System.out.println("사용 불가 닉네임");
-			return false;
+			return -1;
 		}
 		
 		boolean flag = false;
@@ -111,22 +120,28 @@ public class MemberManager {
 		if (pw.length() <= 3 || pw.length() > 10)
 		{
 			System.out.println(pw + " 길이가 안맞음");
-			return false;
+			return PWFORMAT;
 		}
 		
 		if(flag == true)
 		{
 			System.out.println(id + " 영어만 등록 가능");
-			return false;
+			return IDFORMAT;
 		}
+		
+		String regex = "^[a-z][a-z0-9]{7,19}@[a-z0-9]{3,20}\\.(com|net|co\\.kr)$";
+		if (Pattern.matches(regex, email))
+		{}
+		else
+			return EMAILFORMAT;
 		
 		readMemberList();
 		if(clientList.containsKey(id))
-			return false;
+			return DUPLICATE;
 		musicManager.createMusicList(id);
 		clientList.put(id, new Member(id,pw,email));//(newMember);
 		updateMemberList();
-		return true;
+		return SUCCES;
 	}
 	
 	public boolean memberDrop(String id)

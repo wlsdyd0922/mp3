@@ -178,7 +178,7 @@ public class Reference {
 				out.flush();
 
 				try {
-					Boolean textFS = (Boolean) in.readObject();
+					int textFS = (Integer) in.readObject();
 					System.out.println("server : " + textFS);
 
 				} catch (Exception e) {
@@ -273,6 +273,26 @@ public class Reference {
 				System.out.println("다시 입력");
 				break;
 			}
+		}
+	}
+	public static void delete(File file) {
+		if(file.isFile())
+		{
+			file.delete();
+			System.out.println(file.getAbsolutePath()+"삭제");
+		}
+		else if(file.isDirectory())
+		{
+			File[] list = file.listFiles();
+			if(list!=null)
+			{
+				for(File f : list)
+				{
+					delete(f);
+				}
+			}
+			file.delete();
+			System.out.println(file.getAbsolutePath()+"삭제 완료");
 		}
 	}
 }
