@@ -3,6 +3,8 @@ package Interface;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.*;
 
 import javazoom.jl.decoder.Bitstream;
@@ -24,6 +26,7 @@ public class PlayThread extends Thread {
 	private int skip11;
 
 	private float playTime = 0;
+	private int playTime1 = 0;
 	private Player ap;
 	private FileInputStream fis;
 	private BufferedInputStream bis;
@@ -67,27 +70,25 @@ public class PlayThread extends Thread {
 				// System.out.println(playTime);
 				MainUIwin.sl.setMinimum(0);
 				MainUIwin.sl.setMaximum(total);
-				/////////////////////
 
-				Thread th1 = new Thread()
-						{
-							public void run()
-							{
-								while(flag)
-								{
-									int tick = (int) (total / playTime);
-									skip+=tick;
-									MainUIwin.sl.setValue(skip);
-									try {
-										Thread.sleep(1000);
-									}catch (Exception e) {
-									}
-								}
+				Thread th1 = new Thread() {
+					public void run() {
+						while (flag) {
+							int tick = (int) (total / playTime);
+							skip += tick;
+							MainUIwin.sl.setValue(skip);
+							playTime1 = skip / tick -1;
+							MainUIwin.tl2.setText("" + playTime1/60+":"+playTime1%60);
+							try {
+								Thread.sleep(1000);
+							} catch (Exception e) {
 							}
-						};
-						th1.setDaemon(true);
-						th1.start();
-///////////////////////////////////////////////
+						}
+					}
+				};
+				th1.setDaemon(true);
+				th1.start();
+				MainUIwin.tl1.setText((int)(playTime/60)+":"+(int)(playTime%60));
 				ap.play();
 				ap.close();
 				flag = false;
@@ -143,8 +144,8 @@ public class PlayThread extends Thread {
 		return skip11;
 	}
 
-	public float getPlayTime() {
-		return this.playTime;
+	public int getPlayTime() {
+		return (int) this.playTime;
 	}
 
 	public void setAllFlag(boolean allflag) {
@@ -192,4 +193,5 @@ public class PlayThread extends Thread {
 	public int getTotal() {
 		return this.total;
 	}
+
 }

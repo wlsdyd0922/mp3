@@ -103,7 +103,7 @@ public class Client {
 			if (a) {
 				JOptionPane.showMessageDialog(mainUIwin, "회원가입 완료");
 			} else {
-				JOptionPane.showMessageDialog(mainUIwin, "ID 4~10자의 영문숫자, ID 중복");
+				JOptionPane.showMessageDialog(mainUIwin, "입력 정보를 확인해주세요\nID,PW 4~10자의 영문숫자\nID 중복");
 			}
 			out.close();
 			in.close();

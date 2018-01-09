@@ -32,8 +32,8 @@ public class MainUIwin extends JFrame {
 	private boolean infFLag;
 	private boolean ranFlag;
 	private int sel = 0;
-	private JLabel tl1 = new JLabel();
-	private JLabel tl2 = new JLabel();
+	protected static JLabel tl1 = new JLabel();
+	protected static JLabel tl2 = new JLabel();
 	protected static JSlider sl = new JSlider(JSlider.HORIZONTAL, 0, 0, 0);
 
 	private JFileChooser chooser = new JFileChooser();
