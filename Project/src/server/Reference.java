@@ -105,6 +105,8 @@ public class Reference {
 //						}
 //					}
 //				};
+//				th1.setDaemon(true);
+//				th1.start();
 		
 		String ip = new String(buffer);
 		int port = 20000;
