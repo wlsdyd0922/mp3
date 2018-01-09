@@ -34,7 +34,7 @@ public class Reference {
 	final static int MUSIC_ADD = 7; // 음악 추가
 	final static int MUSIC_DEL = 8; // 음악 삭제
 	final static int LYRIC_CALL = 9;		//가사 요청
-	final static int LYRIC_ADD = 1024735;			//가사 추가
+	final static int LYRIC_ADD = 10;			//가사 추가
 	
 	public static void musicReceive(int port, String music) {
 		////////////////////// udp 파일전송////////////////////////

@@ -21,7 +21,7 @@ public class NetworkManager extends Thread{
 	final static int MUSIC_ADD = 7;		//음악 추가
 	final static int MUSIC_DEL = 8;			//음악 삭제
 	final static int LYRIC_CALL = 9;		//가사 요청
-	final static int LYRIC_ADD = 1024735;			//가사 추가
+	final static int LYRIC_ADD = 10;			//가사 추가
 	
 	private Date today = new Date();
 	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss");
