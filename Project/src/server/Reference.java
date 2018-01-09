@@ -38,7 +38,7 @@ public class Reference {
 	
 	public static void musicReceive(int port, String music) {
 		////////////////////// udp 파일전송////////////////////////
-		byte[] buffer = new byte[8192];
+		byte[] buffer = new byte[65000];
 		long fileSize;
 		long totalReadBytes = 0;
 
@@ -92,6 +92,19 @@ public class Reference {
 		FileInputStream ipIn = new FileInputStream(target);
 		int n = ipIn.read(buffer);
 		ipIn.close();
+		
+//		boolean flag = true;
+//		Thread th1 = new Thread()
+//				{
+//					public void run()
+//					{
+//						while(flag)
+//						{
+//							int tick = total / playTime;
+//							skip+=tick;
+//						}
+//					}
+//				};
 		
 		String ip = new String(buffer);
 		int port = 20000;
