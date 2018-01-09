@@ -14,6 +14,7 @@ public class PlayThread extends Thread {
 	private boolean allFlag = false;
 	private boolean infiFlag = false;
 	private boolean ranFlag = false;
+	boolean flag = true;
 	private int total;
 	private int stopped;
 	private int skip;
@@ -30,6 +31,7 @@ public class PlayThread extends Thread {
 	private List<Integer> suff = new ArrayList<>();
 
 	public PlayThread() {
+		MainUIwin.sl.setValue(0);
 	}
 
 	public PlayThread(int skip) {
@@ -62,13 +64,33 @@ public class PlayThread extends Thread {
 				MainUIwin.la5.setText("ÁÖÆÄ¼ö : " + (bit.readFrame().frequency() / 1000.0) + "Khz");
 				playTime = (int) ((float) cl.getFileSize() * 8 / bit.readFrame().bitrate() * 10);
 				playTime = playTime / 10;
-				//System.out.println(playTime);
+				// System.out.println(playTime);
 				MainUIwin.sl.setMinimum(0);
 				MainUIwin.sl.setMaximum(total);
-				
+				/////////////////////
+
+				Thread th1 = new Thread()
+						{
+							public void run()
+							{
+								while(flag)
+								{
+									int tick = (int) (total / playTime);
+									skip+=tick;
+									MainUIwin.sl.setValue(skip);
+									try {
+										Thread.sleep(1000);
+									}catch (Exception e) {
+									}
+								}
+							}
+						};
+						th1.setDaemon(true);
+						th1.start();
+///////////////////////////////////////////////
 				ap.play();
 				ap.close();
-//				MainUIwin.sl.setValue(0);
+				flag = false;
 
 				if (allFlag) {
 					if (selectNext > MainUIwin.musicList.getLastVisibleIndex()) {
@@ -109,6 +131,7 @@ public class PlayThread extends Thread {
 		this.playflag = false;
 		return skip;
 	}
+
 	public int stopper11() {
 		try {
 			stopped = fis.available();
@@ -119,6 +142,7 @@ public class PlayThread extends Thread {
 		this.playflag = false;
 		return skip11;
 	}
+
 	public float getPlayTime() {
 		return this.playTime;
 	}
@@ -137,6 +161,7 @@ public class PlayThread extends Thread {
 		}
 		return this.selectNext;
 	}
+
 	public int getSelect() {
 		return this.select;
 	}
@@ -163,6 +188,7 @@ public class PlayThread extends Thread {
 	public boolean getInfFlag() {
 		return this.infiFlag;
 	}
+
 	public int getTotal() {
 		return this.total;
 	}

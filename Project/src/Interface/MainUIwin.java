@@ -6,7 +6,8 @@ import java.io.File;
 
 import javax.management.loading.MLet;
 import javax.swing.*;
-
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import javazoom.jl.player.Player;
 
@@ -80,30 +81,28 @@ public class MainUIwin extends JFrame {
 			}
 		};
 		addWindowListener(win);
-		
-		sl.addChangeListener(e->{
-			sl.setValue(sl.getValue());
-			MouseListener mou = new MouseAdapter() {
-				public void mousePressed(MouseEvent arg0) {
-					mouflag = true;
+		sl.setValue(sl.getValue());
+		MouseListener mou = new MouseAdapter() {
+			public void mousePressed(MouseEvent arg0) {
+				mouflag = true;
+				sl.setValue(sl.getValue());
+			}
+			public void mouseReleased(MouseEvent arg0) {
+				if(mouflag && t !=null) {
+					skip = sl.getValue();
+					sl.setValue(sl.getValue());
+					t.kill();
+					t = new PlayThread(skip);
+					t.setRanFlag(ranFlag);
+					t.setAllFlag(allFLag);
+					t.setInfFlag(infFLag);
+					t.setDaemon(true);
+					t.start();
+					mouflag = false;
 				}
-				public void mouseReleased(MouseEvent arg0) {
-					if(mouflag) {
-						skip = sl.getValue();
-						System.out.println(skip);
-						t.kill();
-						t = new PlayThread(skip);
-						t.setRanFlag(ranFlag);
-						t.setAllFlag(allFLag);
-						t.setInfFlag(infFLag);
-						t.setDaemon(true);
-						t.start();
-						mouflag = false;
-					}
-				}
-			};
-			sl.addMouseListener(mou);
-		});
+			}
+		};
+		sl.addMouseListener(mou);
 
 		KeyAdapter listdelete = new KeyAdapter() {
 			@Override
@@ -128,6 +127,7 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+//					sl.setValue(0);
 					playing();
 				}
 			}
@@ -138,6 +138,7 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
+//					sl.setValue(0);
 					playing();
 				}
 			}
@@ -185,6 +186,7 @@ public class MainUIwin extends JFrame {
 						Client.search.setVisible(true);
 						break;
 					case "¢º":
+//						sl.setValue(0);
 						playing();
 						break;
 					case "¡á":
@@ -214,6 +216,8 @@ public class MainUIwin extends JFrame {
 						}
 						break;
 					case "¢¸¢¸":
+						sl.setValue(0);
+						skip = sl.getValue();
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
 								int a = musicList.getSelectedIndex() - 1;
@@ -223,7 +227,7 @@ public class MainUIwin extends JFrame {
 									musicList.setSelectedIndex(a);
 								}
 								if (skip != 0) {
-									t = new PlayThread(skip);
+									t = new PlayThread();
 								} else {
 									t = new PlayThread();
 								}
@@ -254,6 +258,8 @@ public class MainUIwin extends JFrame {
 						}
 						break;
 					case "¢º¢º":
+						sl.setValue(0);
+						skip = sl.getValue();
 						if (musicList.getSelectedValue() != null) {
 							if (t == null) {
 								int a = musicList.getSelectedIndex() + 1;
@@ -449,6 +455,7 @@ public class MainUIwin extends JFrame {
 	}
 
 	public void playing() {
+		
 		if (sel != musicList.getSelectedIndex()) {
 			skip = 0;
 		}
@@ -485,41 +492,5 @@ public class MainUIwin extends JFrame {
 		}
 	}
 
-	public void playing1(int skip) {
-		if (sel != musicList.getSelectedIndex()) {
-			skip = 0;
-		}
-		if (musicList.getSelectedValue() != null) {
-			if (t == null) {
-				if (skip != 0) {
-					t = new PlayThread(skip);
-				} else {
-					t = new PlayThread();
-				}
-				t.setRanFlag(ranFlag);
-				t.setAllFlag(allFLag);
-				t.setInfFlag(infFLag);
-				t.setDaemon(true);
-				t.start();
-				
-			} else {
-				t.kill();
-				if (skip != 0) {
-					t = new PlayThread(skip);
-				} else {
-					t = new PlayThread();
-				}
-				t.setRanFlag(ranFlag);
-				t.setAllFlag(allFLag);
-				t.setInfFlag(infFLag);
-				t.setDaemon(true);
-				t.start();
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
+
 }
