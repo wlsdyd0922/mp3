@@ -275,24 +275,5 @@ public class Reference {
 			}
 		}
 	}
-	public static void delete(File file) {
-		if(file.isFile())
-		{
-			file.delete();
-			System.out.println(file.getAbsolutePath()+"삭제");
-		}
-		else if(file.isDirectory())
-		{
-			File[] list = file.listFiles();
-			if(list!=null)
-			{
-				for(File f : list)
-				{
-					delete(f);
-				}
-			}
-			file.delete();
-			System.out.println(file.getAbsolutePath()+"삭제 완료");
-		}
-	}
+
 }

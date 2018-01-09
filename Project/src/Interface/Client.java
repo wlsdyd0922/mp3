@@ -19,10 +19,11 @@ public class Client {
 	private MainUIwin mainUIwin;
 	private long size = 0;
 	private String dir = "C:\\mp3tmp\\";
+	private String ippath = "Project\\data";
 
 	public Client() {
 		try {
-			File target = new File("Project\\data", "IP.txt");
+			File target = new File(ippath, "IP.txt");
 			int bufSize = (int) target.length();
 			byte[] buffer = new byte[bufSize];
 			FileInputStream ipIn = new FileInputStream(target);
@@ -258,6 +259,7 @@ public class Client {
 				}
 				ds.close();
 				fos.close();
+				Thread.sleep(80);
 
 				// System.out.println("File transfer completed");
 			} else {
@@ -270,4 +272,5 @@ public class Client {
 		// System.out.println("Process Close");
 		return fileSize;
 	}
+	
 }

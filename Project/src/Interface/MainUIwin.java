@@ -77,7 +77,15 @@ public class MainUIwin extends JFrame {
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
+				if (t != null) {
+					t.kill();
+				}
 				System.exit(0);
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+
 			}
 		};
 		addWindowListener(win);
@@ -87,8 +95,9 @@ public class MainUIwin extends JFrame {
 				mouflag = true;
 				sl.setValue(sl.getValue());
 			}
+
 			public void mouseReleased(MouseEvent arg0) {
-				if(mouflag && t !=null) {
+				if (mouflag && t != null) {
 					skip = sl.getValue();
 					sl.setValue(sl.getValue());
 					t.kill();
@@ -127,7 +136,7 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//					sl.setValue(0);
+					// sl.setValue(0);
 					playing();
 				}
 			}
@@ -138,7 +147,7 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-//					sl.setValue(0);
+					// sl.setValue(0);
 					playing();
 				}
 			}
@@ -186,7 +195,7 @@ public class MainUIwin extends JFrame {
 						Client.search.setVisible(true);
 						break;
 					case "в║":
-//						sl.setValue(0);
+						// sl.setValue(0);
 						playing();
 						break;
 					case "бс":
@@ -455,7 +464,7 @@ public class MainUIwin extends JFrame {
 	}
 
 	public void playing() {
-		
+
 		if (sel != musicList.getSelectedIndex()) {
 			skip = 0;
 		}
@@ -491,6 +500,5 @@ public class MainUIwin extends JFrame {
 			}
 		}
 	}
-
 
 }
