@@ -321,7 +321,7 @@ public class NetworkManager extends Thread{
 		System.out.println(f.format(today));
 		System.out.println(socket.getInetAddress());
 		System.out.println(id + " ·Î±×¾Æ¿ô");
-		ipList.remove(id);
+		ipList.remove(id); 
 		}
 		catch(Exception e)
 		{

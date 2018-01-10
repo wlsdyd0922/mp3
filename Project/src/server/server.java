@@ -7,7 +7,7 @@ public class server {
 	private static Map<String,Integer> ipList = new HashMap<>();
 	public static void main(String[] args) {
 		try(ServerSocket server = new ServerSocket(20000)){
-			System.out.println("서버 기동"); 
+			System.out.println("서버 기동");  
 			while(true)
 			{
 				Socket s = server.accept();
