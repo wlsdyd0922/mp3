@@ -16,6 +16,10 @@ public class MemberManager {
 	final static int EMAILFORMAT = 4;
 	final static int ADMIN = 5;
 	final static int IDLENGTH = 6;
+	
+	final static int IDPWERROR = 1;
+	final static int DUPLICATION = 2;
+	final static int TIMEOUT = 3;
 
 	public void InitList()
 	{
@@ -84,12 +88,12 @@ public class MemberManager {
 		}
 	}
 
-	public boolean login(String id, String pw)  
+	public int login(String id, String pw)  
 	{
 		if(clientList.containsKey(id))
-			return clientList.get(id).getPassword().equals(pw);
-		else
-			return false;
+			if(clientList.get(id).getPassword().equals(pw))
+				return SUCCES;
+		return IDPWERROR;
 	}
 
 	public int memberAccept(String id, String pw, String email)

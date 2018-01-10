@@ -7,9 +7,9 @@ import java.util.*;
 
 public class NetworkManager extends Thread{
 	private boolean flag = true;
-	private int otp;
-	private Map<String,Integer> ipList;
+	private Map<String,Long> ipList;
 	private Random rand;
+	private int loginCount=0;
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
 	final static int LOGIN = 0;					//로그인 요청
@@ -23,6 +23,11 @@ public class NetworkManager extends Thread{
 	final static int MUSIC_DEL = 8;			//음악 삭제
 	final static int LYRIC_CALL = 9;		//가사 요청
 	final static int LYRIC_ADD = 10;			//가사 추가
+	
+	final static int SUCCES = 0;	
+	final static int IDPWERROR = 1;
+	final static int DUPLICATION = 2;
+	final static int TIMEOUT = 3;
 	
 	private Date today = new Date();
 	private SimpleDateFormat f = new SimpleDateFormat("MM-dd HH:mm:ss");
@@ -45,7 +50,7 @@ public class NetworkManager extends Thread{
 		}
 	}
 	
-	public NetworkManager(Socket socket,Map<String,Integer> list)
+	public NetworkManager(Socket socket,Map<String,Long> list)
 	{
 		port = 20000;
 		this.socket = socket;
@@ -239,6 +244,7 @@ public class NetworkManager extends Thread{
 	
 	public void loginer()
 	{
+		loginCount++;
 		try {
 		System.out.println(f.format(today));
 		System.out.println(socket.getInetAddress() + " 로그인 시도");
@@ -247,15 +253,16 @@ public class NetworkManager extends Thread{
 		System.out.println(socket.getInetAddress() + " : id = " + id);
 		String pw = (String)in.readObject();
 		System.out.println(socket.getInetAddress() + " : pw = " + pw);
-		int OTP = (Integer)in.readObject();
-		boolean loginResult = memM.login(id, pw);
-		if(!loginCheck(id,OTP))
-			loginResult = false;
+		long OTP = (long)in.readObject();
+		int loginResult = memM.login(id, pw);
+		if(!loginCheck(id,OTP) && loginResult == 0)
+			loginResult = DUPLICATION;
+		if(loginCount > 5)
+			loginResult = TIMEOUT;
 		out.writeObject(loginResult);
 		out.flush();
 		System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
-		if(loginResult)
-			ipSave(id);
+		System.out.println(id+" otp : "+OTP);
 		}
 		catch(Exception e)
 		{
@@ -320,6 +327,7 @@ public class NetworkManager extends Thread{
 		String id = (String)in.readObject();
 		System.out.println(f.format(today));
 		System.out.println(socket.getInetAddress());
+		long OTP = (Long)in.readObject();
 		System.out.println(id + " 로그아웃");
 		ipList.remove(id); 
 		}
@@ -438,7 +446,7 @@ public class NetworkManager extends Thread{
 		}
 	}
 	
-	public boolean ipSave(String id) 
+	public void ipSave(String id, long OTP) 
 	{
 //		if(ipList.get(id) == null)
 //		ipList.put(id, new ArrayList<String>());
@@ -452,17 +460,33 @@ public class NetworkManager extends Thread{
 //		} catch (Exception e) {
 //			System.out.println("memberDB update failed");
 //		}
-		boolean putResult=false;
-		if(ipList.put(id,rand.nextInt(999999)+1) != null)
-			putResult=true;
-		return putResult;
+		ipList.put(id,OTP);
 	}
 	
-	public boolean loginCheck(String id,int OTP)
+	public boolean loginCheck(String id,Long OTP)
 	{
+		if(!ipList.containsKey(id))
+		{
+			ipList.put(id, OTP);
+			return true;
+		}
 		return (ipList.get(id) == OTP);
 	}
 	
+	
+	Thread otpThread = new Thread()
+			{
+				public void run()
+				{
+					try {
+						Thread.sleep(60000);
+						loginCount = 0;
+						kill();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			};
 //	public boolean ipLoad(String id)
 //	{
 //		try (ObjectInputStream obj = new ObjectInputStream(
