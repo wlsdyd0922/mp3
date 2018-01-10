@@ -7,8 +7,9 @@ import java.util.*;
 
 public class NetworkManager extends Thread{
 	private boolean flag = true;
-	
-	private List<String> ipList = new ArrayList<>();
+	private int otp;
+	private Map<String,Integer> ipList;
+	private Random rand;
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
 	final static int LOGIN = 0;					//로그인 요청
@@ -44,7 +45,7 @@ public class NetworkManager extends Thread{
 		}
 	}
 	
-	public NetworkManager(Socket socket,List<String> list)
+	public NetworkManager(Socket socket,Map<String,Integer> list)
 	{
 		port = 20000;
 		this.socket = socket;
@@ -246,8 +247,9 @@ public class NetworkManager extends Thread{
 		System.out.println(socket.getInetAddress() + " : id = " + id);
 		String pw = (String)in.readObject();
 		System.out.println(socket.getInetAddress() + " : pw = " + pw);
+		int OTP = (Integer)in.readObject();
 		boolean loginResult = memM.login(id, pw);
-		if(ipSave(id))
+		if(!loginCheck(id,OTP))
 			loginResult = false;
 		out.writeObject(loginResult);
 		out.flush();
@@ -450,7 +452,15 @@ public class NetworkManager extends Thread{
 //		} catch (Exception e) {
 //			System.out.println("memberDB update failed");
 //		}
-		return ipList.add(id);
+		boolean putResult=false;
+		if(ipList.put(id,rand.nextInt(999999)+1) != null)
+			putResult=true;
+		return putResult;
+	}
+	
+	public boolean loginCheck(String id,int OTP)
+	{
+		return (ipList.get(id) == OTP);
 	}
 	
 //	public boolean ipLoad(String id)

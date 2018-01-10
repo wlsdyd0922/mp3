@@ -4,7 +4,7 @@ import java.net.*;
 import java.util.*;
 
 public class server {
-	private static List<String> ipList = new ArrayList<>();
+	private static Map<String,Integer> ipList = new HashMap<>();
 	public static void main(String[] args) {
 		try(ServerSocket server = new ServerSocket(20000)){
 			System.out.println("서버 기동"); 
@@ -13,6 +13,7 @@ public class server {
 				Socket s = server.accept();
 				new NetworkManager(s,ipList);
 				System.out.println("Client Accessed");
+				System.out.println(ipList);
 			}
 			
 		}catch(Exception e) {
