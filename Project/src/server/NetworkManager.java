@@ -8,7 +8,7 @@ import java.util.*;
 public class NetworkManager extends Thread{
 	private boolean flag = true;
 	
-	private Map<String,ArrayList<String>> ipList = new HashMap<>();
+	private List<String> ipList = new ArrayList<>();
 	
 	final static int LOGIN_CONFIRM = -1;//클라이언트 로그인 재확인 요청값
 	final static int LOGIN = 0;					//로그인 요청
@@ -44,11 +44,12 @@ public class NetworkManager extends Thread{
 		}
 	}
 	
-	public NetworkManager(Socket socket)
+	public NetworkManager(Socket socket,List<String> list)
 	{
 		port = 20000;
 		this.socket = socket;
 		System.out.println("networkManager : " + socket.toString());
+		this.ipList = list;
 		memM = new MemberManager();
 		musM = new MusicManager();
 		try {
@@ -245,11 +246,14 @@ public class NetworkManager extends Thread{
 		System.out.println(socket.getInetAddress() + " : id = " + id);
 		String pw = (String)in.readObject();
 		System.out.println(socket.getInetAddress() + " : pw = " + pw);
-
 		boolean loginResult = memM.login(id, pw);
+		if(ipSave(id))
+			loginResult = false;
 		out.writeObject(loginResult);
 		out.flush();
 		System.out.println(socket.getInetAddress() + " 로그인 결과 :  " + loginResult);
+		if(loginResult)
+			ipSave(id);
 		}
 		catch(Exception e)
 		{
@@ -315,6 +319,7 @@ public class NetworkManager extends Thread{
 		System.out.println(f.format(today));
 		System.out.println(socket.getInetAddress());
 		System.out.println(id + " 로그아웃");
+		ipList.remove(id);
 		}
 		catch(Exception e)
 		{
@@ -431,10 +436,40 @@ public class NetworkManager extends Thread{
 		}
 	}
 	
-	public void ipSave(String id) 
+	public boolean ipSave(String id) 
 	{
-		if(ipList.get(id) == null)
-		ipList.put(id, new ArrayList<String>());
-		ipList.get(id).add(socket.getInetAddress().toString());
+//		if(ipList.get(id) == null)
+//		ipList.put(id, new ArrayList<String>());
+//		ipList.get(id).add(socket.getInetAddress().toString());
+//		try(ObjectOutputStream obj = new ObjectOutputStream(
+//				new BufferedOutputStream(
+//					new FileOutputStream(
+//							new File("memberDB",id+"ip.list"))));)
+//		{
+//			obj.writeObject(ipList);
+//		} catch (Exception e) {
+//			System.out.println("memberDB update failed");
+//		}
+		return ipList.add(id);
 	}
+	
+//	public boolean ipLoad(String id)
+//	{
+//		try (ObjectInputStream obj = new ObjectInputStream(
+//				new BufferedInputStream(
+//						new FileInputStream(
+//								new File("memberDB",id+"ip.list"))));) {
+//			ipList = (Map<String, ArrayList<String>>) obj.readObject();
+//
+//			Iterator<String> it = ipList.keySet().iterator();
+//			while (it.hasNext()) {
+//				String n = it.next();
+//				if(n.equals(socket.getInetAddress()))
+//					return false;
+//			}
+//		} catch (Exception e) {
+//			System.out.println("memberDB read failed");
+//		}
+//		return true;
+//		}
 }

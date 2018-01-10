@@ -75,7 +75,7 @@ public class Reference {
 		int size = (int) target.length();
 		byte[] buffer = new byte[size];
 		FileInputStream ipIn = new FileInputStream(target);
-		int n = ipIn.read(buffer);
+		ipIn.read(buffer);
 		ipIn.close();
 		
 //		boolean flag = true;
