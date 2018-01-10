@@ -260,6 +260,7 @@ public class Reference {
 			}
 		}
 	}
+
 	public static void delete(File file) {
 		if(file.isFile())
 		{
