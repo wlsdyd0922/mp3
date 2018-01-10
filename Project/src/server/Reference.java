@@ -1,26 +1,11 @@
 package server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import javax.sound.sampled.*;
+import javax.sound.sampled.Line.Info;
 
 public class Reference {
 	static boolean flag = true;
@@ -294,5 +279,33 @@ public class Reference {
 			file.delete();
 			System.out.println(file.getAbsolutePath()+"삭제 완료");
 		}
+	}
+	public void setVolume()
+	{
+	Info source = Port.Info.SPEAKER;
+    //        source = Port.Info.LINE_OUT;
+    //        source = Port.Info.HEADPHONE;
+
+        if (AudioSystem.isLineSupported(source)) 
+        {
+            try 
+            {
+                Port outline = (Port) AudioSystem.getLine(source);
+                outline.open();                
+                FloatControl volumeControl = (FloatControl) outline.getControl(FloatControl.Type.VOLUME);                
+                System.out.println("       volume: " + volumeControl.getValue() );
+                float v = 0.33F;
+                volumeControl.setValue(v);
+                System.out.println("   new volume: " + volumeControl.getValue() );
+                v = 0.73F;
+                volumeControl.setValue(v); 
+                System.out.println("newest volume: " + volumeControl.getValue() );
+            } 
+            catch (LineUnavailableException ex) 
+            {
+                System.err.println("source not supported");
+                ex.printStackTrace();
+            }            
+        }
 	}
 }
