@@ -1,6 +1,7 @@
 package Interface;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -9,7 +10,6 @@ import java.util.*;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.player.Player;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 
 public class PlayThread extends Thread {
 	private boolean playflag = true;
@@ -24,6 +24,9 @@ public class PlayThread extends Thread {
 	private int selectPrev;
 	private int select;
 	private int skip11;
+	private String a;
+	private Format f1 = new DecimalFormat("00");
+	private Format f2 = new DecimalFormat("00");
 
 	private float playTime = 0;
 	private int playTime1 = 0;
@@ -51,7 +54,7 @@ public class PlayThread extends Thread {
 					selectNext = (int) (Math.random() * MainUIwin.musicList.getLastVisibleIndex());
 				}
 				Client cl = new Client();
-				String a = cl.play(MainUIwin.MUSIC, MainUIwin.musicList.getModel().getElementAt(select).toString());
+				a = cl.play(MainUIwin.MUSIC, MainUIwin.musicList.getModel().getElementAt(select).toString());
 				MainUIwin.musicList.setSelectedIndex(select);
 
 				fis = new FileInputStream(a);
@@ -71,26 +74,33 @@ public class PlayThread extends Thread {
 				MainUIwin.sl.setMinimum(0);
 				MainUIwin.sl.setMaximum(total);
 
+				flag = true;
 				Thread th1 = new Thread() {
 					public void run() {
 						while (flag) {
 							int tick = (int) (total / playTime);
 							skip += tick;
 							MainUIwin.sl.setValue(skip);
-							playTime1 = skip / tick -1;
-							MainUIwin.tl2.setText("" + playTime1/60+":"+playTime1%60);
+							playTime1 = skip / tick - 1;
+							
+							MainUIwin.tl2.setText("" + playTime1 / 60 + ":" + f1.format(playTime1 % 60));
 							try {
 								Thread.sleep(1000);
 							} catch (Exception e) {
+								e.printStackTrace();
 							}
 						}
 					}
 				};
 				th1.setDaemon(true);
 				th1.start();
-				MainUIwin.tl1.setText((int)(playTime/60)+":"+(int)(playTime%60));
+
+				
+				MainUIwin.tl1.setText((int) (playTime / 60)+ ":" + f1.format((int) (playTime % 60)));
 				ap.play();
 				ap.close();
+
+				skip = 0;
 				flag = false;
 
 				if (allFlag) {
@@ -110,14 +120,32 @@ public class PlayThread extends Thread {
 						playflag = false;
 					}
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void delete(File file) {
+		if (file.isFile()) {
+			file.delete();
+		} else if (file.isDirectory()) {
+			File[] list = file.listFiles();
+			if (list != null) {
+				for (File f : list) {
+					delete(f);
+				}
+			}
+			file.delete();
+		}
+	}
+
 	public void kill() {
-		ap.close();
+		if (ap != null) {
+			ap.close();
+		}
+		delete(new File(a));
 		this.playflag = false;
 	}
 

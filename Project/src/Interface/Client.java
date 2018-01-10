@@ -18,11 +18,15 @@ public class Client {
 	private int port = 20000;
 	private MainUIwin mainUIwin;
 	private long size = 0;
-	private String dir = "C:\\mp3tmp\\";
+//	private String dir = "C:\\mp3tmp\\";
+//	private String dir = System.getProperty("user.home") + "\\mp3tmp\\";
+	private String dir = System.getProperty("user.dir") + "\\mp3tmp\\";
+	private String ippath = System.getProperty("user.dir") + "\\Project\\data\\";
+	private long otp;
 
 	public Client() {
 		try {
-			File target = new File("Project\\data", "IP.txt");
+			File target = new File(ippath, "IP.txt");
 			int bufSize = (int) target.length();
 			byte[] buffer = new byte[bufSize];
 			FileInputStream ipIn = new FileInputStream(target);
@@ -51,7 +55,22 @@ public class Client {
 			Client.id = id;
 			out.writeObject(pw);
 			out.flush();
-			logInflag = (boolean) in.readObject();
+			otp = (long) (Math.random() * Long.MAX_VALUE);
+			out.writeObject(otp);
+			System.out.println(otp);
+			out.flush();
+			int result = (int) in.readObject();
+			if ( result== 0) {
+				logInflag = true;
+			}else if(result ==1){
+				System.out.println("asd");
+				JOptionPane.showMessageDialog(mainUIwin, "입력정보 확인하세요", "Login 실패", JOptionPane.WARNING_MESSAGE);
+				logInflag = false;
+			}else if(result ==2) {
+				JOptionPane.showMessageDialog(mainUIwin, "중복 로그인", "Login 실패", JOptionPane.WARNING_MESSAGE);
+				logInflag = false;
+			}
+			
 			if (logInflag) {
 				search = new Search();
 				MainUIwin.bts[2].setEnabled(true);
@@ -62,7 +81,6 @@ public class Client {
 				MainUIwin.bts[5].setEnabled(true);
 				clientMusicList(MainUIwin.LIST);
 			} else {
-				JOptionPane.showMessageDialog(mainUIwin, "입력정보 확인하세요", "Login 실패", JOptionPane.WARNING_MESSAGE);
 				MainUIwin.bts[2].setEnabled(false);
 			}
 			out.close();
@@ -76,7 +94,10 @@ public class Client {
 	public void logOut(int logout) {
 		try {
 			out.writeObject(logout);
+			out.flush();
 			out.writeObject(id);
+			out.flush();
+			out.writeObject(otp);
 			out.close();
 			JOptionPane.showMessageDialog(mainUIwin, "Logout 완료");
 		} catch (IOException e) {
@@ -231,7 +252,6 @@ public class Client {
 
 		try {
 			File file = new File(dir);
-			file.deleteOnExit();
 			if (!file.mkdir()) {
 				if (!file.exists()) {
 					JOptionPane.showMessageDialog(mainUIwin, "파일 생성 실패", "ERROR", JOptionPane.WARNING_MESSAGE);
@@ -258,7 +278,7 @@ public class Client {
 				}
 				ds.close();
 				fos.close();
-
+				Thread.sleep(90);
 				// System.out.println("File transfer completed");
 			} else {
 				JOptionPane.showMessageDialog(mainUIwin, "실행 중 오류가 발생하였습니다.", "Start Error",
@@ -270,4 +290,5 @@ public class Client {
 		// System.out.println("Process Close");
 		return fileSize;
 	}
+
 }

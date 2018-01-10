@@ -1,11 +1,41 @@
 package Interface;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
-import javax.management.loading.MLet;
-import javax.swing.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.Line.Info;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.Port;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -32,17 +62,18 @@ public class MainUIwin extends JFrame {
 	private boolean infFLag;
 	private boolean ranFlag;
 	private int sel = 0;
-	protected static JLabel tl1 = new JLabel();
-	protected static JLabel tl2 = new JLabel();
+	protected static JLabel tl1 = new JLabel("0:00");
+	protected static JLabel tl2 = new JLabel("0:00");
 	protected static JSlider sl = new JSlider(JSlider.HORIZONTAL, 0, 0, 0);
+	private JLabel vol = new JLabel("♬");
+	private JSlider slvol = new JSlider(JSlider.HORIZONTAL, 0, 100, 100);
 
 	private JFileChooser chooser = new JFileChooser();
 
 	private JPanel bg1 = new JPanel(null);
 	private JPanel buttonline = new JPanel(null);
 	private JPanel titleLine = new JPanel(null);
-	private JPanel bg = new JPanel(new GridLayout(4, 1));
-	private JPanel lyricline = new JPanel(new BorderLayout());
+	private JPanel bg = new JPanel(new GridLayout(3, 1));
 	private JPanel scrollLine = new JPanel(new BorderLayout());
 	private JPanel bg3 = new JPanel(new BorderLayout());
 	private JPanel bg2 = new JPanel();
@@ -77,18 +108,34 @@ public class MainUIwin extends JFrame {
 	private void event() {
 		WindowListener win = new WindowAdapter() {
 			public void windowClosing(WindowEvent arg0) {
+				if (Client.logInflag) {
+					cl = new Client();
+					cl.logOut(LOGOUT);
+				}
+				if (t != null) {
+					t.kill();
+					
+				}
+				// 서버에 종료했다는 내용 전달..
 				System.exit(0);
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO 자동 생성된 메소드 스텁
+				super.windowDeactivated(arg0);
 			}
 		};
 		addWindowListener(win);
-		sl.setValue(sl.getValue());
+		
 		MouseListener mou = new MouseAdapter() {
 			public void mousePressed(MouseEvent arg0) {
 				mouflag = true;
 				sl.setValue(sl.getValue());
 			}
+
 			public void mouseReleased(MouseEvent arg0) {
-				if(mouflag && t !=null) {
+				if (mouflag && t != null) {
 					skip = sl.getValue();
 					sl.setValue(sl.getValue());
 					t.kill();
@@ -127,18 +174,26 @@ public class MainUIwin extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//					sl.setValue(0);
+					// sl.setValue(0);
 					playing();
 				}
 			}
 		};
 		musicList.addKeyListener(playmusicenter);
 
+		ChangeListener chl = new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				float v = slvol.getValue()/100f;
+				setVolume(v);
+			}
+		};
+		slvol.addChangeListener(chl);
+
 		MouseAdapter playMusicMou = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-//					sl.setValue(0);
+					// sl.setValue(0);
 					playing();
 				}
 			}
@@ -186,7 +241,7 @@ public class MainUIwin extends JFrame {
 						Client.search.setVisible(true);
 						break;
 					case "▶":
-//						sl.setValue(0);
+						// sl.setValue(0);
 						playing();
 						break;
 					case "■":
@@ -357,7 +412,7 @@ public class MainUIwin extends JFrame {
 
 		setContentPane(bg1);
 		bg1.add(bg, BorderLayout.CENTER);
-		bg.setBounds(0, 0, 600, 635);
+		bg.setBounds(0, 0, 500, 435);
 
 		scroll.setViewportView(musicList);
 		scroll1.setViewportView(tp);
@@ -384,12 +439,20 @@ public class MainUIwin extends JFrame {
 		titleLine.add(la5);
 		titleLine.add(bts[0]);
 		titleLine.add(bts[1]);
-
+		titleLine.add(slvol);
+		titleLine.add(vol);
+		
 		bg.add(bg2);
 		bg2.setLayout(null);
-		sl.setBounds(87, 34, 413, 82);
-		tl1.setBounds(519, 64, 57, 15);
-		tl2.setBounds(18, 64, 57, 15);
+		sl.setBounds(70, 30, 350, 80);
+		bg2.setBackground(Color.WHITE);
+		sl.setBackground(Color.WHITE);
+		slvol.setBounds(30, 110, 100, 20);
+		vol.setBounds(8, 105, 30, 30);
+		vol.setFont(new Font("굴림", Font.BOLD, 20));
+		slvol.setBackground(Color.WHITE);
+		tl1.setBounds(435, 61, 57, 15);
+		tl2.setBounds(20, 61, 57, 15);
 		bg2.add(sl);
 		bg2.add(tl1);
 		bg2.add(tl2);
@@ -409,31 +472,24 @@ public class MainUIwin extends JFrame {
 		bts[4].setEnabled(false);
 		bts[5].setEnabled(false);
 
-		scrollLine.setBounds(600, 0, 283, 635);
+		scrollLine.setBounds(500, 0, 232, 435);
+		
 		bt[0].setBounds(10, 10, 80, 40);
 		bt[1].setBounds(110, 10, 80, 40);
 		bt[2].setBounds(210, 10, 80, 40);
 		bt[3].setBounds(110, 49, 80, 40);
 		bt[4].setBounds(210, 49, 80, 40);
 
-		bts[0].setBounds(490, 10, 90, 40);
-		bts[1].setBounds(490, 60, 90, 40);
+		bts[0].setBounds(380, 10, 90, 40);
+		bts[1].setBounds(380, 60, 90, 40);
 		bts[3].setBounds(330, 10, 60, 40);
-		bts[4].setBounds(400, 10, 100, 40);
-		bts[5].setBounds(510, 10, 70, 40);
+		bts[4].setBounds(330, 60, 100, 40);
+		bts[5].setBounds(400, 10, 70, 40);
 
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
 
-		bg.add(bg3);
-		bg3.add(scroll1);
-		bg3.setBackground(Color.WHITE);
-		bg3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), "가사"));
-		tp.setBackground(Color.WHITE);
-		tp.setFont(new Font("굴림", Font.PLAIN, 20));
-		tp.setFocusable(false);
-		tp.setText("asdasd\nas\nsddssda\nsds\nsdsd\nasdfds\nsdfdf");
 	}
 
 	private void menu() {
@@ -448,14 +504,14 @@ public class MainUIwin extends JFrame {
 		event();
 		menu();
 		setTitle("Playing");
-		setSize(900, 700);
+		setSize(750, 500);
 		setLocation(300, 100);
 		setResizable(false);
 		setVisible(true);
 	}
 
 	public void playing() {
-		
+
 		if (sel != musicList.getSelectedIndex()) {
 			skip = 0;
 		}
@@ -492,5 +548,24 @@ public class MainUIwin extends JFrame {
 		}
 	}
 
-
+	public void setVolume(float v) {
+		Info[] source = new Info[3];
+		source[0] = Port.Info.SPEAKER;
+		source[1] = Port.Info.LINE_OUT;
+		source[2] = Port.Info.HEADPHONE;
+		
+		for(int i = 0 ; i < source.length;i++) {
+			if (AudioSystem.isLineSupported(source[i])) {
+				try {
+					Port outline = (Port) AudioSystem.getLine(source[i]);
+					outline.open();
+					FloatControl volumeControl = (FloatControl) outline.getControl(FloatControl.Type.VOLUME);
+					volumeControl.setValue(v);
+				} catch (LineUnavailableException ex) {
+					System.err.println("source not supported");
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
 }
