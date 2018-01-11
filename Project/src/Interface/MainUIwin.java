@@ -489,7 +489,6 @@ public class MainUIwin extends JFrame {
 		la1.setBounds(10, 10, 400, 20);
 		la4.setBounds(10, 40, 400, 20);
 		la5.setBounds(10, 60, 400, 20);
-
 	}
 
 	private void menu() {

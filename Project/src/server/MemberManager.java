@@ -133,7 +133,7 @@ public class MemberManager {
 			return IDFORMAT;
 		}
 		
-		String regex = "^[a-z][a-z0-9]{7,19}@[a-z0-9]{3,20}\\.(com|net|co\\.kr)$";
+		String regex = "^[a-z0-9][a-z0-9]{7,19}@[a-z0-9]{3,20}\\.(com|net|co\\.kr)$";
 		if (Pattern.matches(regex, email))
 		{}
 		else

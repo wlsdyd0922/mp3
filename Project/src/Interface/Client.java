@@ -57,7 +57,6 @@ public class Client {
 			out.flush();
 			otp = (long) (Math.random() * Long.MAX_VALUE);
 			out.writeObject(otp);
-			System.out.println(otp);
 			out.flush();
 			int result = (int) in.readObject();
 			if ( result== 0) {
@@ -120,11 +119,20 @@ public class Client {
 			out.flush();
 			out.writeObject(email);
 			out.flush();
-			boolean a = (boolean) in.readObject();
-			if (a) {
+			int a = (int) in.readObject();
+			if (a == 0) {
 				JOptionPane.showMessageDialog(mainUIwin, "회원가입 완료");
-			} else {
-				JOptionPane.showMessageDialog(mainUIwin, "입력 정보를 확인해주세요\nID,PW 4~10자의 영문숫자\nID 중복");
+			} else if(a==1){
+			}else if(a==2) {
+				JOptionPane.showMessageDialog(mainUIwin, "입력 정보를 확인해주세요.\nID 중복");
+			}else if(a == 3) {
+				JOptionPane.showMessageDialog(mainUIwin, "입력 정보를 확인해주세요.\nID 4~10자의 영문숫자");
+			}else if(a == 4) {
+				JOptionPane.showMessageDialog(mainUIwin, "입력 정보를 확인해주세요.\nemail 오류");
+			}else if(a==5) {
+				JOptionPane.showMessageDialog(mainUIwin, "해당 아이디는 사용할수 없습니다 ");
+			}else if(a == 6) {
+				JOptionPane.showMessageDialog(mainUIwin, "ID는 4~10글자 사이로 입력하세요");
 			}
 			out.close();
 			in.close();
